@@ -1,1 +1,1 @@
-# Distress-Mangement-System
+# Distress-Management-System
