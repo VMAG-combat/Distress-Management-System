@@ -5,18 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "start": "nodemon index.js"
+    "start": "nodemon backend/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nkartik01/Distress-Mangement-System.git"
+    "url": "git+https://github.com/VMAG-combat/Distress-Mangement-System.git"
   },
-  "author": "nkartik01",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nkartik01/Distress-Mangement-System/issues"
+    "url": "https://github.com/VMAG-combat/Distress-Mangement-System/issues"
   },
-  "homepage": "https://github.com/nkartik01/Distress-Mangement-System#readme",
+  "homepage": "https://github.com/VMAG-combat/Distress-Mangement-System#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
