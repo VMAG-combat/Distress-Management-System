@@ -15,7 +15,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-app.use("/crud/",require("./routes/basicCrud"))
+app.use("/crud/",require("./routes/basicCrud"));
+
+app.use("/signup/",require("./routes/authentication/userSignup"));
+app.use("/signin/",require("./routes/authentication/userSignin"));
 
 app.listen(80, () => {
   console.log("listening");

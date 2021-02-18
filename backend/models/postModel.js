@@ -1,4 +1,4 @@
-class Student {
+class Post {
     constructor(id, postId, userId, comments, likes,
         photo, caption, date, time, report ) {
             this.id = id;
@@ -14,4 +14,4 @@ class Student {
     }
 }
 
-module.exports = Student;
+module.exports = Post;

@@ -1,4 +1,4 @@
-class Student {
+class Incident {
     constructor(id, incidentId, reportedId, helpers, longitude,
         latitude, date, time, status, ) {
             this.id = id;
@@ -13,4 +13,4 @@ class Student {
     }
 }
 
-module.exports = Student;
+module.exports = Incident;
