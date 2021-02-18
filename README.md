@@ -1,7 +1,22 @@
 
 # Distress-Management-System
 
-Start the project with :
-npm start
+## Getting Started
 
+### Open two terminals
+1. Backend
+
+```bash
+$  npm start
+```
+
+2. Frontend
+
+```bash
+# Install Dependencies
+$ cd frontend && yarn install
+
+# for android
+$ yarn android 
+```
 
