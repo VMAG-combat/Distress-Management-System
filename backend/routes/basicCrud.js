@@ -9,12 +9,14 @@ const get = require("../crud/get");
 router.post("/insert",async(req,res)=>{
     try{
         var data = req.body;
+        var email = req.body.email;
+        var tp = {"email":email}
         console.log(req.body)
-        var id = await insert({collection:"User",data})
+        var id = await insert({collection:"User",tp})
         return res.status(200).send(id);
     }catch(err){
         console.log(err);
-        res.status(500).send(err)}       //please apply this try catch necessarily to all routes
+        res.status(500).send(err)}
 })
 
 router.get("/get/id/:id",async(req,res)=>{
@@ -24,7 +26,7 @@ router.get("/get/id/:id",async(req,res)=>{
         return res.status(200).send(doc);
     }catch(err){
         console.log(err);
-        res.status(500).send(err)}       //please apply this try catch necessarily to all routes
+        res.status(500).send(err)}       
 })
 
 router.get("/get/email/:email",async(req,res)=>{
@@ -34,7 +36,7 @@ router.get("/get/email/:email",async(req,res)=>{
         return res.status(200).send(doc);
     }catch(err){
         console.log(err);
-        res.status(500).send(err)}       //please apply this try catch necessarily to all routes
+        res.status(500).send(err)}      
 })
 
 
