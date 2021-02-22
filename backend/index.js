@@ -12,8 +12,14 @@ admin.initializeApp({
 admin.app;
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(cors());
 
+const authRoutes = require('./routes/auth.js');
+
+app.use('/auth', authRoutes);
 
 app.use("/crud/",require("./routes/basicCrud"));
 
