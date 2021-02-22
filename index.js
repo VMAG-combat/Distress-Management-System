@@ -13,6 +13,9 @@ admin.app;
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 // import route files like
 // app.use("/<filename>",require("./<filename>"))
 
@@ -31,6 +34,12 @@ app.use(cors());
 
 // module.exports=router
 
-app.listen(80, () => {
+const authRoutes = require('./backend/routes/auth.js');
+
+app.use('/auth', authRoutes);
+
+app.listen(5000, () => {
   console.log("listening");
 });
+
+
