@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const fast2sms = require('fast-two-sms');
 var otpGenerator = require('otp-generator') 
-const insert = require('../../crud/insert.js');
-const get = require('../../crud/get.js');
+const insert = require('../crud/insert.js');
+const get = require('../crud/get.js');
 
 exports.sendotp = async (req, res) => {
     const { name, email, password, phone, address } = req.body;
