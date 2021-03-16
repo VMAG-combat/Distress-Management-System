@@ -18,13 +18,17 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 
 const authRoutes = require('./routes/auth.js');
+const userRoutes = require('./routes/user.js');
+const incidentRoutes = require('./routes/incident.js');
 
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
+app.use('/incident', incidentRoutes);
 
 app.use("/crud/",require("./routes/basicCrud"));
 
-app.use("/signup/",require("./routes/authentication/userSignup"));
-app.use("/signin/",require("./routes/authentication/userSignin"));
+//app.use("/signup/",require("./routes/authentication/userSignup"));
+//app.use("/signin/",require("./routes/authentication/userSignin"));
 
 app.listen(80, () => {
   console.log("listening");
