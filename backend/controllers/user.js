@@ -64,3 +64,45 @@ exports.updatelocation = async (req, res) => {
         });
     }
 }
+
+// controller for updating friends list for the users
+
+//second userid : qIg58mULHGfi5piowC32
+exports.addFriends = async (req,res) => {
+
+    //{userId, friendId}
+    var {userId, friendId} = req.body;
+    try {
+        var user = await get({collection:"User",by:"id", id:userId})
+        // adding user2 to user1's friend list
+        if(user.friends){
+            user.friends.push(friendId);
+        }
+        else{
+            user.friends = [friendId];
+        }
+        var id = await update({collection: "User", data:user,id:user.id});
+        console.log("Friend added in user's list")
+
+        // adding user1 to user2's friend list
+        var user2 = await get({collection:"User",by:"id", id:friendId})
+        if(user2.friends){
+            user2.friends.push(userId);
+        }
+        else{
+            user2.friends = [userId];
+        }
+        var fid = await update({collection: "User", data:user2,id:user2.id})
+        console.log("User added in friends's list");
+
+        res.json({
+            user: user,
+            friend: user2,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            message: "Error in Adding Friends",
+        });
+    }
+};
