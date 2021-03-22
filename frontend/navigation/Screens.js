@@ -14,7 +14,7 @@ import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
 import Elements from "../screens/Elements";
-import Articles from "../screens/Articles";
+import SocialMedia from "../screens/SocialMedia";
 import BachaoButton from "../components/BachaoButton";
 // drawer
 import CustomDrawerContent from "./Menu";
@@ -63,20 +63,22 @@ function ElementsStack(props) {
   );
 }
 
-function ArticlesStack(props) {
+function SocialMediaStack(props) {
+  // console.log(props)
   return (
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
-        name="Articles"
-        component={Articles}
+        name="SocialMedia"
+        component={SocialMedia}
+        initialParams={{'userId':props.route.params.userId}}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Articles" navigation={navigation} scene={scene} />
+            <Header title="Social" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: "#F8F9FE" }
         }}
       />
-            <Stack.Screen
+            {/* <Stack.Screen
         name="Pro"
         component={Pro}
         options={{
@@ -92,17 +94,20 @@ function ArticlesStack(props) {
           ),
           headerTransparent: true
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }
 
 function ProfileStack(props) {
+  // console.log("PROFILE: \n"+props)
   return (
+    
     <Stack.Navigator initialRouteName="Profile" mode="card" headerMode="screen">
       <Stack.Screen
         name="Profile"
         component={Profile}
+        initialParams={{'userId':props.route.params.userId}}
         options={{
           header: ({ navigation, scene }) => (
             <Header
@@ -114,27 +119,31 @@ function ProfileStack(props) {
             />
           ),
           cardStyle: { backgroundColor: "#FFFFFF" },
-          headerTransparent: true
-        }}
+          headerTransparent: true,
+          // navigation={props.navigation}
+        }
+      }
+      // navigation={props.navigation}
       />
             <Stack.Screen
         name="Pro"
-        component={Pro}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title=""
-              back
-              white
-              transparent
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          headerTransparent: true
-        }}
+        component={OnboardingStack}
+        // options={{
+        //   header: ({ navigation, scene }) => (
+        //     <Header
+        //       title=""
+        //       back
+        //       white
+        //       transparent
+        //       navigation={navigation}
+        //       scene={scene}
+        //     />
+        //   ),
+        //   headerTransparent: true
+        // }}
       />
     </Stack.Navigator>
+
   );
 }
 
@@ -148,8 +157,14 @@ function HomeStack(props) {
           header: ({ navigation, scene }) => (
             <Header
               title="Home"
-              search
-              options
+              // search
+              // options
+              // tabs={[
+              //   { id: 'popular', title: 'Popular' },
+              //   { id: 'beauty', title: 'Beauty' },
+              //   { id: 'fashion', title: 'Fashion' },
+              //   // { id: 'car_motorcycle', title: 'Car & Motorcycle' },
+              // ]}
               navigation={navigation}
               scene={scene}
             />
@@ -179,16 +194,34 @@ function HomeStack(props) {
 }
 
 export default function OnboardingStack(props) {
+  // console.log(props)
+
   return (
     <Stack.Navigator mode="card" headerMode="none">
-      <Stack.Screen
-        name="Onboarding"
-        component={Onboarding}
-        option={{
-          headerTransparent: true
-        }}
-      />
-      <Stack.Screen name="App" component={AppStack} />
+      {
+        (props.jwt) ? (
+          <Stack.Screen name="App" component={AppStack} options={
+            {
+              jwt:props.jwt,
+              // deleteJWT:props.deleteJWT
+              
+            }
+          } initialParams={{'userId':props.userId}}/>
+        ) : (
+          // <>
+          <Stack.Screen
+          name="Onboarding"
+          component={Onboarding}
+          option={{
+          headerTransparent: true,       
+          newJWT: props.newJWT,
+            
+          }}
+        />
+        // </>
+        )
+      }
+      
     </Stack.Navigator>
   );
 }
@@ -196,90 +229,57 @@ const bachaoButton = () => {
   return null;
 }
 function AppStack(props) {
-  return (
-    // <Drawer.Navigator
-    //   style={{ flex: 1 }}
-    //   drawerContent={props => <CustomDrawerContent {...props} />}
-    //   drawerStyle={{
-    //     backgroundColor: "white",
-    //     width: width * 0.8
-    //   }}
-    //   drawerContentOptions={{
-    //     activeTintcolor: "white",
-    //     inactiveTintColor: "#000",
-    //     activeBackgroundColor: "transparent",
-    //     itemStyle: {
-    //       width: width * 0.75,
-    //       backgroundColor: "transparent",
-    //       paddingVertical: 16,
-    //       paddingHorizonal: 12,
-    //       justifyContent: "center",
-    //       alignContent: "center",
-    //       alignItems: "center",
-    //       overflow: "hidden"
-    //     },
-    //     labelStyle: {
-    //       fontSize: 18,
-    //       marginLeft: 12,
-    //       fontWeight: "normal"
-    //     }
-    //   }}
-    //   initialRouteName="Home"
-    // >
-    //   <Drawer.Screen name="Home" component={HomeStack} />
-    //   <Drawer.Screen name="Profile" component={ProfileStack} />
-    //   <Drawer.Screen name="Register" component={Register} />
-    //   <Drawer.Screen name="Elements" component={ElementsStack} />
-    //   <Drawer.Screen name="Articles" component={ArticlesStack} />
-    // </Drawer.Navigator>
-    
-
-    <Tab.Navigator
-    style={{flex:1, flexDirection: 'row'}}
-    initialRouteName={'Home'}
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        
-        let IconComponent = Ionicons;
-        let iconName;
-        if (route.name === 'Home') {
-          iconName = 'ios-home'; 
-        } else if (route.name === 'Elements') {
-          iconName = 'ios-calendar';
-        }else if (route.name === 'Articles') {
-          iconName = 'ios-people';
-        }else if (route.name === 'Profile') {
-          iconName = 'ios-call';
-        }
   
-        // You can return any component that you like here!
-        return <IconComponent name={iconName} size={25} color={tintColor} />;
+  return (
+
+
+
+      <Tab.Navigator
+      style={{flex:1, flexDirection: 'row'}}
+      initialRouteName={'Home'}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, horizontal, tintColor }) => {
+          
+          let IconComponent = Ionicons;
+          let iconName;
+          if (route.name === 'Home') {
+            iconName = 'ios-home'; 
+          } else if (route.name === 'Elements') {
+            iconName = 'ios-calendar';
+          }else if (route.name === 'SocialMedia') {
+            iconName = 'planet';
+          }else if (route.name === 'Profile') {
+            iconName = 'ios-call';
+          }
+    
+          // You can return any component that you like here!
+          return <IconComponent name={iconName} size={25} color={tintColor} />;
+        },
+      })}
+      tabBarOptions= {{
+        labelStyle: {
+          fontSize: 12,
       },
-    })}
-    tabBarOptions= {{
-      labelStyle: {
-        fontSize: 12,
-    },
-    showLabel: false,
-    activeTintColor: 'tomato', // active icon color
-    inactiveTintColor: '#001f30',  // inactive icon color
-    style: {
-        backgroundColor: '#FDFDFD', // TabBar background
-        borderTopColor: 'white',
-    }
-  }}
-    >
-      
-      <Tab.Screen name="Home" component={HomeStack}/>
-      <Tab.Screen name="Elements" component={ElementsStack}/>
-      {/* <Tab.Screen name="Elemednts"/> */}
-      <Tab.Screen name="Bachao" component={bachaoButton} options={{
-  tabBarIcon: () => (<BachaoButton/>),
-}} />
-      <Tab.Screen name="Articles" component={ArticlesStack} />
-      <Tab.Screen name="Profile" component={ProfileStack} />
-      
-    </Tab.Navigator>
+      showLabel: false,
+      activeTintColor: 'red', // active icon color
+      inactiveTintColor: '#001f30',  // inactive icon color
+      style: {
+          backgroundColor: '#FDFDFD', // TabBar background
+          borderTopColor: 'white',
+      }
+    }}
+      >
+        
+        <Tab.Screen name="Home" component={HomeStack}/>
+        <Tab.Screen name="Elements" component={ElementsStack}/>
+        {/* <Tab.Screen name="Elemednts"/> */}
+        <Tab.Screen name="Bachao" component={bachaoButton} options={{
+    tabBarIcon: () => (<BachaoButton/>),
+  }} />
+        <Tab.Screen name="SocialMedia" component={SocialMediaStack} initialParams={{'userId':props.route.params.userId}}/>
+        <Tab.Screen name="Profile" component={ProfileStack}   initialParams={{'userId':props.route.params.userId}}/>
+        
+      </Tab.Navigator>
     
   );
 }

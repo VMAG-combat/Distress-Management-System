@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { getPostsByUser, createPost, deletePost, like, comment, getPosts} = require('../../controllers/post')
+const { getPostsByUser, createPost, deletePost, like, comment, getPosts, photo,getPostPhotoRn} = require('../../controllers/post')
 
 const { createPostValidator } = require('../../validator/index');
 
@@ -21,5 +21,8 @@ router.post("/createPost", createPost, createPostValidator);
 
 router.delete("/post/:postId", deletePost);
 
+//post's photo
+router.get("/post/photo/:postId", photo);
+router.get("/post/rn/new", getPostPhotoRn);
 
 module.exports = router;

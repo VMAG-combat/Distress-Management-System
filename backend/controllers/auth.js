@@ -26,11 +26,11 @@ exports.sendotpForRegister = async (req, res) => {
         else{
             //generate otp and send to phone
             //var otp = "8569430"
-            var otp = otpGenerator.generate(6, { upperCase: false, specialChars: false });
+            var otp = otpGenerator.generate(6, { upperCase: false, specialChars: false , alphabets:false});
             var message = "Your otp for Bachao Account Registration is: "+otp;
             console.log("sending otp "+otp);
-            const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [phone]})
-            console.log(response);
+            const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [phone], flash:1})
+            // console.log(response);
             res.json({
                 otp: otp,
                 name: name,
@@ -89,17 +89,16 @@ exports.sendotpForLogin = async (req, res) => {
                 error:"No user found" 
             });
         }else{
-            console.log(user)
+            // console.log(user)
             if(user[0].password === password){
                 
                 //generate otp and send to phone
                 //var otp = "8569430"
-                var otp = otpGenerator.generate(6, { upperCase: false, specialChars: false });
+                var otp = otpGenerator.generate(6, { upperCase: false, specialChars: false,alphabets:false });
                 var message = "Your otp for Bachao Account Login is: "+otp;
                 console.log("sending otp "+otp);
-                const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [user[0].phone]})
+                const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [user[0].phone],flash:1})
 
-                console.log(response);
                 res.json({
                     otp: otp,
                     email: email,
@@ -127,7 +126,7 @@ exports.login = async (req, res) => {
     
     try {
         var user = await get({collection:"User",by:"where",where:[{parameter:"email", comparison:"==",value:email}]})
-        console.log(process.env.JWT_SIGNIN_KEY)
+        // console.log(process.env.JWT_SIGNIN_KEY)
         const token = jwt.sign({_id: user[0].id}, "swsh23hjddnns", {expiresIn: 300});
         console.log("successfully logged in!");
         res.cookie("token", token, { maxAge: 300*1000 })

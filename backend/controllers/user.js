@@ -4,7 +4,7 @@ const get = require('../crud/get.js');
 exports.editprofile = async (req, res) => {
     const user = req.body;
 //module.exports = async (obj = { collection: "string", data: {}, id: "string" }) => {
-    console.log(user);
+    // console.log(user);
     try {
         var id = await update({collection: "User", data:user,id:user.id});
         console.log("User Profile Updated Successfully");
@@ -24,7 +24,7 @@ exports.editprofile = async (req, res) => {
 
 exports.getprofile = async (req, res) => {
     const id = req.params.userid;
-    console.log(id);
+    // console.log(id);
     try {
         var user = await get({collection:"User",by:"id", id:id})
         console.log("user profile fetched succesfully");
@@ -104,5 +104,44 @@ exports.addFriends = async (req,res) => {
         res.status(400).json({
             message: "Error in Adding Friends",
         });
+    }
+};
+
+
+exports.getFriends = async (req,res) => {
+
+    var userid = req.params.userid
+    console.log(userid)
+    try {
+        var user = await get({collection:"User",by:"id", id: userid})
+        console.log(user)
+        var friendids = user.friends;
+
+        friends = []
+        
+        
+        
+        if(!friendids){
+            return res.status(404).json({
+                error:"No Friends Found!!" 
+            });
+        }
+        else{
+            for(const fid of friendids){
+            
+                const friend = await get({collection:"User",by:"id",id:fid});
+                
+                
+                friends.push(friend);
+            }
+        res.json({
+            friends:friends,
+            error:""
+        })
+    }
+    } catch (error) {
+        return res.status(400).json({
+            error: error.message
+        })
     }
 };

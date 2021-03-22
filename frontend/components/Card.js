@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 
-import { argonTheme } from '../constants';
+import { Images, argonTheme } from '../constants';
 
 
 class Card extends React.Component {
   render() {
-    const { navigation, item, horizontal, full, style, ctaColor, imageStyle } = this.props;
-    
+    const { navigation, item,  horizontal, full, style, ctaColor, imageStyle } = this.props;
+    // console.log(post)
     const imageStyles = [
       full ? styles.fullImage : styles.horizontalImage,
       imageStyle
