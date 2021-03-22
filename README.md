@@ -7,16 +7,21 @@
 1. Backend
 
 ```bash
-$  npm start
+# Install Dependencies
+$ cd backend && npm install
+
+# run the server
+$ npm start
 ```
 
 2. Frontend
 
 ```bash
 # Install Dependencies
-$ cd frontend && yarn install
+$ cd frontend && npm install
 
-# for android
-$ yarn android 
+# run the application
+$ npm start
 ```
 
+**NOTE :** put your machines ip_address as the apiURL in env..js
