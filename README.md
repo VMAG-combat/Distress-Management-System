@@ -24,3 +24,4 @@ $ cd frontend && npm install
 $ npm start
 ```
 
+**NOTE :** put your machines ip_address as the apiURL in env..js
