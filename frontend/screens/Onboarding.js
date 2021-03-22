@@ -17,6 +17,7 @@ import Images from "../constants/Images";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./Login";
+import Otp from "./Otp";
 const Stack = createStackNavigator();
 function  StartStack({navigation}) {
   return (
@@ -57,17 +58,11 @@ function  StartStack({navigation}) {
               style={styles.button}
               color={argonTheme.COLORS.SECONDARY}
               onPress={() => navigation.navigate('Login')}
-              textStyle={{ color: argonTheme.COLORS.BLACK }}
+              textStyle={{ color: argonTheme.COLORS.BLACK, fontSize:18 }}
             >
-              Login
+              Get Started
             </Button>
             
-            <TouchableOpacity
-    style={{ height: 60 }}
-    onPress={()=> navigation.navigate('App') 
-            }>
-              <Text>Skip</Text>
-            </TouchableOpacity>
           </Block>
       </Block>
     </Block>
@@ -83,78 +78,41 @@ function LoginStack({navigation}){
 }
 function RegisterStack({navigation}){
   return(
-    <Register/>
+    <Register navigation={navigation}/>
   );
 }
-
+function OtpStack({navigation,route}){
+  return(
+    <Otp navigation={navigation} route={route}/>
+  );
+}
 class Onboarding extends React.Component {
  
   render() {
     const { navigation } = this.props;
-
     return (
-      // <NavigationContainer>
+      
         <Stack.Navigator initialRouteName="Start"
         screenOptions={{
           headerShown: false
         }}
         >
     <Stack.Screen name='Start' component={StartStack} />
-      <Stack.Screen name='Login' component={LoginStack} />
-      <Stack.Screen name='Register' component={RegisterStack} />
+      <Stack.Screen name='Login' component={LoginStack} 
+      options={
+        {
+          newJWT: this.props.newJWT,
+        }}/>
+      <Stack.Screen name='Register' component={RegisterStack} options={
+        {
+          newJWT: this.props.newJWT,
+        }}/>
+      <Stack.Screen name='Otp' component={OtpStack} options={
+        {
+          newJWT: this.props.newJWT,
+        }} />
     </Stack.Navigator>
-      // </NavigationContainer>
-      // <Block flex style={styles.container}>
-      //   <StatusBar hidden />
-      //   <Block flex center>
-      //   <ImageBackground
-      //       source={Images.Onboarding}
-      //       style={{ height, width, zIndex: 1 }}
-      //     />
-      //   </Block>
-      //   <Block center>
-      //     <Image source={Images.LogoOnboarding} style={styles.logo} />
-      //   </Block>
-      //   <Block flex space="between" style={styles.padded}>
-      //       <Block flex space="around" style={{ zIndex: 2 }}>
-      //         <Block style={styles.title}>
-      //           <Block>
-      //             <Text color="white" size={50}>
-      //               Spreading
-      //             </Text>
-      //           </Block>
-      //           <Block>
-      //             <Text color="white" size={50}>
-      //               Happiness!!!
-      //             </Text>
-      //           </Block>
-      //           <Block style={styles.subTitle}>
-      //             <Text color="white" size={15}>
-      //               Your own distress management system.
-      //             </Text>
-      //           </Block>
-      //         </Block>
-      //         <Block center>
-              
-      //           <Button
-      //             style={styles.button}
-      //             color={argonTheme.COLORS.SECONDARY}
-      //             onPress={() => navigation.navigate('Register')}
-      //             textStyle={{ color: argonTheme.COLORS.BLACK }}
-      //           >
-      //           Register 
-      //           </Button>
-                
-      //           <TouchableOpacity
-      //   style={{ height: 60 }}
-      //   onPress={()=> navigation.navigate('App') 
-      //           }>
-      //             <Text>Skip</Text>
-      //           </TouchableOpacity>
-      //         </Block>
-      //     </Block>
-      //   </Block>
-      // </Block>
+     
     );
   }
 }
