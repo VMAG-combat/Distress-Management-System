@@ -13,7 +13,7 @@ import Onboarding from "../screens/Onboarding";
 import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
-import Elements from "../screens/Elements";
+import Element from "../screens/Element";
 import SocialMedia from "../screens/SocialMedia";
 import BachaoButton from "../components/BachaoButton";
 // drawer
@@ -31,13 +31,14 @@ const Tab = createBottomTabNavigator();
 
 function ElementsStack(props) {
   return (
-    <Stack.Navigator mode="card" headerMode="screen">
+    <Stack.Navigator initialRouteName="Element" mode="card" headerMode="screen">
       <Stack.Screen
-        name="Elements"
-        component={Elements}
+        name="Element"
+        component={Element}
+        initialParams={{'userId':props.route.params.userId}}
         options={{
           header: ({ navigation, scene }) => (
-            <Header title="Elements" navigation={navigation} scene={scene} />
+            <Header title="Events" navigation={navigation} scene={scene} />
           ),
           cardStyle: { backgroundColor: "#F8F9FE" }
         }}
@@ -271,7 +272,7 @@ function AppStack(props) {
       >
         
         <Tab.Screen name="Home" component={HomeStack}/>
-        <Tab.Screen name="Elements" component={ElementsStack}/>
+        <Tab.Screen name="Elements" component={ElementsStack}  initialParams={{'userId':props.route.params.userId}}/>
         {/* <Tab.Screen name="Elemednts"/> */}
         <Tab.Screen name="Bachao" component={bachaoButton} options={{
     tabBarIcon: () => (<BachaoButton/>),
