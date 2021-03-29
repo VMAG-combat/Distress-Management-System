@@ -42,6 +42,7 @@ exports.sendotpForRegister = async (req, res) => {
             });
         }
     } catch (error) {
+        console.log("error in backend")
         return res.status(400).json({error: error});
     } 
 
