@@ -70,6 +70,8 @@ class Login extends React.Component {
             password: password
         })
         .then((response) => {
+          console.log("Login response body \n: "+response.data);
+          console.log("Login otp: "+response.data.otp);
           this.setState({
             isSignIn:true,
             otp: response.data.otp,
