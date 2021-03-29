@@ -11,6 +11,7 @@ import { Block, Text, theme } from "galio-framework";
 //argon
 import { articles, Images, argonTheme } from "../constants";
 import { Card } from "../components";
+import PostCard from '../components/PostCard';
 import axios from 'axios';
 import ENV from '../env.';
 
@@ -59,64 +60,32 @@ class Posts extends React.Component{
                 {message}
               </Text> )
               : (
-                <ScrollView
-                 showsVerticalScrollIndicator={false}
-               >
-            <Block flex style={styles.group}>
-              <Text bold size={16} style={styles.title}>
-                Cards
-              </Text>
-              <Block flex>
-                <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-                  <Card item={articles[0]} horizontal />
-                  <Block flex row>
-                    <Card
-                      item={articles[1]}
-                      style={{ marginRight: theme.SIZES.BASE }}
-                    />
-                    <Card item={articles[2]} />
-                  </Block>
-                  <Card item={articles[4]} full />
-                  <Block flex card shadow style={styles.category}>
-                    <ImageBackground
-                      source={{ uri: Images.Products["View article"] }}
-                      style={[
-                        styles.imageBlock,
-                        { width: width - theme.SIZES.BASE * 2, height: 252 }
-                      ]}
-                      imageStyle={{
-                        width: width - theme.SIZES.BASE * 2,
-                        height: 252
-                      }}
-                    >
-                      <Block style={styles.categoryTitle}>
-                        <Text size={18} bold color={theme.COLORS.WHITE}>
-                          View article
-                        </Text>
-                      </Block>
-                    </ImageBackground>
-                  </Block>
-                </Block>
-                <Block flex style={{ marginTop: theme.SIZES.BASE / 2 }}>
-                  <ScrollView
-                    horizontal={true}
-                    pagingEnabled={true}
-                    decelerationRate={0}
-                    scrollEventThrottle={16}
-                    snapToAlignment="center"
-                    showsHorizontalScrollIndicator={false}
-                    snapToInterval={cardWidth + theme.SIZES.BASE * 0.375}
-                    contentContainerStyle={{
-                      paddingHorizontal: theme.SIZES.BASE / 2
+                <View style={styles.screen} >
+                <FlatList
+                    style={styles.list}
+                    // onRefresh={this.loadPosts}
+                    // refreshing={this.state.isRefreshing}
+                    data={posts}
+                    keyExtractor={(item) => item.id }
+                    ItemSeparatorComponent={() => {
+                        return (
+                            <View style={styles.separator} />
+                        )
                     }}
-                  >
-                  </ScrollView>
-                </Block>
-              </Block>
-                
-            </Block>
-            
-            </ScrollView>
+                    
+                    renderItem={({item, index}) => {
+                        return (
+                            <PostCard 
+                                post={item}
+                               
+                                index={index}
+                               
+                            />
+                        );
+                    }} 
+                />
+    
+          </View>
               )
               }
 

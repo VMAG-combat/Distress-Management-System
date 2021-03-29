@@ -1,8 +1,11 @@
 import React from 'react';
-import {View,StyleSheet,TouchableHighlight,Text,Image,Animated, Button,Dimensions} from 'react-native';
+import {View,StyleSheet,TouchableHighlight,Text,Image,Animated, Button,Dimensions, Linking} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as SMS from 'expo-sms';
+import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
+
 const { width, height } = Dimensions.get('window');
 class BachaoButton extends React.Component{
     constructor(props){
@@ -18,7 +21,7 @@ class BachaoButton extends React.Component{
     buttonSize = new Animated.Value(1);
     mode = new Animated.Value(0);
 
-    handdlePress = () =>{
+    handdlePress = async () =>{
         // e.preventDefault();
 
         
@@ -44,6 +47,13 @@ class BachaoButton extends React.Component{
         })
         if(this.state.count>=2){
         console.log("Bachao");
+        RNImmediatePhoneCall.immediatePhoneCall('+916389701088');
+        // const { result } = await SMS.sendSMSAsync(
+        //     ['6389701088'],
+        //     'My sample HelloWorld message',
+        //   );
+
+        // console.log(result)
         this.setState({
             count: 0,
         })
