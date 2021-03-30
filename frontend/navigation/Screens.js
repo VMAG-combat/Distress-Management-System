@@ -217,6 +217,9 @@ function AppStack(props) {
         tabBarIcon: ({ focused, horizontal, tintColor }) => {
           let IconComponent = Ionicons;
           let iconName;
+          if (route.name === "Map") {
+            iconName = "ios-map";
+          }
           if (route.name === "Home") {
             iconName = "ios-home";
           } else if (route.name === "Elements") {
@@ -256,6 +259,7 @@ function AppStack(props) {
       />
       <Tab.Screen name="SocialMedia" component={SocialMediaStack} initialParams={{ userId: props.route.params.userId }} />
       <Tab.Screen name="Profile" component={ProfileStack} initialParams={{ userId: props.route.params.userId }} />
+      <Tab.Screen name="Map" component={MapStack} initialParams={{ userId: props.route.params.userId }} />
     </Tab.Navigator>
   );
 }
