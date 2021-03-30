@@ -66,12 +66,12 @@ class Header extends React.Component {
           <BellButton key='chat-home' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-home' navigation={navigation} isWhite={white} />
         ]);
-      case 'Deals':
+      case 'Elements':
         return ([
           <BellButton key='chat-categories' navigation={navigation} />,
           <BasketButton key='basket-categories' navigation={navigation} />
         ]);
-      case 'Categories':
+      case 'Articles':
         return ([
           <BellButton key='chat-categories' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-categories' navigation={navigation} isWhite={white} />
@@ -121,16 +121,16 @@ class Header extends React.Component {
   }
   renderOptions = () => {
     const { navigation, optionLeft, optionRight } = this.props;
-
+    // console.log(optionLeft)
     return (
       <Block row style={styles.options}>
-        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
+        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Elements')}>
           <Block row middle>
             <Icon name="diamond" family="ArgonExtra" style={{ paddingRight: 8 }} color={argonTheme.COLORS.ICON} />
             <Text size={16} style={styles.tabTitle}>{optionLeft || 'Beauty'}</Text>
           </Block>
         </Button>
-        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
+        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Profile')}>
           <Block row middle>
             <Icon size={16} name="bag-17" family="ArgonExtra" style={{ paddingRight: 8 }} color={argonTheme.COLORS.ICON}/>
             <Text size={16} style={styles.tabTitle}>{optionRight || 'Fashion'}</Text>
@@ -141,19 +141,27 @@ class Header extends React.Component {
   }
   renderTabs = () => {
     const { tabs, tabIndex, navigation } = this.props;
+    // var tabss = [
+    //   { id: 'popular', title: 'Popular' },
+    //   { id: 'beauty', title: 'Beauty' },
+    //   { id: 'fashion', title: 'Fashion' },
+    //   { id: 'car_motorcycle', title: 'Car & Motorcycle' },
+    // ]
     const defaultTab = tabs && tabs[0] && tabs[0].id;
-    
+    // console.log(defaultTab)
     if (!tabs) return null;
 
     return (
       <Tabs
-        data={tabs || []}
+        data={tabs || [ ]}
         initialIndex={tabIndex || defaultTab}
-        onChange={id => navigation.setParams({ tabId: id })} />
+        onChange={id => navigation.setParams({ tabId: id })} 
+        navigation={this.props.navigation}/>
     )
   }
   renderHeader = () => {
     const { search, options, tabs } = this.props;
+    // console.log(options)
     if (search || tabs || options) {
       return (
         <Block center>
@@ -187,15 +195,15 @@ class Header extends React.Component {
           transparent={transparent}
           right={this.renderRight()}
           rightStyle={{ alignItems: 'center' }}
-          left={
-            <Icon 
-              name={back ? 'chevron-left' : "menu"} family="entypo" 
-              size={20} onPress={this.handleLeftPress} 
-              color={iconColor || (white ? argonTheme.COLORS.WHITE : argonTheme.COLORS.ICON)}
-              style={{ marginTop: 2 }}
-            />
+          // left={
+          //   <Icon 
+          //     name={back ? 'chevron-left' : "menu"} family="entypo" 
+          //     size={20} onPress={this.handleLeftPress} 
+          //     color={iconColor || (white ? argonTheme.COLORS.WHITE : argonTheme.COLORS.ICON)}
+          //     style={{ marginTop: 2 }}
+          //   />
               
-          }
+          // }
           leftStyle={{ paddingVertical: 12, flex: 0.2 }}
           titleStyle={[
             styles.title,
@@ -217,8 +225,9 @@ const styles = StyleSheet.create({
   },
   title: {
     width: '100%',
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: 'bold',
+    
   },
   navbar: {
     paddingVertical: 0,

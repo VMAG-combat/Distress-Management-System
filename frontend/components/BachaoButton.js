@@ -5,24 +5,50 @@ import {useNavigation} from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
 class BachaoButton extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+          count:0,
+          message:''
+        }
+        
+        // console.log(this.state);
+      }
     
     buttonSize = new Animated.Value(1);
     mode = new Animated.Value(0);
 
     handdlePress = () =>{
+        // e.preventDefault();
+
+        
         Animated.sequence([
             Animated.timing(this.buttonSize,{
-                toValue:0.95,
-                duration:100
+                toValue:0.6,
+                duration:100,
+                useNativeDriver:true
             }),
             Animated.timing(this.buttonSize,{
-                toValue:1
+                toValue:1,
+                duration:0,
+                useNativeDriver:true,
             }),
-            Animated.timing(this.mode, {
-                toValue: this.mode._value === 0 ? 1 : 0,
-                duration:300
-            })
+            // Animated.timing(this.mode, {
+            //     toValue: this.mode._value === 0 ? 1 : 0,
+            //     duration:300
+            // })
         ]).start();
+        
+        this.setState({
+            count: this.state.count+1,
+        })
+        if(this.state.count>=2){
+        console.log("Bachao");
+        this.setState({
+            count: 0,
+        })
+
+        }
     };
     render(){
         const {navigation} = this.props;
@@ -62,7 +88,7 @@ class BachaoButton extends React.Component{
 
         return (
             <View style={{position:'absolute',bottom:0.00622*height, alignItems:'center',backgroundColor:'transparent'}}>
-                <Animated.View style={{position:"absolute",left: galleryX, top: galleryY}}>
+                {/* <Animated.View style={{position:"absolute",left: galleryX, top: galleryY}}>
                     <View style={styles.secondary_button}>
                         <TouchableOpacity onPress={() => {this.props.navigation.navigate('Merch')}}>
                         <Ionicons name="ios-pricetags" size={24} color="white" />
@@ -82,12 +108,12 @@ class BachaoButton extends React.Component{
                         <Ionicons name="ios-images" size={24} color="white" />
                         </TouchableOpacity>
                     </View>
-                </Animated.View>
+                </Animated.View> */}
                 <Animated.View style={[styles.button,sizeStyle]}>
                     <TouchableHighlight onPress={this.handdlePress} underlayColor={0}>
-                        <Animated.View style={{backgroundColor:"#aa2fd6",height:0.08094*height,width:0.08094*height,borderRadius:0.08717*height,justifyContent:'center',alignItems:'center',shadowColor:'black',shadowOffset: {width:0.1244*height,height:0.1244*height},shadowOpacity: 1}}>
+                        <Animated.View style={{backgroundColor:"#aa2fd6",height:0.1094*height,width:0.1094*height,borderRadius:0.08717*height,justifyContent:'center',alignItems:'center',shadowColor:'black',shadowOffset: {width:0.1244*height,height:0.1244*height},shadowOpacity: 1}}>
                             <Image
-                            style={{position:'relative',height:0.08094*height,width:0.08094*height,borderRadius:0.08717*height,borderWidth:1,borderColor: 'white',shadowColor:'black',shadowOffset: {width:0.1244*height,height:0.1244*height},shadowOpacity: 1}}
+                            style={{position:'relative',height:0.1094*height,width:0.1094*height,borderRadius:0.08717*height,borderWidth:1,borderColor: 'white',shadowColor:'black',shadowOffset: {width:0.1244*height,height:0.1244*height},shadowOpacity: 1}}
                             source={require('../assets/icon.png')}
                             />
                         </Animated.View>

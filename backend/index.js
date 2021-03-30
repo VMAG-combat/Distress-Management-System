@@ -20,10 +20,12 @@ app.use(cors());
 const authRoutes = require('./routes/auth.js');
 const userRoutes = require('./routes/user.js');
 const incidentRoutes = require('./routes/incident.js');
+const socialRoutes = require('./routes/social/post.js');
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/incident', incidentRoutes);
+app.use('/social', socialRoutes);
 
 app.use("/crud/",require("./routes/basicCrud"));
 

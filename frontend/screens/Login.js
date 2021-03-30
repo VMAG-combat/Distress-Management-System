@@ -3,12 +3,15 @@ import React, { useState } from 'react'
 
 import { TouchableOpacity, StyleSheet, View, Dimensions, ImageBackground,Alert } from 'react-native'
 import {Text, theme, Block} from 'galio-framework'
+import { showMessage } from "react-native-flash-message";
 
 
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import {Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
+import ENV from '../env.';
+import axios from 'axios';
 
 
 const { width, height } = Dimensions.get("screen");
@@ -20,61 +23,89 @@ class Login extends React.Component {
         super(props);
         this.state = {
           email: "",
-          password: ""
+          password: "",
+          error:"",
+          isSignIn: false,
+          otp:''
         };
-        // this.onLoginPressed = this.onLoginPressed.bind(this);
-        // this.handleChange = this.handleChange.bind(this);
+        this.loginUser = this.loginUser.bind(this);
+    this.onLoginFail = this.onLoginFail.bind(this);
+      }
+
+
+      loginUser() {
+        const { email, password } = this.state;
+    
+        const emailError = emailValidator(email)
+        const passwordError = passwordValidator(password)
+        this.setState({ error: '' });
+    
+        if (emailError || passwordError) {
+          this.setState({...this.state.email,...this.state.password, emailError,passwordError})
+  
+     
+        return(
+            // Alert.alert(
+            //     "Error!!!",
+            //     emailError +"\n"+passwordError,
+            //     [
+            //       {
+            //           text: 'Ok',
+            //           onPress: () => console.log('Cancel Pressed'),
+            //           style: 'cancel'
+            //         },
+            //     ]
+            // )
+            showMessage({
+              message: "Please Enter Valid Email and Password!",
+              type: "danger",
+              icon: { icon: "danger", position: 'left' },
+              duration: 3000
+          })
+        );
+      }
+       else{ 
+        axios.post(`${ENV.apiUrl}/auth/sendotpForLogin`,{
+            email: email,
+            password: password
+        })
+        .then((response) => {
+          this.setState({
+            isSignIn:true,
+            otp: response.data.otp,
+            email: "",
+            password:"",
+            error:""
+          })
+          this.props.navigation.navigate('Otp',{otp: this.state.otp, isSignIn:this.state.isSignIn , email:email, password:password});
+          showMessage({
+            message: "Authenticated!! Please Enter the OTP sent to your mobile number",
+            type: "success",
+            icon: { icon: "success", position: 'left' },
+            duration: 3000
+        })
+        })
+        .catch((error) => {
+          console.log(error);
+          this.onLoginFail();
+        });
+      }
+    }
+    
+      onLoginFail() {
+        this.setState({
+          error: 'Login Failed',
+          isSignIn: false
+        });
+        showMessage({
+          message: "Login Failed! Email and Password do not match.",
+          type: "danger",
+          icon: { icon: "danger", position: 'left' },
+          duration: 3000
+      })
       }
     render(){
-        const {navigation} = this.props; 
-        // console.log(this.props.navigation.navigate);
-    // const [email, setEmail] = useState({ value: '', error: '' })
-    // const [password, setPassword] = useState({ value: '', error: '' })
-  
-    // const onLoginPressed = () => {
-    //   const emailError = emailValidator(email.value)
-    //   const passwordError = passwordValidator(password.value)
-    //   if (emailError || passwordError) {
-    //     setEmail({ ...email, error: emailError })
-    //     setPassword({ ...password, error: passwordError })
-    //     return
-    //   }
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [{ name: 'Dashboard' }],
-    //   })
-    // }
-
-    const onLoginPressed=()=>{
-        
-        const emailError = emailValidator(this.state.email)
-        const passwordError = passwordValidator(this.state.password)
-        console.log(this.state)
-        
-        if (emailError || passwordError) {
-            this.setState({...this.state.email,...this.state.password, emailError,passwordError})
-    
-       
-          return(
-              Alert.alert(
-                  "Error!!!",
-                  emailError +"\n"+passwordError,
-                  [
-                    {
-                        text: 'Ok',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel'
-                      },
-                  ]
-              )
-          );
-        }
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'App' }],
-          })
-        }
-      
+        const {navigation} = this.props;
 
     return (
         <Block flex middle>
@@ -87,8 +118,9 @@ class Login extends React.Component {
           <Text color="white" size={32} style={{margin: 40, alignItems: 'center'}}>Welcome back</Text>
           <Block width={width * 0.8} style={{ marginBottom: 15 }}>
                       <Input
+                      autoFocus
                         borderless
-                        type='text'
+                        keyboardType="email-address"
                         name="email"
                         placeholder="Email"
                         onChangeText={(text) => this.setState({email: text,error: ''})}
@@ -129,39 +161,11 @@ class Login extends React.Component {
                         </Text>
                       </Block> */}
                     </Block>
-            
-          {/* <TextInput
-            label="Email"
-            returnKeyType="next"
-            value={email.value}
-            onChangeText={(text) => setEmail({ value: text, error: '' })}
-            error={!!email.error}
-            errorText={email.error}
-            autoCapitalize="none"
-            autoCompleteType="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-          /> */}
-          {/* <TextInput
-            label="Password"
-            returnKeyType="done"
-            value={password.value}
-            onChangeText={(text) => setPassword({ value: text, error: '' })}
-            error={!!password.error}
-            errorText={password.error}
-            secureTextEntry
-          /> */}
-          {/* <View style={styles.forgotPassword}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ForgotPasswordScreen')}
-            >
-              <Text style={styles.forgot}>Forgot your password?</Text>
-            </TouchableOpacity>
-          </View> */}
+        
           <Block middle width={width*0.8}>
-          <Button color='primary' style={{width: width*0.8, marginTop: 50}} mode="contained" onPress={onLoginPressed}>
+          <Button color='primary' style={{width: width*0.8, marginTop: 50}} mode="contained" onPress={this.loginUser}>
           <Text bold size={18} color={argonTheme.COLORS.WHITE}>
-                          Get Started
+                          Authenticate
                         </Text>
           </Button>
           </Block>
