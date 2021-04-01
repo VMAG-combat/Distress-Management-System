@@ -17,8 +17,8 @@ import axios from "axios";
 import ENV from "../env.";
 import deviceStorage from "../services/deviceStorage.js";
 import OTPTextInput from "react-native-otp-textinput";
-import { Restart } from "fiction-expo-restart";
 
+import RNRestart from "react-native-restart";
 class Otp extends React.Component {
   constructor(props) {
     super(props);
@@ -100,9 +100,9 @@ class Otp extends React.Component {
             icon: { icon: "success", position: "left" },
             duration: 3000,
           });
-          navigation.navigate("App");
+          // navigation.navigate("App");
           // delay(3000);
-          // Restart();
+          RNRestart.Restart();
         }
       } else {
         return showMessage({

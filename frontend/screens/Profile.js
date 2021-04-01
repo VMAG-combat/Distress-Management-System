@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Dimensions, ScrollView, Image, ImageBackground, Platform } from "react-native";
 import { Block, Text, theme } from "galio-framework";
-import { Restart } from "fiction-expo-restart";
+import RNRestart from "react-native-restart";
 
 import { Button } from "../components";
 import { Images, argonTheme } from "../constants";
@@ -54,7 +54,7 @@ class Profile extends React.Component {
     // console.log(this.deleteJWT);
     const handleLogout = () => {
       this.deleteJWT();
-      Restart();
+      RNRestart.Restart();
     };
 
     return (

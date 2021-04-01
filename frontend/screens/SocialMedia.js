@@ -386,17 +386,24 @@ function PostTab({ navigation, route }) {
   return <Posts navigation={navigation} route={route} />;
 }
 class SocialMedia extends React.Component {
+  state = {};
   render() {
     deviceStorage.getId().then((userId) => {
-      return (
-        <Tab.Navigator>
-          <Tab.Screen name="Posts" component={PostTab} initialParams={{ userId: userId }} />
-          <Tab.Screen name="Friends" component={FriendTab} initialParams={{ userId: userId }} />
-          <Tab.Screen name="My Feeds" component={MyFeedTab} initialParams={{ userId: userId }} />
-          {/* <Tab.Screen name="My Feeds" component={this.renderProduct} /> */}
-        </Tab.Navigator>
-      );
+      this.setState({ id: userId });
     });
+
+    return (
+      <>
+        {this.state.id ? (
+          <Tab.Navigator>
+            <Tab.Screen name="Posts" component={PostTab} initialParams={{ userId: this.state.id }} />
+            <Tab.Screen name="Friends" component={FriendTab} initialParams={{ userId: this.state.id }} />
+            <Tab.Screen name="My Feeds" component={MyFeedTab} initialParams={{ userId: this.state.id }} />
+            {/* <Tab.Screen name="My Feeds" component={this.renderProduct} /> */}
+          </Tab.Navigator>
+        ) : null}
+      </>
+    );
   }
 }
 
