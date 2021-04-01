@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "_internal": {
+      "isDebug": false,
+      "projectRoot": "C:\\Users\\aknar\\Documents\\sem6\\Distress-Mangement-System\\frontend",
+      "dynamicConfigPath": null,
+      "staticConfigPath": null,
+      "packageJsonPath": "C:\\Users\\aknar\\Documents\\sem6\\Distress-Mangement-System\\frontend\\package.json"
+    },
+    "name": "frontend",
+    "slug": "frontend",
+    "version": "1.0.0",
+    "sdkVersion": "40.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.bachaao"
+    }
+  }
+}
