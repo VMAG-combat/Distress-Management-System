@@ -1,5 +1,7 @@
 const admin = require("firebase-admin");
-module.exports = async (obj = { collection: "string", by: "string", id: "string", where: [{ parameter: "string", comparison: "comparison operator", value: any }] }) => {
+module.exports = async (
+  obj = { collection: "string", by: "string", id: "string", where: [{ parameter: "string", comparison: "comparison operator", value: any }] }
+) => {
   if (typeof obj !== "object") {
     throw new Error("Argument should be of type 'object'");
   }
@@ -27,14 +29,14 @@ module.exports = async (obj = { collection: "string", by: "string", id: "string"
     obj.where.map((c, i) => {
       if (
         !c.comparison ||
-        typeof c.comparison !== "string" ||
-        c.comparison === "" ||
+        // typeof c.comparison !== "string" ||
+        // c.comparison === "" ||
         !c.parameter ||
-        typeof c.parameter !== "string" ||
-        c.parameter === "" ||
-        !c.value ||
-        typeof c.value !== "string" ||
-        c.value === ""
+        // typeof c.parameter !== "string" ||
+        // c.parameter === "" ||
+        !c.value
+        // typeof c.value !== "string" ||
+        // c.value === ""
       ) {
         throw new Error("Each element of 'where' must be an object have 'parameter', 'comparison' and 'value' properties");
       }

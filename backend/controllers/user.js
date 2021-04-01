@@ -1,6 +1,52 @@
 const update = require("../crud/update.js");
 const get = require("../crud/get.js");
 
+exports.getNearestUsers = async (req, res) => {
+  try {
+    const { latitude, longitude } = req.body;
+    console.log(req.body);
+    var users = await get({
+      collection: "User",
+      by: "where",
+      where: [
+        { parameter: "latitude", value: latitude + 0.05, comparison: "<=" },
+        { parameter: "latitude", value: latitude - 0.05, comparison: ">=" },
+      ],
+    });
+    var users2 = await get({
+      collection: "User",
+      by: "where",
+      where: [
+        { parameter: "longitude", value: longitude + 0.05, comparison: "<=" },
+        { parameter: "longitude", value: longitude - 0.05, comparison: ">=" },
+      ],
+    });
+    // users = Array(users);
+
+    users = users.filter((user) => {
+      console.log(user.id, req.body.userid);
+      if (user.id === req.body.userid) {
+        return false;
+      }
+      for (var i = 0; i < users2.length; i++) {
+        // }
+        // users2.map(user2=>{
+
+        if (user.id === users2[i].id) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    // console.log(users);
+    return res.send({ users: users });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.toString());
+  }
+};
+
 exports.editprofile = async (req, res) => {
   const user = req.body;
   //module.exports = async (obj = { collection: "string", data: {}, id: "string" }) => {
@@ -42,14 +88,14 @@ exports.getprofile = async (req, res) => {
 exports.updatelocation = async (req, res) => {
   // req.body should have {userid, latitude, longitude}
   var newuser = req.body;
-  console.log(newuser);
+  // console.log(newuser);
   try {
     var user = await get({ collection: "User", by: "id", id: newuser.userid });
-    console.log(user);
+    // console.log(user);
     user.longitude = newuser.longitude;
     user.latitude = newuser.latitude;
     var id = await update({ collection: "User", data: user, id: user.id });
-    console.log("User Location Updated Successfully");
+    console.log("User Location Updated Successfully", new Date().toLocaleTimeString());
     res.json({
       message: "",
       userid: user.id,

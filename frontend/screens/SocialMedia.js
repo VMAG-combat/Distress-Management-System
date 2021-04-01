@@ -83,7 +83,7 @@
 // //     }).catch((error) => {
 // //       this.setState({
 // //         message: error.response.data.error,
-        
+
 // //       });
 // //     });
 // //   }
@@ -131,7 +131,6 @@
 
 //   // renderCards(props){
 //   //   const message = props.route.params.message
-
 
 //   //   return (
 //   //     <Block flex center>
@@ -202,7 +201,7 @@
 //   //     </ScrollView>
 //   //       )
 //   //       }
-         
+
 //   //     </Block>
 //   //   );
 //   // };
@@ -223,7 +222,7 @@
 // //       // }).catch((error) => {
 // //       //   this.setState({
 // //       //     message: error.response.data.error,
-          
+
 // //       //   });
 // //       //   console.log(this.state.message)
 // //       // });
@@ -272,10 +271,10 @@
 // //   };
 
 //   render() {
-    
+
 //     const {message,posts,friends} = this.state;
 //     console.log(this.props.route.params.userId)
-    
+
 //     return (
 //        <Tab.Navigator>
 //       <Tab.Screen name="Posts" component={PostTab} initialParams={{'userId':this.props.route}}/>
@@ -345,71 +344,60 @@
 // export default SocialMedia;
 
 import React from "react";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Posts from './Posts';
-import Friends from './Friends';
-import MyFeed from './MyFeed';
-import CreatePost from './CreatePost';
-
+import Posts from "./Posts";
+import Friends from "./Friends";
+import MyFeed from "./MyFeed";
+import CreatePost from "./CreatePost";
+import deviceStorage from "../services/deviceStorage";
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
-function FeedStack({navigation, route}){
-  console.log(navigation)
-  return(
-    <MyFeed navigation={navigation} route={route}/>
-  )
+function FeedStack({ navigation, route }) {
+  console.log(navigation);
+  return <MyFeed navigation={navigation} route={route} />;
 }
-function CreatePostStack({navigation, route}){
-  return(
-    <CreatePost navigation={navigation} route={route}/>
-  )
+function CreatePostStack({ navigation, route }) {
+  return <CreatePost navigation={navigation} route={route} />;
 }
-function MyFeedTab({navigation, route}){
+function MyFeedTab({ navigation, route }) {
   // console.log()
-   return (
-    <Stack.Navigator initialRouteName="MyFeed"
-    screenOptions={{
-      headerShown: false
-    }}
+  return (
+    <Stack.Navigator
+      initialRouteName="MyFeed"
+      screenOptions={{
+        headerShown: false,
+      }}
     >
-<Stack.Screen name='MyFeed' component={FeedStack} initialParams={{'navigation':navigation, 'route':route}} />
-  <Stack.Screen name='CreatePost' component={CreatePostStack} 
-  />
-  
-</Stack.Navigator>
+      <Stack.Screen name="MyFeed" component={FeedStack} initialParams={{ navigation: navigation, route: route }} />
+      <Stack.Screen name="CreatePost" component={CreatePostStack} />
+    </Stack.Navigator>
     // <Posts navigation={navigation} route={route}/>
   );
 }
-function FriendTab({navigation, route}){
+function FriendTab({ navigation, route }) {
   // console.log(route)
-   return (
-    <Friends navigation={navigation} route={route}/>
-  );
+  return <Friends navigation={navigation} route={route} />;
 }
-function PostTab({navigation, route}){
+function PostTab({ navigation, route }) {
   // console.log(route)
-   return (
-    <Posts navigation={navigation} route={route}/>
-  );
+  return <Posts navigation={navigation} route={route} />;
 }
 class SocialMedia extends React.Component {
-
   render() {
-     const userId = this.props.route.params.userId;
-     
-    return (
-       <Tab.Navigator>
-      <Tab.Screen name="Posts" component={PostTab} initialParams={{'userId':userId}}/>
-      <Tab.Screen name="Friends" component={FriendTab} initialParams={{'userId':userId}}/>
-      <Tab.Screen name="My Feeds" component={MyFeedTab} initialParams={{'userId':userId}}/>
-      {/* <Tab.Screen name="My Feeds" component={this.renderProduct} /> */}
-    </Tab.Navigator>
-    );
+    deviceStorage.getId().then((userId) => {
+      return (
+        <Tab.Navigator>
+          <Tab.Screen name="Posts" component={PostTab} initialParams={{ userId: userId }} />
+          <Tab.Screen name="Friends" component={FriendTab} initialParams={{ userId: userId }} />
+          <Tab.Screen name="My Feeds" component={MyFeedTab} initialParams={{ userId: userId }} />
+          {/* <Tab.Screen name="My Feeds" component={this.renderProduct} /> */}
+        </Tab.Navigator>
+      );
+    });
   }
 }
-
 
 export default SocialMedia;

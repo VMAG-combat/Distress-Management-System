@@ -4,33 +4,59 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { StyleSheet, Dimensions, ScrollView } from "react-native";
 import { isLoaded } from "expo-font";
 const { width } = Dimensions.get("screen");
+import Geolocation from "@react-native-community/geolocation";
+import axios from "axios";
+import ENV from "../env.";
+import deviceStorage from "../services/deviceStorage";
 export default class Map extends Component {
   state = { isLoading: true, helpers: [] };
   getHelpers = async () => {
     //code to get helpers from db
     var helpers = [
-      { latitude: 30.21, longitude: 74.3 },
-      { latitude: 30.22, longitude: 74.31 },
+      // { latitude: 30.21, longitude: 74.3 },
+      // { latitude: 30.22, longitude: 74.31 },
     ];
-    this.setState({ helpers });
+    this.setState({ helpers, id: await deviceStorage.getId() });
   };
   componentDidMount() {
-    this.getHelpers();
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        console.log(position.coords.latitude);
-        this.setState({
-          current: { longitude: position.coords.longitude, latitude: position.coords.latitude, isLoading: false },
-          map: { latitudeDelta: 0.1, longitudeDelta: 0.1, longitude: position.coords.longitude, latitude: position.coords.latitude },
-          isLoading: false,
-        });
-        console.log(this.state);
-      },
-      (err) => {
-        console.log(err);
-      },
-      { enableHighAccuracy: true }
-    );
+    this.getHelpers().then(() => {
+      Geolocation.getCurrentPosition(
+        async (position) => {
+          console.log(position.coords.latitude);
+          this.setState({
+            current: { longitude: position.coords.longitude, latitude: position.coords.latitude, isLoading: false },
+            map: { latitudeDelta: 0.1, longitudeDelta: 0.1, longitude: position.coords.longitude, latitude: position.coords.latitude },
+            isLoading: false,
+          });
+          axios
+            .put(`${ENV.apiUrl}/user/updatelocation`, {
+              userid: this.state.id,
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude,
+            })
+            .then((res) => {
+              console.log(res.data);
+            });
+
+          axios
+            .post(`${ENV.apiUrl}/user/getNearestUsers`, {
+              userid: this.state.id,
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude,
+            })
+            .then((res) => {
+              // console.log(res.data);
+              this.setState({ helpers: res.data.users });
+            });
+
+          console.log(this.state);
+        },
+        (err) => {
+          console.log(err);
+        },
+        { enableHighAccuracy: true }
+      );
+    });
   }
   render() {
     return (
@@ -46,7 +72,7 @@ export default class Map extends Component {
           >
             <Marker pinColor="blue" coordinate={{ ...this.state.current }} />
             {this.state.helpers.map((helper) => {
-              return <Marker pinColor="green" coordinate={{ ...helper }} />;
+              return <Marker pinColor="green" coordinate={{ ...helper }} key={helper.id} />;
             })}
           </MapView>
         ) : null}

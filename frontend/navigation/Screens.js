@@ -83,7 +83,6 @@ function SocialMediaStack(props) {
       <Stack.Screen
         name="SocialMedia"
         component={SocialMedia}
-        initialParams={{ userId: props.route.params.userId }}
         options={{
           header: ({ navigation, scene }) => <Header title="Social" navigation={navigation} scene={scene} />,
           cardStyle: { backgroundColor: "#F8F9FE" },
@@ -108,7 +107,6 @@ function ProfileStack(props) {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        initialParams={{ userId: props.route.params.userId }}
         options={{
           header: ({ navigation, scene }) => <Header transparent white title="Profile" navigation={navigation} scene={scene} />,
           cardStyle: { backgroundColor: "#FFFFFF" },
@@ -257,9 +255,9 @@ function AppStack(props) {
           tabBarIcon: () => <BachaoButton />,
         }}
       />
-      <Tab.Screen name="SocialMedia" component={SocialMediaStack} initialParams={{ userId: props.route.params.userId }} />
-      <Tab.Screen name="Profile" component={ProfileStack} initialParams={{ userId: props.route.params.userId }} />
-      <Tab.Screen name="Map" component={MapStack} initialParams={{ userId: props.route.params.userId }} />
+      <Tab.Screen name="SocialMedia" component={SocialMediaStack} />
+      <Tab.Screen name="Profile" component={ProfileStack} />
+      <Tab.Screen name="Map" component={MapStack} />
     </Tab.Navigator>
   );
 }
