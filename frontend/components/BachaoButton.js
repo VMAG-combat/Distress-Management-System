@@ -47,7 +47,7 @@ class BachaoButton extends React.Component{
         })
         if(this.state.count>=2){
         console.log("Bachao");
-        RNImmediatePhoneCall.immediatePhoneCall('+916389701088');
+        // RNImmediatePhoneCall.immediatePhoneCall('+916389701088');
         // const { result } = await SMS.sendSMSAsync(
         //     ['6389701088'],
         //     'My sample HelloWorld message',

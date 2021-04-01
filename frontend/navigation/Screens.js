@@ -230,7 +230,8 @@ function AppStack(props) {
           }
 
           // You can return any component that you like here!
-          return <IconComponent name={iconName} size={25} color={tintColor} />;
+          // console.log(tintColor)
+          return <IconComponent focused={focused} name={iconName} size={25} color={color} />;
         },
       })}
       tabBarOptions={{

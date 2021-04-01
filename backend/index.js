@@ -31,6 +31,6 @@ app.use("/crud/",require("./routes/basicCrud"));
 //app.use("/signup/",require("./routes/authentication/userSignup"));
 //app.use("/signin/",require("./routes/authentication/userSignin"));
 
-app.listen(19000, () => {
+app.listen(80, () => {
   console.log("listening");
 });
