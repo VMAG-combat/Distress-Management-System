@@ -54,7 +54,7 @@ export default class Map extends Component {
         (err) => {
           console.log(err);
         },
-        { enableHighAccuracy: true }
+        { enableHighAccuracy: true, timeout: 20000 }
       );
     });
   }

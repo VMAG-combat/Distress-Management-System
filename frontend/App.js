@@ -59,7 +59,7 @@ class App extends React.Component {
         (err) => {
           console.log("e", err);
         },
-        { enableHighAccuracy: true }
+        { enableHighAccuracy: true, timeout: 20000 }
       );
     // }, 5000);
   };
