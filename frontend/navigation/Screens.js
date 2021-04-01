@@ -13,7 +13,7 @@ import Onboarding from "../screens/Onboarding";
 import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
-import Elements from "../screens/Elements";
+import Element from "../screens/Element";
 import SocialMedia from "../screens/SocialMedia";
 import BachaoButton from "../components/BachaoButton";
 // drawer
@@ -32,13 +32,14 @@ const Tab = createBottomTabNavigator();
 
 function ElementsStack(props) {
   return (
-    <Stack.Navigator mode="card" headerMode="screen">
+    <Stack.Navigator initialRouteName="Element" mode="card" headerMode="screen">
       <Stack.Screen
-        name="Elements"
-        component={Elements}
-        options={{
-          header: ({ navigation, scene }) => <Header title="Elements" navigation={navigation} scene={scene} />,
-          cardStyle: { backgroundColor: "#F8F9FE" },
+        name="Element"
+        component={Element}
+          header: ({ navigation, scene }) => (
+            <Header title="Events" navigation={navigation} scene={scene} />
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" }
         }}
       />
       <Stack.Screen

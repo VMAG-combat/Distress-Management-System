@@ -151,7 +151,7 @@ class Register extends React.Component {
             throw new Error(resData.error);
         }
           else{
-            console.log(resData.otp)
+            console.log("otp: "+resData.otp)
             this.setState({
               isSignup:true,
               otp: resData.otp,
