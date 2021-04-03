@@ -70,7 +70,7 @@ class Profile extends React.Component {
                   <Block row space="between">
                     <Block middle>
                       <Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
-                        2K
+                        {/* {user.posts.length} */}2K
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Posts
@@ -78,7 +78,7 @@ class Profile extends React.Component {
                     </Block>
                     <Block middle>
                       <Text bold color="#525F7F" size={18} style={{ marginBottom: 4 }}>
-                        10
+                        {/* {user.friends.length} */}10
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Friends

@@ -13,10 +13,11 @@ export default class Map extends Component {
   getHelpers = async () => {
     //code to get helpers from db
     var helpers = [
-      // { latitude: 30.21, longitude: 74.3 },
-      // { latitude: 30.22, longitude: 74.31 },
+      { latitude: 30.21, longitude: 74.3, id:1 },
+      { latitude: 30.22, longitude: 74.31 , id:2},
     ];
-    this.setState({ helpers, id: await deviceStorage.getId() });
+    
+    this.setState({helpers, id: await deviceStorage.getId() });
   };
   componentDidMount() {
     this.getHelpers().then(() => {
@@ -28,6 +29,8 @@ export default class Map extends Component {
             map: { latitudeDelta: 0.1, longitudeDelta: 0.1, longitude: position.coords.longitude, latitude: position.coords.latitude },
             isLoading: false,
           });
+          deviceStorage.saveKey("longitude", position.coords.longitude.toString())
+          deviceStorage.saveKey("latitude", position.coords.latitude.toString())
           axios
             .put(`${ENV.apiUrl}/user/updatelocation`, {
               userid: this.state.id,
@@ -35,26 +38,27 @@ export default class Map extends Component {
               latitude: position.coords.latitude,
             })
             .then((res) => {
+              console.log("kl")
               console.log(res.data);
             });
 
           axios
-            .post(`${ENV.apiUrl}/user/getNearestUsers`, {
-              userid: this.state.id,
-              longitude: position.coords.longitude,
-              latitude: position.coords.latitude,
-            })
+            .get(`${ENV.apiUrl}/user/getNearestUsers/`+this.state.id+"/"+position.coords.longitude+"/"+position.coords.latitude
+            //  {
+            //   userid: this.state.id,
+            //   longitude: position.coords.longitude,
+            //   latitude: position.coords.latitude,
+            // }
+            )
             .then((res) => {
-              // console.log(res.data);
               this.setState({ helpers: res.data.users });
             });
-
           console.log(this.state);
         },
         (err) => {
           console.log(err);
         },
-        { enableHighAccuracy: true, timeout: 20000 }
+        { enableHighAccuracy: false, timeout: 20000 }
       );
     });
   }

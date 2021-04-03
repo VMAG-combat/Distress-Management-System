@@ -162,7 +162,8 @@ const PostCard = (props) => {
                                     name="md-thumbs-up"
                                     size={24}
                                     style={{ marginRight: 5 }}
-                                    color={checkLike() ? 'blue' : "black"}
+                                    color="black"
+                                    // color={checkLike() ? 'blue' : "black"}
                                 />
                                 <Text style={styles.socialBarLabel}> {post.likes.length} </Text>
                             </TouchableOpacity>
@@ -188,7 +189,7 @@ const PostCard = (props) => {
                     onPress={() => navigation.navigate('Comments', { postId: post.id, userId: userId })}
                 >
                 </TouchableOpacity>
-                {/* { post.postedBy._id === userId && ( */}
+                { post.userId === userId && (
                     <View style={styles.postActions} >
                         <View style={styles.socialBarSection}>
                             <TouchableOpacity 
@@ -220,7 +221,7 @@ const PostCard = (props) => {
                         </View>
                     </View>
                 
-
+                )}
             </View>
     
         </TouchableComp>

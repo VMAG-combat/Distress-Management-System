@@ -13,7 +13,8 @@ import BackgroundTask from "react-native-background-task";
 // import KeyEvent from "react-native-keyevent";
 BackgroundTask.define(() => {
   console.log("scheduling background task");
-  App.updateLocation();
+  var app = new App();
+  app.updateLocation();
   BackgroundTask.finish();
 });
 
@@ -41,11 +42,14 @@ class App extends React.Component {
     BackgroundTask.schedule();
   }
   updateLocation = () => {
-    console.log(this.state);
+    // console.log(this.state);
     // this.inter = setInterval(() => {
     if (this.state.id && this.state.id !== "")
       Geolocation.getCurrentPosition(
         (position) => {
+          console.log(position.coords.longitude)
+          deviceStorage.saveKey("longitude", position.coords.longitude.toString())
+          deviceStorage.saveKey("latitude", position.coords.latitude.toString())
           axios
             .put(`${ENV.apiUrl}/user/updatelocation`, {
               userid: this.state.id,
@@ -59,7 +63,7 @@ class App extends React.Component {
         (err) => {
           console.log("e", err);
         },
-        { enableHighAccuracy: true, timeout: 20000 }
+        { enableHighAccuracy: false, timeout: 20000 }
       );
     // }, 5000);
   };
@@ -68,9 +72,9 @@ class App extends React.Component {
       jwt: jwt,
     });
   }
-  componentWillUnmount() {
-    // clearTimeout(this.inter);
-  }
+  // componentWillUnmount() {
+  //   // clearTimeout(this.inter);
+  // }
   render() {
     return (
       <NavigationContainer>

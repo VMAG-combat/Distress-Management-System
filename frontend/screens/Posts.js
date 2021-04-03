@@ -3,7 +3,9 @@ import {
   ScrollView,
   StyleSheet,
   ImageBackground,
-  Dimensions
+  Dimensions,
+  View,
+  FlatList
 } from "react-native";
 //galio
 import { Block, Text, theme } from "galio-framework";
@@ -25,29 +27,71 @@ class Posts extends React.Component{
         this.state = {
           userId:'',
           posts:'',
-          message:''
+          message:'',
+          isRefreshing: false
         }
     }
 
     componentDidMount(){
       
+        // axios({
+        //   method: 'GET',
+        //   url: `${ENV.apiUrl}/social/getposts/`+this.props.route.params.userId,
+        // }).then((response) => {
+
+        //   this.setState({
+        //     posts: response.data.posts,
+        //     message: response.data.error
+        //   });
+        // }).catch((error) => {
+        //   this.setState({
+        //     message: error.response.data.error,
+            
+        //   });
+        // });
+        this.loadPosts();
+
+        
+      }
+      loadPosts = () =>{
+        this.setState({
+          isRefreshing: true
+        })
+        console.log(this.props)
         axios({
           method: 'GET',
           url: `${ENV.apiUrl}/social/getposts/`+this.props.route.params.userId,
         }).then((response) => {
+
           this.setState({
             posts: response.data.posts,
-            message: response.data.error
+            message: response.data.error,
+            isRefreshing: false,
           });
         }).catch((error) => {
           this.setState({
             message: error.response.data.error,
+            isRefreshing: false,
             
           });
         });
-
-        
-      }
+          // axios({
+          //     method: 'GET',
+          //     url: `${ENV.apiUrl}/social/myposts/`+this.props.route.params.route.params.userId,
+          //   }).then((response) => {
+          //     // console.log(response.data.posts)
+          //     this.setState({
+          //       posts: response.data.posts,
+          //       message: response.data.error,
+          //       isRefreshing: false,
+          //     });
+          //   }).catch((error) => {
+          //     this.setState({
+          //       message: error.response.data.error,
+          //       isRefreshing: false,
+          //     });
+          //   });
+        }
     render(){
         
         const {posts,message} = this.state;
@@ -56,19 +100,20 @@ class Posts extends React.Component{
         return (
             <Block flex center>
               {
-               (!posts) ?( <Text bold size={16} style={styles.title}>
-                {message}
+               ((!posts) || (posts.length ==0)) ?( <Text bold size={16} style={styles.title}>
+                No Posts Available
               </Text> )
               : (
                 <View style={styles.screen} >
                 <FlatList
                     style={styles.list}
-                    // onRefresh={this.loadPosts}
-                    // refreshing={this.state.isRefreshing}
+                    onRefresh={this.loadPosts}
+                    refreshing={this.state.isRefreshing}
                     data={posts}
                     keyExtractor={(item) => item.id }
                     ItemSeparatorComponent={() => {
                         return (
+                          // <></>
                             <View style={styles.separator} />
                         )
                     }}
@@ -157,6 +202,24 @@ const styles = StyleSheet.create({
       bottom: 0,
       backgroundColor: argonTheme.COLORS.BUTTON_COLOR
     },
+    screen: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'white'
+  },
+  centered: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+  },
+  list: {
+      width:  width,
+    
+  },
+  separator: {
+      // marginTop: 10,
+  },
   });
 
   

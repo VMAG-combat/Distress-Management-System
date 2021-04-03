@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.reactnativerestart.RestartPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;

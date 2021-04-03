@@ -2,9 +2,14 @@ const update = require("../crud/update.js");
 const get = require("../crud/get.js");
 
 exports.getNearestUsers = async (req, res) => {
+  // const {userid, latitude, longitude } = req.params;
+  console.log(req.params)
+  const userid = req.params.userid;
+  const latitude = req.params.latitude;
+  const longitude = req.params.longitude;
   try {
-    const { latitude, longitude } = req.body;
-    console.log(req.body);
+    
+    // console.log(req.body);
     var users = await get({
       collection: "User",
       by: "where",
@@ -23,9 +28,10 @@ exports.getNearestUsers = async (req, res) => {
     });
     // users = Array(users);
 
+    
     users = users.filter((user) => {
-      console.log(user.id, req.body.userid);
-      if (user.id === req.body.userid) {
+      console.log(user.id, userid);
+      if (user.id === userid) {
         return false;
       }
       for (var i = 0; i < users2.length; i++) {
@@ -40,10 +46,10 @@ exports.getNearestUsers = async (req, res) => {
     });
 
     // console.log(users);
-    return res.send({ users: users });
+    return res.json({ users: users });
   } catch (err) {
     console.log(err);
-    res.status(500).send(err.toString());
+    res.status(500).json(err.toString());
   }
 };
 
@@ -178,3 +184,29 @@ exports.getFriends = async (req, res) => {
     });
   }
 };
+
+exports.getFollowUsers = async (req,res) => {
+  var userid = req.params.userid;
+  // console.log(userid)
+  try {
+    var user = await get({ collection: "User", by: "id", id: userid });
+    console.log(user);
+    var friendids = user.friends;
+    var allusers = await get({collection: "User", by:"where", where:[{parameter:"id", comparison:"!=",value:userid}]})
+    // console.log(users)
+    followlist = []
+    for(const u of allusers){
+      if(!friendids.includes(u.id))
+      followlist.push(u)
+    }
+    
+    res.json({
+      users: followlist,
+      error: ""
+    })
+  } catch (error) {
+    return res.status(404).json({
+      error: error.message,
+    });
+  }
+}

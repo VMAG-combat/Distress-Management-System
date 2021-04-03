@@ -68,11 +68,12 @@ exports.getPosts = async (req,res) => {
         // console.log(friendids)
         for(const fid of friendids){
             
-            const posts = await get({collection:"Post",by:"where",where:[{parameter:"userid", comparison:"==",value:fid}]});
-            
+            const posts = await get({collection:"Post",by:"where",where:[{parameter:"userId", comparison:"==",value:fid}]});
+            console.log(fid)
             for(const post of posts)
             allposts.push(post);
         }
+        console.log(allposts)
         
         if(!allposts){
             return res.status(404).json({
