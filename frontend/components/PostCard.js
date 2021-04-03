@@ -189,7 +189,7 @@ const PostCard = (props) => {
                     onPress={() => navigation.navigate('Comments', { postId: post.id, userId: userId })}
                 >
                 </TouchableOpacity>
-                { post.userId === userId && (
+                { post.userId === userId ? (
                     <View style={styles.postActions} >
                         <View style={styles.socialBarSection}>
                             <TouchableOpacity 
@@ -221,7 +221,7 @@ const PostCard = (props) => {
                         </View>
                     </View>
                 
-                )}
+                ):null}
             </View>
     
         </TouchableComp>

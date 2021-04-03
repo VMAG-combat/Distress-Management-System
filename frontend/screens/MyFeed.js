@@ -120,7 +120,7 @@ class MyFeed extends React.Component{
                             post={item}
                            
                             index={index}
-                           
+                            userId={this.props.route.params.route.params.userId}
                         />
                     );
                 }} 
