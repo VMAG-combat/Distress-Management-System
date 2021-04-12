@@ -36,9 +36,10 @@ function ElementsStack(props) {
       <Stack.Screen
         name="Element"
         component={Element}
-          header: ({ navigation, scene }) => (
+        options={{
+          header: ({ navigation, scene }) => 
             <Header title="Events" navigation={navigation} scene={scene} />
-          ),
+          ,
           cardStyle: { backgroundColor: "#F8F9FE" }
         }}
       />
@@ -213,7 +214,7 @@ function AppStack(props) {
       style={{ flex: 1, flexDirection: "row" }}
       initialRouteName={"Home"}
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        tabBarIcon: ({ focused, horizontal, color }) => {
           let IconComponent = Ionicons;
           let iconName;
           if (route.name === "Map") {
@@ -230,7 +231,8 @@ function AppStack(props) {
           }
 
           // You can return any component that you like here!
-          return <IconComponent name={iconName} size={25} color={tintColor} />;
+          // console.log(tintColor)
+          return <IconComponent focused={focused} name={iconName} size={25} color={color} />;
         },
       })}
       tabBarOptions={{
@@ -238,7 +240,7 @@ function AppStack(props) {
           fontSize: 12,
         },
         showLabel: false,
-        activeTintColor: "red", // active icon color
+        activeTintColor: argonTheme.COLORS.ACTIVE, // active icon color
         inactiveTintColor: "#001f30", // inactive icon color
         style: {
           backgroundColor: "#FDFDFD", // TabBar background
@@ -246,7 +248,8 @@ function AppStack(props) {
         },
       }}
     >
-      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Map" component={MapStack} />
+      {/* <Tab.Screen name="Home" component={HomeStack} /> */}
       <Tab.Screen name="Elements" component={ElementsStack} />
       {/* <Tab.Screen name="Elemednts"/> */}
       <Tab.Screen
@@ -258,7 +261,7 @@ function AppStack(props) {
       />
       <Tab.Screen name="SocialMedia" component={SocialMediaStack} />
       <Tab.Screen name="Profile" component={ProfileStack} />
-      <Tab.Screen name="Map" component={MapStack} />
+      
     </Tab.Navigator>
   );
 }

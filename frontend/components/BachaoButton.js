@@ -1,8 +1,14 @@
 import React from 'react';
-import {View,StyleSheet,TouchableHighlight,Text,Image,Animated, Button,Dimensions} from 'react-native';
+import {View,StyleSheet,TouchableHighlight,Text,Image,Animated, Button,Dimensions, Linking, PermissionsAndroid,Alert} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+// import * as SMS from 'expo-sms';
+// import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
+
+import SmsAndroid from 'react-native-get-sms-android';
+import deviceStorage from '../services/deviceStorage';
+
 const { width, height } = Dimensions.get('window');
 class BachaoButton extends React.Component{
     constructor(props){
@@ -14,11 +20,28 @@ class BachaoButton extends React.Component{
         
         // console.log(this.state);
       }
-    
+    //   async componentDidMount() {
+    //     try {
+    //       let granted = await PermissionsAndroid.request(
+    //         PermissionsAndroid.PERMISSIONS.SEND_SMS, {
+    //           title: 'Send SMS',
+    //           message: 'Need access to send sms',
+    //         },
+    //       );
+    //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    //         console.log('SEND_SMS permissions granted', granted);
+    //       } else {
+    //         Alert.alert('SEND_SMS permissions denied');
+    //         console.log('SEND_SMS permissions denied');
+    //       }
+    //     } catch (err) {
+    //       Alert.alert(err);
+    //     }
+    //   };
     buttonSize = new Animated.Value(1);
     mode = new Animated.Value(0);
 
-    handdlePress = () =>{
+    handdlePress = async () =>{
         // e.preventDefault();
 
         
@@ -44,6 +67,31 @@ class BachaoButton extends React.Component{
         })
         if(this.state.count>=2){
         console.log("Bachao");
+        // RNImmediatePhoneCall.immediatePhoneCall('+916389701088');
+        // const { result } = await SMS.sendSMSAsync(
+        //     ['6389701088'],
+        //     'My sample HelloWorld message',
+        //   );
+        // var phone = ['6389701088','6389701088']
+        console.log(await deviceStorage.loadCoords())
+        deviceStorage.loadCoords().then((coord) => {
+            console.log(coord)
+        var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitute: " +coord[0]+"\nLongitude: "+coord[1];
+        // for(const p of phone){
+        //     console.log(p)
+        SmsAndroid.autoSend(
+            '6389701088',
+            messsage,
+            (fail) => {
+              console.log('Failed with this error: ' + fail);
+            },
+            (success) => {
+              console.log('SMS sent successfully');
+            },
+          );
+        // }
+        })
+        // console.log(result)
         this.setState({
             count: 0,
         })

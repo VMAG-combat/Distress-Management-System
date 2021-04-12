@@ -28,6 +28,19 @@ const deviceStorage = {
       console.log("AsyncStorage Error: " + error.message);
     }
   },
+  async loadCoords(){
+    try{
+      const lat = await AsyncStorage.getItem("latitude");
+      const long = await AsyncStorage.getItem("longitude");
+      console.log("latitude: ", lat)
+      if(lat !== 0 && long !== 0){
+        return [lat,long]
+      }
+      return ""
+    } catch(error){
+      console.log("AsyncStorage Error: " + error.message);
+    }
+  },
   async getId() {
     const token = await AsyncStorage.getItem("id_token");
     if (token !== null) {

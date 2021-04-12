@@ -29,7 +29,7 @@ exports.sendotpForRegister = async (req, res) => {
             var otp = otpGenerator.generate(6, { upperCase: false, specialChars: false , alphabets:false});
             var message = "Your otp for Bachao Account Registration is: "+otp;
             console.log("sending otp "+otp);
-            const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [phone], flash:1})
+            // const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [phone], flash:1})
             // console.log(response);
             res.json({
                 otp: otp,
@@ -49,34 +49,34 @@ exports.sendotpForRegister = async (req, res) => {
 }
 
 // check otp in frontend, if matched call this function 
-exports.register = async (req, res) => {
+// exports.register = async (req, res) => {
 
-    const { name, email, password, phone, address } = req.body;
+//     const { name, email, password, phone, address } = req.body;
 
-    const user = {name: name, email:email, password: password, phone:phone, address:address, bloodGrp:"", weight:"",height:"", identificationMark:"",medicalHistory:"",longitude: "", latitude: "",points:"",incidents:[],helped:[]}
+//     const user = {name: name, email:email, password: password, phone:phone, address:address, bloodGrp:"", weight:"",height:"", identificationMark:"",medicalHistory:"",longitude: "", latitude: "",points:"",incidents:[],helped:[]}
     
-    try {
-        var id = await insert({collection:"User",data:user}) 
-        console.log(process.env.JWT_SIGNIN_KEY)
-        const token = jwt.sign({_id: id}, "swsh23hjddnns", {expiresIn: 300});
-        console.log("successfully registered!");
-        res.cookie("token", token, { maxAge: 300*1000 })
-        res.json({
-            token,
-            user:user,
-            id: id,
-            error:""
-        })
+//     try {
+//         var id = await insert({collection:"User",data:user}) 
+//         console.log(process.env.JWT_SIGNIN_KEY)
+//         const token = jwt.sign({_id: id}, "swsh23hjddnns", {expiresIn: 300});
+//         console.log("successfully registered!");
+//         res.cookie("token", token, { maxAge: 300*1000 })
+//         res.json({
+//             token,
+//             user:user,
+//             id: id,
+//             error:""
+//         })
 
-    } catch (error) {
-        return res.status(400).json({
-            error:error
-        })
-    }
-  } catch (error) {
-    return res.status(400).json({ error: error });
-  }
-};
+//     } catch (error) {
+//         return res.status(400).json({
+//             error:error
+//         })
+//     }
+//   // } catch (error) {
+//   //   return res.status(400).json({ error: error });
+//   // }
+// };
 
 // check otp in frontend, if matched call this function
 exports.register = async (req, res) => {

@@ -351,12 +351,16 @@ import Posts from "./Posts";
 import Friends from "./Friends";
 import MyFeed from "./MyFeed";
 import CreatePost from "./CreatePost";
+import AddFriend from "./AddFriend.js";
 import deviceStorage from "../services/deviceStorage";
+
+import { Icon, Header } from "../components";
+
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 function FeedStack({ navigation, route }) {
-  console.log(navigation);
+  // console.log(navigation);
   return <MyFeed navigation={navigation} route={route} />;
 }
 function CreatePostStack({ navigation, route }) {
@@ -371,15 +375,33 @@ function MyFeedTab({ navigation, route }) {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="MyFeed" component={FeedStack} initialParams={{ navigation: navigation, route: route }} />
+      <Stack.Screen name="MyFeeds" component={FeedStack} initialParams={{ navigation: navigation, route: route }} />
       <Stack.Screen name="CreatePost" component={CreatePostStack} />
     </Stack.Navigator>
     // <Posts navigation={navigation} route={route}/>
   );
 }
-function FriendTab({ navigation, route }) {
+function AddFriendStack({navigation,route}){
+  return <AddFriend navigation={navigation} route={route} />;
+}
+function FriendStack({ navigation, route }) {
   // console.log(route)
   return <Friends navigation={navigation} route={route} />;
+}
+function FriendTab({ navigation, route }) {
+  // console.log()
+  return (
+    <Stack.Navigator
+      initialRouteName="Friends"
+      screenOptions={{
+        headerShown: false,
+      }}      
+    >
+      <Stack.Screen name="Friends" component={FriendStack} initialParams={{ navigation: navigation, route: route }} />
+      <Stack.Screen name="AddFriend" component={AddFriendStack} initialParams={{ navigation: navigation, route: route }} />
+    </Stack.Navigator>
+    // <Posts navigation={navigation} route={route}/>
+  );
 }
 function PostTab({ navigation, route }) {
   // console.log(route)

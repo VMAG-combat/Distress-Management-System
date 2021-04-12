@@ -67,7 +67,7 @@ export const AllEvents = ({userid}) => {
       method: "GET",
       url: `${ENV.apiUrl}/event/getAllEvents/${userid}`,      
     }).then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         if(res.data.error==""){  
           console.log("All Events fetched successfully"); 
           setdata(res.data.events);
@@ -86,7 +86,7 @@ export const AllEvents = ({userid}) => {
       method: "POST",
       url: `${ENV.apiUrl}/event/registerEvent/${userid}/${eventid}`,      
     }).then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         if(res.data.message==""){  
           console.log("Event Registered successfully"); 
           registerAlert("Event Registration Successful! Organiser will contact you for further details. \nOrganiser Email: "+res.data.oemail);

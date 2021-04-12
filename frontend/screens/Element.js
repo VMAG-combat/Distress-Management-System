@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import deviceStorage from "../services/deviceStorage";
 //import { theme } from 'galio-framework';
 
 import { AllEvents } from './AllEvents';
@@ -18,10 +18,14 @@ import { CreateEvent } from './CreateEvent';
 
 export const Elements = (props) => {
   const [chosentab, setChosentab] = useState('tab0');
+  const[userid, setUserid] = useState();
   const colors = ['#A80EC3', '#D3ACDA'];
-  const userid = props.route.params.userId;
+  deviceStorage.getId().then((userId)=>{
+    setUserid(userId)
+  })
+  
   useEffect(() => {
-    console.log("User id is: "+userid); 
+    console.log("User id iss: "+userid); 
   },[userid]);
   return (
     <View style={{ flex: 1 }}>

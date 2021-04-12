@@ -15,6 +15,7 @@ import { argonTheme } from "../constants";
 import PostCard from '../components/PostCard';
 import axios from 'axios';
 import ENV from '../env.';
+import { isLoading } from "expo-font";
 
 const { width } = Dimensions.get("screen");
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -32,6 +33,9 @@ class MyFeed extends React.Component{
         }
     }
 
+    componentDidMount(){
+      this.loadPosts()
+    }
     loadPosts = () =>{
       this.setState({
         isRefreshing: true
@@ -45,12 +49,12 @@ class MyFeed extends React.Component{
             this.setState({
               posts: response.data.posts,
               message: response.data.error,
-              isRefreshing: false
+              isRefreshing: false,
             });
           }).catch((error) => {
             this.setState({
               message: error.response.data.error,
-              isRefreshing: false
+              isRefreshing: false,
             });
           });
       }
@@ -95,8 +99,9 @@ class MyFeed extends React.Component{
         const { navigation } = this.props;
         return (
             <Block flex center>
-
+            
               <View style={styles.screen} >
+                
             <FlatList
                 style={styles.list}
                 onRefresh={this.loadPosts}
@@ -115,12 +120,11 @@ class MyFeed extends React.Component{
                             post={item}
                            
                             index={index}
-                           
+                            userId={this.props.route.params.route.params.userId}
                         />
                     );
                 }} 
-            />
-
+            />  
       </View>
               
             <FAB
@@ -129,7 +133,7 @@ class MyFeed extends React.Component{
                   icon="plus"
                   onPress={() => navigation.navigate("CreatePost", {'userId':this.props.route.params.route.params.userId})}
                 />
-               
+                
             </Block>
           );
     }

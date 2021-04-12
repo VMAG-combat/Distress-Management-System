@@ -3,7 +3,9 @@ import {
   ScrollView,
   StyleSheet,
   ImageBackground,
-  Dimensions
+  Dimensions,
+  View,
+  FlatList
 } from "react-native";
 //galio
 import { Block, Text, theme } from "galio-framework";
@@ -11,6 +13,7 @@ import { Block, Text, theme } from "galio-framework";
 //argon
 import { articles, Images, argonTheme } from "../constants";
 import { Card } from "../components";
+import PostCard from '../components/PostCard';
 import axios from 'axios';
 import ENV from '../env.';
 
@@ -24,29 +27,71 @@ class Posts extends React.Component{
         this.state = {
           userId:'',
           posts:'',
-          message:''
+          message:'',
+          isRefreshing: false
         }
     }
 
     componentDidMount(){
       
+        // axios({
+        //   method: 'GET',
+        //   url: `${ENV.apiUrl}/social/getposts/`+this.props.route.params.userId,
+        // }).then((response) => {
+
+        //   this.setState({
+        //     posts: response.data.posts,
+        //     message: response.data.error
+        //   });
+        // }).catch((error) => {
+        //   this.setState({
+        //     message: error.response.data.error,
+            
+        //   });
+        // });
+        this.loadPosts();
+
+        
+      }
+      loadPosts = () =>{
+        this.setState({
+          isRefreshing: true
+        })
+        console.log(this.props)
         axios({
           method: 'GET',
           url: `${ENV.apiUrl}/social/getposts/`+this.props.route.params.userId,
         }).then((response) => {
+
           this.setState({
             posts: response.data.posts,
-            message: response.data.error
+            message: response.data.error,
+            isRefreshing: false,
           });
         }).catch((error) => {
           this.setState({
             message: error.response.data.error,
+            isRefreshing: false,
             
           });
         });
-
-        
-      }
+          // axios({
+          //     method: 'GET',
+          //     url: `${ENV.apiUrl}/social/myposts/`+this.props.route.params.route.params.userId,
+          //   }).then((response) => {
+          //     // console.log(response.data.posts)
+          //     this.setState({
+          //       posts: response.data.posts,
+          //       message: response.data.error,
+          //       isRefreshing: false,
+          //     });
+          //   }).catch((error) => {
+          //     this.setState({
+          //       message: error.response.data.error,
+          //       isRefreshing: false,
+          //     });
+          //   });
+        }
     render(){
         
         const {posts,message} = this.state;
@@ -55,68 +100,37 @@ class Posts extends React.Component{
         return (
             <Block flex center>
               {
-               (!posts) ?( <Text bold size={16} style={styles.title}>
-                {message}
+               ((!posts) || (posts.length ==0)) ?( <Text bold size={16} style={styles.title}>
+                No Posts Available
               </Text> )
               : (
-                <ScrollView
-                 showsVerticalScrollIndicator={false}
-               >
-            <Block flex style={styles.group}>
-              <Text bold size={16} style={styles.title}>
-                Cards
-              </Text>
-              <Block flex>
-                <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-                  <Card item={articles[0]} horizontal />
-                  <Block flex row>
-                    <Card
-                      item={articles[1]}
-                      style={{ marginRight: theme.SIZES.BASE }}
-                    />
-                    <Card item={articles[2]} />
-                  </Block>
-                  <Card item={articles[4]} full />
-                  <Block flex card shadow style={styles.category}>
-                    <ImageBackground
-                      source={{ uri: Images.Products["View article"] }}
-                      style={[
-                        styles.imageBlock,
-                        { width: width - theme.SIZES.BASE * 2, height: 252 }
-                      ]}
-                      imageStyle={{
-                        width: width - theme.SIZES.BASE * 2,
-                        height: 252
-                      }}
-                    >
-                      <Block style={styles.categoryTitle}>
-                        <Text size={18} bold color={theme.COLORS.WHITE}>
-                          View article
-                        </Text>
-                      </Block>
-                    </ImageBackground>
-                  </Block>
-                </Block>
-                <Block flex style={{ marginTop: theme.SIZES.BASE / 2 }}>
-                  <ScrollView
-                    horizontal={true}
-                    pagingEnabled={true}
-                    decelerationRate={0}
-                    scrollEventThrottle={16}
-                    snapToAlignment="center"
-                    showsHorizontalScrollIndicator={false}
-                    snapToInterval={cardWidth + theme.SIZES.BASE * 0.375}
-                    contentContainerStyle={{
-                      paddingHorizontal: theme.SIZES.BASE / 2
+                <View style={styles.screen} >
+                <FlatList
+                    style={styles.list}
+                    onRefresh={this.loadPosts}
+                    refreshing={this.state.isRefreshing}
+                    data={posts}
+                    keyExtractor={(item) => item.id }
+                    ItemSeparatorComponent={() => {
+                        return (
+                          // <></>
+                            <View style={styles.separator} />
+                        )
                     }}
-                  >
-                  </ScrollView>
-                </Block>
-              </Block>
-                
-            </Block>
-            
-            </ScrollView>
+                    
+                    renderItem={({item, index}) => {
+                        return (
+                            <PostCard 
+                                post={item}
+                               
+                                index={index}
+                               
+                            />
+                        );
+                    }} 
+                />
+    
+          </View>
               )
               }
 
@@ -188,6 +202,24 @@ const styles = StyleSheet.create({
       bottom: 0,
       backgroundColor: argonTheme.COLORS.BUTTON_COLOR
     },
+    screen: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'white'
+  },
+  centered: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+  },
+  list: {
+      width:  width,
+    
+  },
+  separator: {
+      // marginTop: 10,
+  },
   });
 
   
