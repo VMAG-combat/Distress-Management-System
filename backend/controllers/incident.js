@@ -162,7 +162,6 @@ exports.getIncidentsByUser = async (req, res) => {
             incidents.push(incident);            
           }
 
-        console.log(incidents);
         console.log("Incidents of the user fetched successfully");
         
         res.json({

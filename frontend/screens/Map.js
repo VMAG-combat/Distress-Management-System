@@ -13,8 +13,8 @@ export default class Map extends Component {
   getHelpers = async () => {
     //code to get helpers from db
     var helpers = [
-      { latitude: 30.21, longitude: 74.3, id:1 },
-      { latitude: 30.22, longitude: 74.31 , id:2},
+      { latitude: 26.499, longitude: 80.289, id:1 },
+      { latitude: 26.51, longitude: 80.29 , id:2},
     ];
     
     this.setState({helpers, id: await deviceStorage.getId() });
@@ -23,7 +23,7 @@ export default class Map extends Component {
     this.getHelpers().then(() => {
       Geolocation.getCurrentPosition(
         async (position) => {
-          console.log(position.coords.latitude);
+          console.log("pos:",position.coords);
           this.setState({
             current: { longitude: position.coords.longitude, latitude: position.coords.latitude, isLoading: false },
             map: { latitudeDelta: 0.1, longitudeDelta: 0.1, longitude: position.coords.longitude, latitude: position.coords.latitude },
@@ -51,7 +51,9 @@ export default class Map extends Component {
             // }
             )
             .then((res) => {
-              this.setState({ helpers: res.data.users });
+              
+              if(res.data.users.length !==0){
+              this.setState({ helpers: res.data.users });}
             });
           console.log(this.state);
         },

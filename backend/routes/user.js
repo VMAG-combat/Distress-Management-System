@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getprofile, editprofile, updatelocation, addFriends, getFriends, getNearestUsers, getFollowUsers } = require("../controllers/user.js");
+const { getprofile, editprofile, updatelocation, addFriends, getFriends, getNearestUsers, getFollowUsers, getAllUsers } = require("../controllers/user.js");
 // import controller
 
 //test in postman using: http://localhost:80/user/getprofile/2QV852n3VjFay1Cx4aed
@@ -13,4 +13,5 @@ router.put("/addfriend", addFriends);
 router.get("/getfriend/:userid", getFriends);
 router.get("/getfollowusers/:userid", getFollowUsers);
 router.get("/getNearestUsers/:userid/:longitude/:latitude", getNearestUsers);
+router.get("/getallusers/:userid", getAllUsers);
 module.exports = router;

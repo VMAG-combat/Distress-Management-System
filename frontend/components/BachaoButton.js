@@ -8,6 +8,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import SmsAndroid from 'react-native-get-sms-android';
 import deviceStorage from '../services/deviceStorage';
+import axios from 'axios';
+import ENV from '../env.';
 
 const { width, height } = Dimensions.get('window');
 class BachaoButton extends React.Component{
@@ -15,7 +17,8 @@ class BachaoButton extends React.Component{
         super(props);
         this.state = {
           count:0,
-          message:''
+          message:'',
+          nearByHelpers:''
         }
         
         // console.log(this.state);
@@ -41,6 +44,39 @@ class BachaoButton extends React.Component{
     buttonSize = new Animated.Value(1);
     mode = new Animated.Value(0);
 
+    registerIncident = async () => {
+        const coord = await deviceStorage.loadCoords();
+        deviceStorage.getId().then((userId) => {
+
+        
+        var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+    var currDateTime = date + '/' + month + '/' + year 
+      + ' ' + hours + ':' + min + ':' + sec
+        axios.post(`${ENV.apiUrl}/incident/registerIncident`,{
+            userid: userId,
+            longitude:coord[1],
+            latitute:coord[0],
+            datetime:currDateTime,
+            status:'active'
+        }).then((response) => {
+            
+            console.log(response.data);
+            this.setState({
+                nearByHelpers:response.data.helpers
+            })
+            console.log("Incident Registered!!!")
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        }
+        )
+    }
     handdlePress = async () =>{
         // e.preventDefault();
 
@@ -66,32 +102,30 @@ class BachaoButton extends React.Component{
             count: this.state.count+1,
         })
         if(this.state.count>=2){
+            this.registerIncident();
         console.log("Bachao");
-        // RNImmediatePhoneCall.immediatePhoneCall('+916389701088');
-        // const { result } = await SMS.sendSMSAsync(
-        //     ['6389701088'],
-        //     'My sample HelloWorld message',
-        //   );
-        // var phone = ['6389701088','6389701088']
-        console.log(await deviceStorage.loadCoords())
+        
         deviceStorage.loadCoords().then((coord) => {
-            console.log(coord)
-        var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitute: " +coord[0]+"\nLongitude: "+coord[1];
-        // for(const p of phone){
-        //     console.log(p)
-        SmsAndroid.autoSend(
-            '6389701088',
-            messsage,
-            (fail) => {
-              console.log('Failed with this error: ' + fail);
-            },
-            (success) => {
-              console.log('SMS sent successfully');
-            },
-          );
-        // }
+            
+            
+           var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitute: " +coord[0]+"\nLongitude: "+coord[1];
+        
+        help.forEach(async helper => {
+            if(helper){
+            console.log('sendin msg to ',helper.phone);
+            await SmsAndroid.autoSend(
+                helper.phone,
+                messsage,
+                (fail) => {
+                  console.log('Failed with this error: ' + fail);
+                },
+                (success) => {
+                  console.log('SMS sent successfully');
+                },
+              );
+            }
+        });
         })
-        // console.log(result)
         this.setState({
             count: 0,
         })

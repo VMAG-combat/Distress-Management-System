@@ -3,7 +3,7 @@ const get = require("../crud/get.js");
 
 exports.getNearestUsers = async (req, res) => {
   // const {userid, latitude, longitude } = req.params;
-  console.log(req.params)
+  
   const userid = req.params.userid;
   const latitude = req.params.latitude;
   const longitude = req.params.longitude;
@@ -30,7 +30,7 @@ exports.getNearestUsers = async (req, res) => {
 
     
     users = users.filter((user) => {
-      console.log(user.id, userid);
+      
       if (user.id === userid) {
         return false;
       }
@@ -158,7 +158,7 @@ exports.getFriends = async (req, res) => {
   console.log(userid);
   try {
     var user = await get({ collection: "User", by: "id", id: userid });
-    console.log(user);
+    
     var friendids = user.friends;
 
     friends = [];
@@ -190,7 +190,7 @@ exports.getFollowUsers = async (req,res) => {
   // console.log(userid)
   try {
     var user = await get({ collection: "User", by: "id", id: userid });
-    console.log(user);
+    
     var friendids = user.friends;
     var allusers = await get({collection: "User", by:"where", where:[{parameter:"id", comparison:"!=",value:userid}]})
     // console.log(users)
@@ -205,6 +205,26 @@ exports.getFollowUsers = async (req,res) => {
       error: ""
     })
   } catch (error) {
+    return res.status(404).json({
+      error: error.message,
+    });
+  }
+}
+
+exports.getAllUsers = async (req,res) => {
+  var userid = req.params.userid;
+  
+  try {
+    
+    var allusers = await get({collection: "User", by:"where", where:[{parameter:"id", comparison:"!=",value:userid}]})
+    
+    
+    res.json({
+      users: allusers,
+      error: ""
+    })
+  } catch (error) {
+    console.log(error)
     return res.status(404).json({
       error: error.message,
     });
