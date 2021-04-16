@@ -108,13 +108,14 @@ class BachaoButton extends React.Component{
         deviceStorage.loadCoords().then((coord) => {
             
             
-           var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitute: " +coord[0]+"\nLongitude: "+coord[1];
+           var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
         
         help.forEach(async helper => {
             if(helper){
             console.log('sendin msg to ',helper.phone);
             await SmsAndroid.autoSend(
-                helper.phone,
+                // helper.phone,
+                '6389701088',
                 messsage,
                 (fail) => {
                   console.log('Failed with this error: ' + fail);

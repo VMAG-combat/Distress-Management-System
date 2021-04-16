@@ -96,7 +96,11 @@ const ListIncident = (props) => {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Add Helpers</Text>
             <AddHelpers allusers={allusers} helpers={addHelpers}/>
-            <Button title="Hide modal" onPress={()=> closeModal()} />
+            <Button style={{backgroundColor:argonTheme.COLORS.BUTTON_COLOR}} onPress={()=> closeModal()} >
+              <Text size={24} color="white">
+                Done
+              </Text>
+              </Button>
            
           </View> 
       </View>

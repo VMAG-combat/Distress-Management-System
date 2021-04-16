@@ -1,9 +1,9 @@
 import React from "react";
-import { StyleSheet, Dimensions, ScrollView, Image,View,SafeAreaView,FlatList, ImageBackground, Platform } from "react-native";
+import { StyleSheet, Dimensions, ScrollView,Alert, Image,View,SafeAreaView,FlatList,TouchableOpacity, ImageBackground, Platform } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 import RNRestart from "react-native-restart";
 
-import { Button } from "../components";
+import { Button,Icon } from "../components";
 import { Images, argonTheme } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 
@@ -55,6 +55,18 @@ class Profile extends React.Component {
   });
   
   }
+  getHelp = () =>{
+
+    Alert.alert(
+      "How to Earn Points?",
+      "You can earn points by helping the person in Distress. Once the person is recified he can add you as a helper through his account and you get the points for helping the victim. \n HELP AS MUCH AS YOU CAN!!!",
+      [
+        { text: "OK", onPress: () => {console.log("OK Pressed");
+      } },
+        
+      ]
+    );
+  }
 
   render() {
     const { navigation } = this.props;
@@ -68,7 +80,7 @@ class Profile extends React.Component {
       <Block flex style={styles.profile}>
         <Block flex>
           <ImageBackground source={Images.ProfileBackground} style={styles.profileContainer} imageStyle={styles.profileBackground}>
-            <ScrollView scrollEnabled={true} showsVerticalScrollIndicator={false} style={{ width, marginTop: "25%", marginBottom:"10%" }} nestedScrollEnabled={true}>
+            <ScrollView scrollEnabled={true} showsVerticalScrollIndicator={false} style={{ width, marginTop: "25%", marginBottom:"15%" }} nestedScrollEnabled={true}>
             
             
               <Block flex style={styles.profileCard}>
@@ -142,6 +154,30 @@ class Profile extends React.Component {
                     </Text>
                     </Block>
                     </Block>
+                    <Block middle style={{ marginTop: 20 }}>
+                    <Block middle>
+                      <View style={styles.points}> 
+                      <TouchableOpacity style={styles.help} onPress={this.getHelp}>
+                      <Icon
+                      style={styles.helpIcon}
+      family="ionicon"
+      size={24}
+      name="help-circle"
+      color="white"
+    />
+                      </TouchableOpacity>
+                      <Text size={30} color="white" bold style={{ textAlign: "center" }}>
+                      {user.points ? user.points:0}
+                    </Text>
+                      
+                      <Text size={12} color="white" bold style={{ textAlign: "center" }}>
+                      
+                      Total Points Earned
+                    </Text>
+                    </View>
+                    
+                    </Block>
+                    </Block>
                   <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
                     <Block style={styles.divider} />
                   </Block>
@@ -179,7 +215,7 @@ const styles = StyleSheet.create({
   },
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
-    // marginBottom: -HeaderHeight * 2,
+    marginBottom: -HeaderHeight * 2,
     flex: 1,
   },
   profileContainer: {
@@ -240,6 +276,25 @@ const styles = StyleSheet.create({
     width:1,
     marginHorizontal:theme.SIZES.BASE,
     borderColor: "#000000",
+},
+points:{
+  backgroundColor:argonTheme.COLORS.LABEL,
+  padding: 25,
+  borderRadius:10
+},
+help:{
+  position:'absolute',
+  top:1,
+  right:2,
+  shadowColor: "black",
+  elevation:5,
+  shadowOffset: {
+    width: 3,
+    height: 2
+  },
+  shadowOpacity: 1,
+  shadowRadius: 5,
+
 },
 });
 
