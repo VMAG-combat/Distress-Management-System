@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions, ScrollView, Image, ImageBackground, Platform } from "react-native";
+import { StyleSheet, Dimensions, ScrollView, Image,View,SafeAreaView,FlatList, ImageBackground, Platform } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 import RNRestart from "react-native-restart";
 
@@ -10,6 +10,7 @@ import { HeaderHeight } from "../constants/utils";
 import deviceStorage from "../services/deviceStorage.js";
 import axios from "axios";
 import ENV from "../env.";
+import ListIncident from "../components/ListIncident";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -19,49 +20,57 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // jwt:'',
       user: "",
       message: "",
+      isRefreshing:false
     };
 
     this.deleteJWT = deviceStorage.deleteJWT.bind(this);
   }
 
   componentDidMount() {
-    deviceStorage.getId().then((userId) => {
-      // console.log(userId)
-      axios({
-        method: "GET",
-        url: `${ENV.apiUrl}/user/getprofile/` + userId,
-      })
-        .then((response) => {
-          this.setState({
-            user: response.data.user,
-            message: response.data.message,
-          });
-        })
-        .catch((error) => {
-          this.setState({
-            message: "Error retrieving data",
-          });
+    this.loadProfile();
+  }
+  loadProfile = () => {
+    this.setState({
+      isRefreshing: true
+    })
+   deviceStorage.getId().then((userId) => {
+    
+      axios.get(`${ENV.apiUrl}/user/getprofile/` + userId)
+    .then((user) => {
+        this.setState({
+          user: user.data.user,
+          message: user.data.message,
+          isRefreshing:false
         });
-    });
+        
+      })
+      .catch((error) => {
+        this.setState({
+          message: "Error retrieving data",
+          isRefreshing:false
+        });
+      });
+  });
+  
   }
 
   render() {
     const { navigation } = this.props;
     const { user, message } = this.state;
-    // console.log(this.deleteJWT);
     const handleLogout = () => {
       this.deleteJWT();
       RNRestart.Restart();
     };
-
+    // console.log(this.state.userId)
     return (
       <Block flex style={styles.profile}>
         <Block flex>
           <ImageBackground source={Images.ProfileBackground} style={styles.profileContainer} imageStyle={styles.profileBackground}>
-            <ScrollView showsVerticalScrollIndicator={false} style={{ width, marginTop: "25%" }}>
+            <ScrollView scrollEnabled={true} showsVerticalScrollIndicator={false} style={{ width, marginTop: "25%", marginBottom:"10%" }} nestedScrollEnabled={true}>
+            
+            
               <Block flex style={styles.profileCard}>
                 <Block middle style={styles.avatarContainer}>
                   <Image source={{ uri: Images.ProfilePicture }} style={styles.avatar} />
@@ -70,7 +79,7 @@ class Profile extends React.Component {
                   <Block row space="between">
                     <Block middle>
                       <Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
-                        {/* {user.posts.length} */}2K
+                       2K
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Posts
@@ -78,7 +87,7 @@ class Profile extends React.Component {
                     </Block>
                     <Block middle>
                       <Text bold color="#525F7F" size={18} style={{ marginBottom: 4 }}>
-                        {/* {user.friends.length} */}10
+                        10
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Friends
@@ -124,39 +133,50 @@ class Profile extends React.Component {
                         Weight
                       </Text>
                     </Block>
+                    
                   </Block>
-                  <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
-                    <Block style={styles.divider} />
-                  </Block>
+                  <Block middle style={{ marginTop: 20 }}>
                   <Block middle>
                     <Text size={16} color="#525F7F" style={{ textAlign: "center" }}>
                       Identification Mark : {user.identificationMark}
                     </Text>
-                    {/* <Button
-                      color="transparent"
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                    >
-                      Show more
-                    </Button> */}
+                    </Block>
+                    </Block>
+                  <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
+                    <Block style={styles.divider} />
+                  </Block>
+                  <Block middle>
+           
+        
                     <Button medium style={{ backgroundColor: argonTheme.COLORS.GRADIENT_START }} textStyle={{ fontSize: 18 }} onPress={handleLogout}>
                       Logout
                     </Button>
                   </Block>
                 </Block>
               </Block>
+             
             </ScrollView>
           </ImageBackground>
+          
         </Block>
       </Block>
+      
     );
+  
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    // padding: 16,
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderColor: "#FFFFFF",
+    marginTop:"25%",
+    marginBottom:"10%",
+    paddingBottom:20,
+    alignItems: 'flex-start',
+  },
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
     // marginBottom: -HeaderHeight * 2,
@@ -214,6 +234,13 @@ const styles = StyleSheet.create({
     width: thumbMeasure,
     height: thumbMeasure,
   },
+  separator: {
+    // marginTop: -10,
+  
+    width:1,
+    marginHorizontal:theme.SIZES.BASE,
+    borderColor: "#000000",
+},
 });
 
 export default Profile;

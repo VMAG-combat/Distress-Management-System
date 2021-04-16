@@ -16,6 +16,7 @@ import Register from "../screens/Register";
 import Element from "../screens/Element";
 import SocialMedia from "../screens/SocialMedia";
 import BachaoButton from "../components/BachaoButton";
+import Incident from '../screens/incident';
 // drawer
 import CustomDrawerContent from "./Menu";
 
@@ -64,6 +65,15 @@ function MapStack(props) {
         options={{
           header: ({ navigation, scene }) => <Header title="Map" navigation={navigation} scene={scene} />,
           cardStyle: { backgroundColor: "#F8F9FE" },
+        }}
+      />
+      <Stack.Screen
+        name="Incident"
+        component={Incident}
+        options={{
+          header: ({ navigation, scene }) => <Header title="My Incidents" back navigation={navigation} scene={scene} />,
+          headerTransparent: true,
+          // cardStyle: { backgroundColor: "#F8F9FE" },
         }}
       />
       <Stack.Screen

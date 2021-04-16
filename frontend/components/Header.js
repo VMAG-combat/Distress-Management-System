@@ -1,7 +1,8 @@
 import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
+import { TouchableHighlight, StyleSheet, Platform, Dimensions,Animated,View } from 'react-native';
 import { Button, Block, NavBar, Text, theme } from 'galio-framework';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Icon from './Icon';
 import Input from './Input';
@@ -12,26 +13,30 @@ const { height, width } = Dimensions.get('window');
 const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
 
 const BellButton = ({isWhite, style, navigation}) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Incident')}>
     <Icon
-      family="ArgonExtra"
-      size={16}
-      name="bell"
+      family="ionicon"
+      size={24}
+      name="bonfire"
       color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
     />
-    <Block middle style={styles.notify} />
+    {/* <Block middle style={styles.notify} /> */}
   </TouchableOpacity>
 );
 
-const BasketButton = ({isWhite, style, navigation}) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
+
+const BasketButton = ({isWhite, style, navigation,back,iconColor}) => (
+
+  
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')} >
     <Icon
       family="ArgonExtra"
-      size={16}
-      name="basket"
+      size={20}
+      name="shop"
       color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
     />
   </TouchableOpacity>
+  
 );
 
 const SearchButton = ({isWhite, style, navigation}) => (
@@ -46,22 +51,25 @@ const SearchButton = ({isWhite, style, navigation}) => (
 );
 
 class Header extends React.Component {
+ 
   handleLeftPress = () => {
     const { back, navigation } = this.props;
     return (back ? navigation.goBack() : navigation.openDrawer());
   }
   renderRight = () => {
-    const { white, title, navigation } = this.props;
+    const { back, white, title, navigation,iconColor } = this.props;
 
-    if (title === 'Title') {
+ 
+    if (title === 'Map') {
       return [
         <BellButton key='chat-title' navigation={navigation} isWhite={white} />,
-        <BasketButton key='basket-title' navigation={navigation} isWhite={white} />
-      ]
+        <BasketButton key='basket-title' navigation={navigation} isWhite={white} back={back} iconColor={iconColor} />
+
+]
     }
 
     switch (title) {
-      case 'Home':
+      case 'Msap':
         return ([
           <BellButton key='chat-home' navigation={navigation} isWhite={white} />,
           <BasketButton key='basket-home' navigation={navigation} isWhite={white} />
@@ -195,15 +203,16 @@ class Header extends React.Component {
           transparent={transparent}
           right={this.renderRight()}
           rightStyle={{ alignItems: 'center' }}
-          // left={
-          //   <Icon 
-          //     name={back ? 'chevron-left' : "menu"} family="entypo" 
-          //     size={20} onPress={this.handleLeftPress} 
-          //     color={iconColor || (white ? argonTheme.COLORS.WHITE : argonTheme.COLORS.ICON)}
-          //     style={{ marginTop: 2 }}
-          //   />
+          left={ back ?
+            (<Icon 
+              name={'arrow-back'} family="ionicon" 
+              size={20}
+              onPress={()=>navigation.goBack()} 
+              color={iconColor || (white ? argonTheme.COLORS.WHITE : argonTheme.COLORS.ICON)}
+              style={{ marginTop: 2 }}
+            />):null
               
-          // }
+          }
           leftStyle={{ paddingVertical: 12, flex: 0.2 }}
           titleStyle={[
             styles.title,
@@ -212,15 +221,26 @@ class Header extends React.Component {
           ]}
           {...props}
         />
-        {this.renderHeader()}
+        {/* {this.renderHeader()} */}
       </Block>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  buttonA:{
+    justifyContent:'center',
+    alignItems:'center',
+    shadowColor:'#005f94',
+    shadowRadius:5,
+    shadowOffset:{height:10},
+    shadowOpacity:0.3,
+    elevation:3,
+    marginLeft:20
+},
   button: {
     padding: 12,
+    // elevation:3,
     position: 'relative',
   },
   title: {
@@ -285,6 +305,18 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: argonTheme.COLORS.HEADER
   },
+  drawer:{
+    width:0.5366*width,
+    height:0.2799*height,
+    backgroundColor:'#FFFFFF',
+    elevation:3,
+    borderRadius:20,
+    shadowRadius:5,
+    flex:1,
+    shadowColor:'#7F58FF',
+    shadowOffset:{height:10},
+    shadowOpacity:0.3,
+}
 });
 
 export default withNavigation(Header);

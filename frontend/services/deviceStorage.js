@@ -1,4 +1,4 @@
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const deviceStorage = {
   async saveKey(key, valueToSave) {
@@ -32,7 +32,6 @@ const deviceStorage = {
     try{
       const lat = await AsyncStorage.getItem("latitude");
       const long = await AsyncStorage.getItem("longitude");
-      console.log("latitude: ", lat)
       if(lat !== 0 && long !== 0){
         return [lat,long]
       }
@@ -75,7 +74,7 @@ const deviceStorage = {
   async deleteJWT() {
     try {
       await AsyncStorage.removeItem("id_token").then((res) => {
-        console.log(res);
+        
         this.setState({
           jwt: "",
         });

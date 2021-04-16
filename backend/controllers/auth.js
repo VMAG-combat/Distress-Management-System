@@ -13,7 +13,7 @@ const get = require("../crud/get.js");
 exports.sendotpForRegister = async (req, res) => {
     const { name, email, password, phone, address } = req.body;
     console.log("printing request body")
-    console.log(req.body);
+    // console.log(req.body);
 
     try {
         var user = await get({collection:"User",by:"where",where:[{parameter:"email", comparison:"==",value:email}]})
@@ -48,36 +48,6 @@ exports.sendotpForRegister = async (req, res) => {
 
 }
 
-// check otp in frontend, if matched call this function 
-// exports.register = async (req, res) => {
-
-//     const { name, email, password, phone, address } = req.body;
-
-//     const user = {name: name, email:email, password: password, phone:phone, address:address, bloodGrp:"", weight:"",height:"", identificationMark:"",medicalHistory:"",longitude: "", latitude: "",points:"",incidents:[],helped:[]}
-    
-//     try {
-//         var id = await insert({collection:"User",data:user}) 
-//         console.log(process.env.JWT_SIGNIN_KEY)
-//         const token = jwt.sign({_id: id}, "swsh23hjddnns", {expiresIn: 300});
-//         console.log("successfully registered!");
-//         res.cookie("token", token, { maxAge: 300*1000 })
-//         res.json({
-//             token,
-//             user:user,
-//             id: id,
-//             error:""
-//         })
-
-//     } catch (error) {
-//         return res.status(400).json({
-//             error:error
-//         })
-//     }
-//   // } catch (error) {
-//   //   return res.status(400).json({ error: error });
-//   // }
-// };
-
 // check otp in frontend, if matched call this function
 exports.register = async (req, res) => {
   const { name, email, password, phone, address } = req.body;
@@ -102,7 +72,7 @@ exports.register = async (req, res) => {
 
   try {
     var id = await insert({ collection: "User", data: user });
-    console.log(process.env.JWT_SIGNIN_KEY);
+    // console.log(process.env.JWT_SIGNIN_KEY);
     const token = jwt.sign({ _id: id }, "swsh23hjddnns", { expiresIn: 300 });
     console.log("successfully registered!");
     res.cookie("token", token, { maxAge: 300 * 1000 });
@@ -122,7 +92,7 @@ exports.register = async (req, res) => {
 exports.sendotpForLogin = async (req, res) => {
   const { email, password } = req.body;
   console.log("printing request body");
-  console.log(req.body);
+  // console.log(req.body);
 
   try {
     var user = await get({ collection: "User", by: "where", where: [{ parameter: "email", comparison: "==", value: email }] });
