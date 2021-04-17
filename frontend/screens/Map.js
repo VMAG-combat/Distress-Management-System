@@ -8,8 +8,11 @@ import Geolocation from "@react-native-community/geolocation";
 import axios from "axios";
 import ENV from "../env.";
 import deviceStorage from "../services/deviceStorage";
+import { showMessage } from "react-native-flash-message";
+
+
 export default class Map extends Component {
-  state = { isLoading: true, helpers: [] };
+  state = { isLoading: true, helpers: [] ,hotspot:false};
   getHelpers = async () => {
     //code to get helpers from db
     var helpers = [
@@ -23,7 +26,7 @@ export default class Map extends Component {
     this.getHelpers().then(() => {
       Geolocation.getCurrentPosition(
         async (position) => {
-          console.log("pos:",position.coords);
+          
           this.setState({
             current: { longitude: position.coords.longitude, latitude: position.coords.latitude, isLoading: false },
             map: { latitudeDelta: 0.1, longitudeDelta: 0.1, longitude: position.coords.longitude, latitude: position.coords.latitude },
@@ -38,8 +41,18 @@ export default class Map extends Component {
               latitude: position.coords.latitude,
             })
             .then((res) => {
-              console.log("kl")
-              console.log(res.data);
+              
+              // console.log(res.data);
+              this.setState({
+                hotspot:res.data.hotspot
+              })
+              if(res.data.hotspot)
+              showMessage({
+                message: "Area around you has been identified as a HOTSPOT.\n STAY ALERT , STAY SAFE!!!",
+                type: "warning",
+                icon: { icon: "warning", position: "left" },
+                duration: 7000,
+              });
             });
 
           axios
@@ -54,8 +67,10 @@ export default class Map extends Component {
               
               if(res.data.users.length !==0){
               this.setState({ helpers: res.data.users });}
+
+             
             });
-          console.log(this.state);
+          
         },
         (err) => {
           console.log(err);
@@ -76,6 +91,15 @@ export default class Map extends Component {
               this.setState({ map: { ...region } });
             }}
           >
+            {this.state.hotspot?(<MapView.Circle
+            center = {{ ...this.state.current  }}
+            radius = { 500 }
+            strokeColor = "red"
+            fillColor="rgba(232, 37, 60,0.3)"
+            strok
+            eWidth = { 1 }
+        />):null}
+            
             <Marker pinColor="blue" coordinate={{ ...this.state.current }} />
             {this.state.helpers.map((helper) => {
               return <Marker pinColor="green" coordinate={{ ...helper }} key={helper.id} />;

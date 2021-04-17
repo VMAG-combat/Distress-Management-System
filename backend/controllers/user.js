@@ -102,9 +102,32 @@ exports.updatelocation = async (req, res) => {
     user.latitude = newuser.latitude;
     var id = await update({ collection: "User", data: user, id: user.id });
     console.log("User Location Updated Successfully", new Date().toLocaleTimeString());
+    var incidents = await get({collection:"Incident",by:"where",where:[{parameter:"status", comparison:"!=",value: "false"}]})
+    var incidents2 = await get({
+      collection: "Incident",
+      by: "where",
+      where: [
+        { parameter: "longitude", value: newuser.longitude + 0.005, comparison: "<=" },
+        { parameter: "longitude", value: newuser.longitude - 0.005, comparison: ">=" },
+      ],
+    });
+    // console.log(incidents)
+    incidents = incidents.filter((incident) => {
+        if (((incident.latitute >= newuser.latitude-0.05 ||incident.latitude >= newuser.latitude-0.05) && incident.longitude >= newuser.longitude-0.05)|| ((incident.latitute <= newuser.latitude+0.05 ||incident.latitude <= newuser.latitude+0.05) && incident.longitude <= newuser.longitude+0.05)) {
+          return true;
+        }
+      
+      return false;
+
+    });
+    
+    var hotspot=false
+    if(incidents.length>=5)
+    hotspot=true
     res.json({
       message: "",
       userid: user.id,
+      hotspot:hotspot
     });
   } catch (error) {
     console.log(error);
