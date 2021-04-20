@@ -102,7 +102,7 @@ exports.updateIncident = async (req, res) => {
             var helper = await get({collection:"User",by:"where",where:[{parameter:"email", comparison:"==",value:email}]})
             console.log(helper);
             helper[0].helped.push(id);
-            helper[0].points = ((parseInt(helper[0])||0)+100).toString();
+            helper[0].points = ((parseInt(helper[0].points)||0)+100).toString();
             var id = await update({collection: "User", data:helper[0],id:helper[0].id});            
           }
         console.log("Helper profiles updated successfully!");

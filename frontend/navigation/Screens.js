@@ -129,20 +129,11 @@ function ProfileStack(props) {
       />
       <Stack.Screen
         name="Pro"
-        component={OnboardingStack}
-        // options={{
-        //   header: ({ navigation, scene }) => (
-        //     <Header
-        //       title=""
-        //       back
-        //       white
-        //       transparent
-        //       navigation={navigation}
-        //       scene={scene}
-        //     />
-        //   ),
-        //   headerTransparent: true
-        // }}
+        component={Pro}
+        options={{
+          header: ({ navigation, scene }) => <Header title="" back white transparent navigation={navigation} scene={scene} />,
+          headerTransparent: true,
+        }}
       />
     </Stack.Navigator>
   );

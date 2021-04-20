@@ -59,7 +59,7 @@ class Profile extends React.Component {
 
     Alert.alert(
       "How to Earn Points?",
-      "You can earn points by helping the person in Distress. Once the person is recified he can add you as a helper through his account and you get the points for helping the victim. \n HELP AS MUCH AS YOU CAN!!!",
+      "You can earn points by helping the person in Distress. Once the person is recified he can add you as a helper through his account and you get the points for helping the victim.\nFor Each help you get 100 points.\n\nHELP AS MUCH AS YOU CAN!!!",
       [
         { text: "OK", onPress: () => {console.log("OK Pressed");
       } },
@@ -75,7 +75,6 @@ class Profile extends React.Component {
       this.deleteJWT();
       RNRestart.Restart();
     };
-    // console.log(this.state.userId)
     return (
       <Block flex style={styles.profile}>
         <Block flex>
@@ -83,26 +82,68 @@ class Profile extends React.Component {
             <ScrollView scrollEnabled={true} showsVerticalScrollIndicator={false} style={{ width, marginTop: "25%", marginBottom:"15%" }} nestedScrollEnabled={true}>
             
             
+            <Text bold size={14} color="black" style={{ position: "absolute",top:theme.SIZES.BASE+20,right:theme.SIZES.BASE }} onPress={()=>{navigation.navigate("Pro")}} >
+                       Edit <Icon
+                      style={styles.helpIcon}
+      family="ionicon"
+      size={18}
+      name="create-outline"
+      // color="white"
+    />
+                      </Text>
+                      
               <Block flex style={styles.profileCard}>
+              
                 <Block middle style={styles.avatarContainer}>
                   <Image source={{ uri: Images.ProfilePicture }} style={styles.avatar} />
                 </Block>
                 <Block style={styles.info}>
                   <Block row space="between">
                     <Block middle>
+                    {user.posts ? (
                       <Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
-                       2K
-                      </Text>
+                       {user.posts.length}
+                      </Text>):<Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
+                       0
+                      </Text>}
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Posts
                       </Text>
                     </Block>
                     <Block middle>
+                      {user.friends ? (
                       <Text bold color="#525F7F" size={18} style={{ marginBottom: 4 }}>
-                        10
+                      {user.friends.length}
+                      </Text>) :<Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
+                       0
                       </Text>
+                      }
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Friends
+                      </Text>
+                    </Block>
+                    <Block middle>
+                      {user.events ? (
+                      <Text bold color="#525F7F" size={18} style={{ marginBottom: 4 }}>
+                      {user.events.length}
+                      </Text>) :<Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
+                       0
+                      </Text>
+                      }
+                      <Text size={12} color={argonTheme.COLORS.TEXT}>
+                        Events
+                      </Text>
+                    </Block>
+                    <Block middle>
+                      {user.incidents ? (
+                      <Text bold color="#525F7F" size={18} style={{ marginBottom: 4 }}>
+                      {user.incidents.length}
+                      </Text>) :<Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
+                       0
+                      </Text>
+                      }
+                      <Text size={12} color={argonTheme.COLORS.TEXT}>
+                        Incidents
                       </Text>
                     </Block>
                   </Block>
@@ -119,10 +160,11 @@ class Profile extends React.Component {
                       {user.phone}
                     </Text>
                   </Block>
-                  <Block row space="between">
+                  
+                  <Block row space="between" style={{marginTop:20}}>
                     <Block middle>
                       <Text bold size={18} color="#525F7F" style={{ marginBottom: 4 }}>
-                        {user.bloodGrp}
+                        {user.bloodGrp || `NA`}
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Blood Group
@@ -130,7 +172,7 @@ class Profile extends React.Component {
                     </Block>
                     <Block middle>
                       <Text bold color="#525F7F" size={18} style={{ marginBottom: 4 }}>
-                        {user.height}
+                        {user.height||`NA`}
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Height
@@ -139,7 +181,7 @@ class Profile extends React.Component {
 
                     <Block middle>
                       <Text bold color="#525F7F" size={18} style={{ marginBottom: 4 }}>
-                        {user.weight}
+                        {user.weight||`NA`}
                       </Text>
                       <Text size={12} color={argonTheme.COLORS.TEXT}>
                         Weight
@@ -150,7 +192,7 @@ class Profile extends React.Component {
                   <Block middle style={{ marginTop: 20 }}>
                   <Block middle>
                     <Text size={16} color="#525F7F" style={{ textAlign: "center" }}>
-                      Identification Mark : {user.identificationMark}
+                      Identification Mark : {user.identificationMark||`NA`}
                     </Text>
                     </Block>
                     </Block>

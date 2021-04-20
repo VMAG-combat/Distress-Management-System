@@ -17,7 +17,8 @@ export default class Map extends Component {
     //code to get helpers from db
     var helpers = [
       { latitude: 26.499, longitude: 80.289, id:1 },
-      { latitude: 26.51, longitude: 80.29 , id:2},
+      { latitude: 26.5, longitude: 80.28 , id:2},
+      { latitude: 26.488, longitude: 80.28 , id:3},
     ];
     
     this.setState({helpers, id: await deviceStorage.getId() });
