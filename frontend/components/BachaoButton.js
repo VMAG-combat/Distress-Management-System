@@ -18,7 +18,7 @@ class BachaoButton extends React.Component{
         this.state = {
           count:0,
           message:'',
-          nearByHelpers:''
+          nearByHelpers:[]
         }
         
         // console.log(this.state);
@@ -65,9 +65,29 @@ class BachaoButton extends React.Component{
             status:'active'
         }).then((response) => {
             
-            console.log(response.data);
+            console.log(response.data.helpers);
             this.setState({
                 nearByHelpers:response.data.helpers
+            })
+            deviceStorage.saveKey("helpers", JSON.stringify(response.data.helpers));
+            deviceStorage.loadCoords().then((coord) => {
+
+               var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
+            this.state.nearByHelpers.forEach(async (helper)=>{
+                if(helper){
+                console.log('sendin msg to ',helper.phone);
+                 await SmsAndroid.autoSend(
+                    helper.phone,
+                    messsage,
+                    (fail) => {
+                      console.log('Failed with this error: ' + fail);
+                    },
+                    (success) => {
+                      console.log('SMS sent successfully');
+                    },
+                  );
+                }
+            });
             })
             console.log("Incident Registered!!!")
           })
@@ -105,28 +125,30 @@ class BachaoButton extends React.Component{
             this.registerIncident();
         console.log("Bachao");
         
-        deviceStorage.loadCoords().then((coord) => {
+        // deviceStorage.loadCoords().then((coord) => {
             
-            
-           var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
-        
-        help.forEach(async helper => {
-            if(helper){
-            console.log('sendin msg to ',helper.phone);
-            await SmsAndroid.autoSend(
-                // helper.phone,
-                '6389701088',
-                messsage,
-                (fail) => {
-                  console.log('Failed with this error: ' + fail);
-                },
-                (success) => {
-                  console.log('SMS sent successfully');
-                },
-              );
-            }
-        });
-        })
+        //     var help = this.state.nearByHelpers
+
+        //    var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
+        // console.log("help?",this.state.nearByHelpers)
+        // this.state.nearByHelpers.forEach((helper)=>{
+        //     console.log("okik",helper)
+        //     if(helper){
+        //     console.log('sendin msg to ',helper.phone);
+        //      SmsAndroid.autoSend(
+        //         // helper.phone,
+        //         '6389701088',
+        //         messsage,
+        //         (fail) => {
+        //           console.log('Failed with this error: ' + fail);
+        //         },
+        //         (success) => {
+        //           console.log('SMS sent successfully');
+        //         },
+        //       );
+        //     }
+        // });
+        // })
         this.setState({
             count: 0,
         })

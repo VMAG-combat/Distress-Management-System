@@ -37,41 +37,68 @@ exports.registerIncident = async (req, res) => {
 
     try {
         //saving new incident to incident database
-        var id = await insert({collection:"Incident",data:incident}) 
+        // var id = await insert({collection:"Incident",data:incident}) 
 
-        //adding incident id to the list of incidents of the current user
-        var user = await get({collection:"User",by:"id", id:incident.userid})
-        if(user.incidents){
-            user.incidents.push(id);
-        }else{
-            user.incidents = [id];
-        }
-        var uid = await update({collection: "User", data:user,id:user.id});
+        // //adding incident id to the list of incidents of the current user
+        // var user = await get({collection:"User",by:"id", id:incident.userid})
+        // if(user.incidents){
+        //     user.incidents.push(id);
+        // }else{
+        //     user.incidents = [id];
+        // }
+        // var uid = await update({collection: "User", data:user,id:user.id});
 
-        console.log("Incident logged successfully!");
+        // console.log("Incident logged successfully!");
 
         //fetching top 5 nearby users using radial distance
-        var allusers = await get({collection:"User",by:"where",where:[{parameter:"latitude", comparison:">",value:"0"}]})
+        // var allusers = await get({collection:"User",by:"where",where:[{parameter:"latitude", comparison:">",value:"0"}]})
 
-        distUsers = [];
+        // distUsers = [];
 
-        allusers.forEach(u => {
-            dis = distance(parseInt(incident.latitude), parseInt(incident.longitude), parseInt(u.latitude), parseInt(u.longitude));
-            u.dist = dis;
-            distUsers.push(u);
-        });
-
+        // allusers.forEach(u => {
+        //     dis = distance(parseInt(incident.latitute), parseInt(incident.longitude), parseInt(u.latitude), parseInt(u.longitude));
+        //     u.dist = dis;
+        //     distUsers.push(u);
+        // });
+        var users = await get({
+            collection: "User",
+            by: "where",
+            where: [
+              { parameter: "id", value: incident.userid , comparison: "!=" },
+            //   { parameter: "latitude", value: incident.latitute - 0.05, comparison: ">=" },
+            ],
+          });
+          var users2 = await get({
+            collection: "User",
+            by: "where",
+            where: [
+              { parameter: "longitude", value: incident.longitude + 0.05, comparison: "<=" },
+            //   { parameter: "longitude", value: incident.longitude - 0.05, comparison: ">=" },
+            ],
+          });
+          // users = Array(users);
+      
+        //   console.log(users)
+        //   console.log(users2)
+          
+          users = users.filter((user) => {
+            
+           if(user.latitude && user.longitude && Math.abs(incident.latitute-user.latitude)<=0.5 && Math.abs(incident.longitude-user.longitude)<=0.5)
+            return true
+            return false;
+          });
         //sorting in ascending order
-        distUsers.sort(GetSortOrder("dist")); //Pass the attribute to be sorted on    
+        // distUsers.sort(GetSortOrder("dist")); //Pass the attribute to be sorted on    
 
-        nearbyUsers = [distUsers[0],distUsers[1],distUsers[2],distUsers[3],distUsers[4]]
+        // nearbyUsers = [distUsers[0],distUsers[1],distUsers[2],distUsers[3],distUsers[4]]
         //nearbyUsers = [distUsers[0],distUsers[1]]
 
+        console.log(users.length)
         res.json({
             message:"",
             incident: incident,
-            incidentId: id,
-            helpers: nearbyUsers
+            // incidentId: id,
+            helpers: users
         });
     } catch (error) {
         console.log(error);

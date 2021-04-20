@@ -14,6 +14,8 @@ import { showMessage } from "react-native-flash-message";
 // import { Octicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AddHelpers from '../components/AddHelpers';
+import deviceStorage from '../services/deviceStorage';
+
 
 
 const ListIncident = (props) => {
@@ -36,15 +38,23 @@ const ListIncident = (props) => {
         setImageUri(ENV.defaultImageUri)
     }
 
+    
+    
     if(incident.latitute){
+      
+      try{
     axios.get(`https://us1.locationiq.com/v1/reverse.php?key=c3878484ac573f&lat=` + (incident.latitute) + '&lon=' + (incident.longitude) + '&format=json').then((res)=>{
 
-        // console.log("Address: " ,res.data.display_name)
+        console.log("Address: " ,res.data.display_name)
         setAdd(res.data.display_name)
     }).catch((err)=>{
       console.log("ff",err)
     })
+  } catch(err){
+    console.log(err)
   }
+  }
+
 
     const toggleModal= ()=>{
         setModalVisible(true)
@@ -61,6 +71,7 @@ const ListIncident = (props) => {
             .then((res) => {
               console.log("kl")
               console.log(res.data);
+              deviceStorage.deleteHelpers()
             });
   }
     const addHelpers = (helper) =>{
@@ -75,6 +86,7 @@ const ListIncident = (props) => {
             .then((res) => {
               console.log("kl")
               console.log(res.data);
+              deviceStorage.deleteHelpers()
             });
     }
     return (<>

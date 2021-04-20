@@ -15,13 +15,23 @@ export default class Map extends Component {
   state = { isLoading: true, helpers: [] ,hotspot:false,center:[]};
   getHelpers = async () => {
     //code to get helpers from db
+
+    var id = await deviceStorage.getId()
     var helpers = [
-      { latitude: 26.499, longitude: 80.289, id:1 },
-      { latitude: 26.5, longitude: 80.28 , id:2},
-      { latitude: 26.488, longitude: 80.28 , id:3},
+      // { latitude: 26.499, longitude: 80.289, id:1 },
+      // { latitude: 26.5, longitude: 80.28 , id:2},
+      // { latitude: 26.488, longitude: 80.28 , id:3},
     ];
-    
-    this.setState({helpers, id: await deviceStorage.getId() });
+    deviceStorage.getHelpers().then( (help)=>{
+      JSON.parse(help).forEach(helper => {
+        helpers.push(
+          {latitude:helper.latitude,longitude:helper.longitude,id:helper.id}
+        )
+      });
+
+      
+    })
+    this.setState({helpers, id: id });
   };
   componentDidMount() {
     this.getHelpers().then(() => {
@@ -35,6 +45,7 @@ export default class Map extends Component {
           });
           deviceStorage.saveKey("longitude", position.coords.longitude.toString())
           deviceStorage.saveKey("latitude", position.coords.latitude.toString())
+          console.log(this.state)
           axios
             .put(`${ENV.apiUrl}/user/updatelocation`, {
               userid: this.state.id,
