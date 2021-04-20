@@ -12,7 +12,7 @@ import { showMessage } from "react-native-flash-message";
 
 
 export default class Map extends Component {
-  state = { isLoading: true, helpers: [] ,hotspot:false};
+  state = { isLoading: true, helpers: [] ,hotspot:false,center:[]};
   getHelpers = async () => {
     //code to get helpers from db
     var helpers = [
@@ -29,7 +29,7 @@ export default class Map extends Component {
           
           this.setState({
             current: { longitude: position.coords.longitude, latitude: position.coords.latitude, isLoading: false },
-            map: { latitudeDelta: 0.1, longitudeDelta: 0.1, longitude: position.coords.longitude, latitude: position.coords.latitude },
+            map: { latitudeDelta: 0.03, longitudeDelta: 0.03, longitude: position.coords.longitude, latitude: position.coords.latitude },
             isLoading: false,
           });
           deviceStorage.saveKey("longitude", position.coords.longitude.toString())
@@ -42,9 +42,10 @@ export default class Map extends Component {
             })
             .then((res) => {
               
-              // console.log(res.data);
+              
               this.setState({
-                hotspot:res.data.hotspot
+                hotspot:res.data.hotspot,
+                center:{latitude: res.data.center[0],longitude:res.data.center[1]}
               })
               if(res.data.hotspot)
               showMessage({
@@ -92,7 +93,7 @@ export default class Map extends Component {
             }}
           >
             {this.state.hotspot?(<MapView.Circle
-            center = {{ ...this.state.current  }}
+            center = {{...this.state.center}}
             radius = { 500 }
             strokeColor = "red"
             fillColor="rgba(232, 37, 60,0.3)"
