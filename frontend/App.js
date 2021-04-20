@@ -47,7 +47,6 @@ class App extends React.Component {
     if (this.state.id && this.state.id !== "")
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log(position.coords.longitude)
           deviceStorage.saveKey("longitude", position.coords.longitude.toString())
           deviceStorage.saveKey("latitude", position.coords.latitude.toString())
           axios

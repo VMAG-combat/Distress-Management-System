@@ -11,60 +11,41 @@ exports.getNearestUsers = async (req, res) => {
   try {
     
     // console.log(req.body);
-    // var users = await get({
-    //   collection: "User",
-    //   by: "where",
-    //   where: [
-    //     { parameter: "latitude", value: latitude + 0.05, comparison: "<=" },
-    //     { parameter: "latitude", value: latitude - 0.05, comparison: ">=" },
-    //   ],
-    // });
-    // var users2 = await get({
-    //   collection: "User",
-    //   by: "where",
-    //   where: [
-    //     { parameter: "longitude", value: longitude + 0.05, comparison: "<=" },
-    //     { parameter: "longitude", value: longitude - 0.05, comparison: ">=" },
-    //   ],
-    // });
-    // // users = Array(users);
-
-    
-    // users = users.filter((user) => {
-      
-    //   if (user.id === userid) {
-    //     return false;
-    //   }
-    //   for (var i = 0; i < users2.length; i++) {
-    //     // }
-    //     // users2.map(user2=>{
-
-    //     if (user.id === users2[i].id) {
-    //       return true;
-    //     }
-    //   }
-    //   return false;
-    // });
     var users = await get({
       collection: "User",
       by: "where",
       where: [
-        { parameter: "id", value: userid , comparison: "!=" },
-      //   { parameter: "latitude", value: incident.latitute - 0.05, comparison: ">=" },
+        { parameter: "latitude", value: latitude + 0.05, comparison: "<=" },
+        { parameter: "latitude", value: latitude - 0.05, comparison: ">=" },
+      ],
+    });
+    var users2 = await get({
+      collection: "User",
+      by: "where",
+      where: [
+        { parameter: "longitude", value: longitude + 0.05, comparison: "<=" },
+        { parameter: "longitude", value: longitude - 0.05, comparison: ">=" },
       ],
     });
     // users = Array(users);
 
-  //   console.log(users)
-  //   console.log(users2)
     
     users = users.filter((user) => {
       
-     if(user.latitude && user.longitude && Math.abs(latitude-user.latitude)<=0.5 && Math.abs(longitude-user.longitude)<=0.5)
-      return true
+      if (user.id === userid) {
+        return false;
+      }
+      for (var i = 0; i < users2.length; i++) {
+        // }
+        // users2.map(user2=>{
+
+        if (user.id === users2[i].id) {
+          return true;
+        }
+      }
       return false;
     });
-
+  
     // console.log(users);
     return res.json({ users: users });
   } catch (err) {
@@ -205,18 +186,18 @@ exports.addFriends = async (req, res) => {
     console.log("Friend added in user's list");
 
     // adding user1 to user2's friend list
-    var user2 = await get({ collection: "User", by: "id", id: friendId });
-    if (user2.friends) {
-      user2.friends.push(userId);
-    } else {
-      user2.friends = [userId];
-    }
-    var fid = await update({ collection: "User", data: user2, id: user2.id });
-    console.log("User added in friends's list");
+    // var user2 = await get({ collection: "User", by: "id", id: friendId });
+    // if (user2.friends) {
+    //   user2.friends.push(userId);
+    // } else {
+    //   user2.friends = [userId];
+    // }
+    // var fid = await update({ collection: "User", data: user2, id: user2.id });
+    // console.log("User added in friends's list");
 
     res.json({
-      user: user,
-      friend: user2,
+      userid: id,
+      
     });
   } catch (error) {
     res.status(400).json({

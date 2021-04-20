@@ -87,7 +87,7 @@ const deviceStorage = {
   async getHelpers() {
     const token = await AsyncStorage.getItem("helpers");
     if (token !== null) {
-      console.log(token)
+      
       return token;
     }
     return "";

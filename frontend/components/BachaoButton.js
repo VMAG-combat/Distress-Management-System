@@ -65,7 +65,7 @@ class BachaoButton extends React.Component{
             status:'active'
         }).then((response) => {
             
-            console.log(response.data.helpers);
+            // console.log(response.data.helpers);
             this.setState({
                 nearByHelpers:response.data.helpers
             })
