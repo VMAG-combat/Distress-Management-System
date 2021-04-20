@@ -1,7 +1,7 @@
 import { Block } from "galio-framework";
 import React, { Component } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { StyleSheet, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, Dimensions, ScrollView,Text } from "react-native";
 import { isLoaded } from "expo-font";
 const { width } = Dimensions.get("screen");
 import Geolocation from "@react-native-community/geolocation";
@@ -12,7 +12,7 @@ import { showMessage } from "react-native-flash-message";
 
 
 export default class Map extends Component {
-  state = { isLoading: true, helpers: [] ,hotspot:false,center:[]};
+  state = { isLoading: false, helpers: [] ,hotspot:false,center:[], update:true};
   getHelpers = async () => {
     //code to get helpers from db
 
@@ -35,13 +35,17 @@ export default class Map extends Component {
     })
     this.setState({helpers, id: id });
   };
+  
   componentDidMount() {
+    this.setState({
+      isLoading:true
+    })
     this.getHelpers().then(() => {
       Geolocation.getCurrentPosition(
         async (position) => {
           
           this.setState({
-            current: { longitude: position.coords.longitude, latitude: position.coords.latitude, isLoading: false },
+            current: { longitude: position.coords.longitude, latitude: position.coords.latitude},
             map: { latitudeDelta: 0.03, longitudeDelta: 0.03, longitude: position.coords.longitude, latitude: position.coords.latitude },
             isLoading: false,
           });
@@ -59,7 +63,8 @@ export default class Map extends Component {
               
               this.setState({
                 hotspot:res.data.hotspot,
-                center:{latitude: res.data.center[0],longitude:res.data.center[1]}
+                center:{latitude: res.data.center[0],longitude:res.data.center[1]},
+                isLoading:false
               })
               if(res.data.hotspot)
               showMessage({
@@ -97,6 +102,7 @@ export default class Map extends Component {
   render() {
     return (
       <Block flex style={styles.home}>
+        
         {!this.state.isLoading ? (
           <MapView
             initialRegion={{ ...this.state.map }}
@@ -120,7 +126,7 @@ export default class Map extends Component {
               return <Marker pinColor="green" coordinate={{ ...helper }} key={helper.id} />;
             })}
           </MapView>
-        ) : null}
+         ) : <Text bold size={32} style={{position:"absolute" , top:100}}>Loading ...</Text>}
       </Block>
     );
   }

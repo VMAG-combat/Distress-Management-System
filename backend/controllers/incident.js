@@ -37,18 +37,18 @@ exports.registerIncident = async (req, res) => {
 
     try {
         //saving new incident to incident database
-        // var id = await insert({collection:"Incident",data:incident}) 
+        var id = await insert({collection:"Incident",data:incident}) 
 
-        // //adding incident id to the list of incidents of the current user
-        // var user = await get({collection:"User",by:"id", id:incident.userid})
-        // if(user.incidents){
-        //     user.incidents.push(id);
-        // }else{
-        //     user.incidents = [id];
-        // }
-        // var uid = await update({collection: "User", data:user,id:user.id});
+        //adding incident id to the list of incidents of the current user
+        var user = await get({collection:"User",by:"id", id:incident.userid})
+        if(user.incidents){
+            user.incidents.push(id);
+        }else{
+            user.incidents = [id];
+        }
+        var uid = await update({collection: "User", data:user,id:user.id});
 
-        // console.log("Incident logged successfully!");
+        console.log("Incident logged successfully!");
 
         //fetching top 5 nearby users using radial distance
         // var allusers = await get({collection:"User",by:"where",where:[{parameter:"latitude", comparison:">",value:"0"}]})
