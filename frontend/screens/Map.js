@@ -23,7 +23,9 @@ export default class Map extends Component {
       // { latitude: 26.488, longitude: 80.28 , id:3},
     ];
     deviceStorage.getHelpers().then( (help)=>{
+      if(help)
       JSON.parse(help).forEach(helper => {
+
         helpers.push(
           {latitude:helper.latitude,longitude:helper.longitude,id:helper.id}
         )

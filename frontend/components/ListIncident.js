@@ -39,21 +39,23 @@ const ListIncident = (props) => {
     }
 
     
-    
-    if(incident.latitute){
+    useEffect(async ()=>{
+      if(incident.latitute){
       
-      try{
-    axios.get(`https://us1.locationiq.com/v1/reverse.php?key=c3878484ac573f&lat=` + (incident.latitute) + '&lon=' + (incident.longitude) + '&format=json').then((res)=>{
-
-        console.log("Address: " ,res.data.display_name)
-        setAdd(res.data.display_name)
-    }).catch((err)=>{
-      console.log("ff",err)
+        try{
+      await axios.get(`https://us1.locationiq.com/v1/reverse.php?key=c3878484ac573f&lat=` + (incident.latitute) + '&lon=' + (incident.longitude) + '&format=json').then((res)=>{
+  
+          console.log("Address: " ,res.data.display_name)
+          setAdd(res.data.display_name)
+      }).catch((err)=>{
+        console.log("ff",err)
+      })
+    } catch(err){
+      console.log(err)
+    }
+    }
     })
-  } catch(err){
-    console.log(err)
-  }
-  }
+    
 
 
     const toggleModal= ()=>{

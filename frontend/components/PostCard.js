@@ -85,15 +85,17 @@ const PostCard = (props) => {
     }
 
     useEffect(() => {
+        if(post.photo){
         let imageUrl = `${ENV.apiUrl}/social/post/photo/${post.id}`;
         Image.getSize(imageUrl, (width, height) => {
             // calculate image width and height 
             const screenWidth = Dimensions.get('window').width
             const scaleFactor = width / screenWidth
-            const imageHeight = height / scaleFactor
+            const imageHeight = height /scaleFactor
             setImgWidth(screenWidth);
             setImgHeight(imageHeight);
         })
+    }
     }, [])
 
 
