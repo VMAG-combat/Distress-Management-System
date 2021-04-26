@@ -25,6 +25,7 @@ class Otp extends React.Component {
     this.state = {
       isVerified: false,
       otp: "",
+      verifying:false,
     };
   }
 
@@ -39,6 +40,9 @@ class Otp extends React.Component {
       var otp1 = this.state.otp;
       var otp2 = this.props.route.params.otp;
       if (otp1 === otp2) {
+        this.setState({
+          verifying:true
+        })
         if (this.props.route.params.isSignUp) {
           console.log("okkk");
           axios
@@ -129,9 +133,17 @@ class Otp extends React.Component {
 
         <Block middle>
           <TouchableOpacity style={styles.verify} onPress={handleCodeVerify}>
-            <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
+            {
+              this.state.verifying ? (
+                <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
+              Verifying...
+            </Text>
+              ) :
+              <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
               Verify
             </Text>
+            }
+            
           </TouchableOpacity>
         </Block>
       </Block>

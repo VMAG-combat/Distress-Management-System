@@ -170,6 +170,7 @@ export default class Map extends Component {
     
         {!this.state.isLoading ? (
           <MapView
+          loadingEnabled={true}
             initialRegion={{ ...this.state.map }}
             provider={PROVIDER_GOOGLE}
             style={styles.home}

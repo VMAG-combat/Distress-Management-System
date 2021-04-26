@@ -338,7 +338,7 @@ class Profile extends React.Component {
         // />
                         ):null
                       }
-                      <Block middle style={{position:'absolute', top:0, right:0,paddingTop:20}} >
+                      <Block middle style={{paddingTop:20}} >
                       <TouchableOpacity onPress={()=>{navigation.navigate("Pro",{contacts:this.state.contacts,userId:user.id})}}><Text bold color={argonTheme.COLORS.PRIMARY}>+ ADD EMERGENCY CONTACTS</Text></TouchableOpacity>
                       </Block>
                     </Block>
