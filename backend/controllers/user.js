@@ -108,10 +108,9 @@ exports.updatelocation = async (req, res) => {
     var dataset=[]
     for(var incident of incidents){
       var latlong=[]
-        if(incident.latitude)
+        
         latlong.push(incident.latitude)
-        else if(incident.latitute)
-        latlong.push(incident.latitute)
+        
         latlong.push(incident.longitude)
 
         dataset.push(latlong)
@@ -283,3 +282,47 @@ exports.getAllUsers = async (req,res) => {
     });
   }
 }
+
+exports.addEmergencyContacts = async (req, res) => {
+  //{userId, friendId}
+  var { userId, emergencyContacts } = req.body;
+  try {
+    var user = await get({ collection: "User", by: "id", id: userId });
+    // adding user2 to user1's friend list
+    for(const contact of emergencyContacts){
+    if (user.emergencyContacts) {
+      user.emergencyContacts.push({
+        "name":contact.name,
+        "phoneno":contact.numbers[0]
+      });
+    } else {
+      user.emergencyContacts = [{
+        "name":contact.name,
+        "phoneno":contact.numbers[0]
+      }];
+    }
+  }
+    var id = await update({ collection: "User", data: user, id: user.id });
+    console.log("Emergency Contacts Added Succesfully");
+
+    console.log(user)
+    // adding user1 to user2's friend list
+    // var user2 = await get({ collection: "User", by: "id", id: friendId });
+    // if (user2.friends) {
+    //   user2.friends.push(userId);
+    // } else {
+    //   user2.friends = [userId];
+    // }
+    // var fid = await update({ collection: "User", data: user2, id: user2.id });
+    // console.log("User added in friends's list");
+
+    res.json({
+      userid: id,
+      
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Error in Adding Contacts",
+    });
+  }
+};

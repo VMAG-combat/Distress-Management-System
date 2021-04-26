@@ -40,10 +40,10 @@ const ListIncident = (props) => {
 
     
     useEffect(async ()=>{
-      if(incident.latitute){
+      if(incident.latitude){
       
         try{
-      await axios.get(`https://us1.locationiq.com/v1/reverse.php?key=c3878484ac573f&lat=` + (incident.latitute) + '&lon=' + (incident.longitude) + '&format=json').then((res)=>{
+      await axios.get(`https://us1.locationiq.com/v1/reverse.php?key=c3878484ac573f&lat=` + (incident.latitude) + '&lon=' + (incident.longitude) + '&format=json').then((res)=>{
   
           console.log("Address: " ,res.data.display_name)
           setAdd(res.data.display_name)
@@ -110,7 +110,7 @@ const ListIncident = (props) => {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Add Helpers</Text>
             <AddHelpers allusers={allusers} helpers={addHelpers}/>
-            <Button style={{backgroundColor:argonTheme.COLORS.BUTTON_COLOR}} onPress={()=> closeModal()} >
+            <Button style={{backgroundColor:argonTheme.COLORS.BUTTON_COLOR,marginBottom:20}} onPress={()=> closeModal()} >
               <Text size={24} color="white">
                 Done
               </Text>

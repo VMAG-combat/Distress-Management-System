@@ -99,6 +99,15 @@ const deviceStorage = {
       console.log("AsyncStorage Error: " + error.message);
     }
   },
+  async getEmergencyContacts() {
+    const token = await AsyncStorage.getItem("emergency_contacts");
+    if (token !== null) {
+      
+      return token;
+    }
+    return "";
+  },
+
 };
 
 export default deviceStorage;

@@ -17,6 +17,7 @@ import Element from "../screens/Element";
 import SocialMedia from "../screens/SocialMedia";
 import BachaoButton from "../components/BachaoButton";
 import Incident from '../screens/incident';
+import AddContacts from '../screens/contacts'
 // drawer
 import CustomDrawerContent from "./Menu";
 
@@ -111,7 +112,11 @@ function SocialMediaStack(props) {
     </Stack.Navigator>
   );
 }
-
+function AddContactsScreen({navigation,route}){
+  return(
+  <AddContacts />
+  )
+}
 function ProfileStack(props) {
   // console.log("PROFILE: \n"+props)
   return (
@@ -129,9 +134,9 @@ function ProfileStack(props) {
       />
       <Stack.Screen
         name="Pro"
-        component={Pro}
+        component={AddContacts}
         options={{
-          header: ({ navigation, scene }) => <Header title="" back white transparent navigation={navigation} scene={scene} />,
+          header: ({ navigation, scene }) => <Header title="Select Contacts" back navigation={navigation} scene={scene} />,
           headerTransparent: true,
         }}
       />

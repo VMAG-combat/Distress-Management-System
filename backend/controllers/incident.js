@@ -83,7 +83,7 @@ exports.registerIncident = async (req, res) => {
           
           users = users.filter((user) => {
             
-           if(user.latitude && user.longitude && Math.abs(incident.latitute-user.latitude)<=0.5 && Math.abs(incident.longitude-user.longitude)<=0.5)
+           if(user.latitude && user.longitude && Math.abs(incident.latitude-user.latitude)<=0.5 && Math.abs(incident.longitude-user.longitude)<=0.5)
             return true
             return false;
           });

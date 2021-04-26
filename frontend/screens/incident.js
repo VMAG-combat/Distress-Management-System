@@ -68,7 +68,7 @@ class Incident extends React.Component {
  
   render(){
     const { message,incident,allusers} = this.state;
-    const sortincident = [].slice.call(incident).sort((a,b)=>{ return b.datetime> a.datetime})
+    const sortincident = [].slice.call(incident).sort((a,b)=>{ return Date.parse(b.datetime)> Date.parse(a.datetime)})
     
     return (
       <Block flex center style={styles.home}>
