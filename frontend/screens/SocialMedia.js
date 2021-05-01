@@ -375,8 +375,8 @@ function MyFeedTab({ navigation, route }) {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="MyFeeds" component={FeedStack} initialParams={{ navigation: navigation, route: route }} />
-      <Stack.Screen name="CreatePost" component={CreatePostStack} />
+      <Stack.Screen name="MyFeed" component={FeedStack} initialParams={{ navigation: navigation, route: route }} />
+      <Stack.Screen name="CreatePost" component={CreatePostStack} initialParams={{ navigation: navigation, route: route }} />
     </Stack.Navigator>
     // <Posts navigation={navigation} route={route}/>
   );

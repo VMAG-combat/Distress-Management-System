@@ -23,6 +23,7 @@ class Login extends React.Component {
       error: "",
       isSignIn: false,
       otp: "",
+      isSending:false,
     };
     this.loginUser = this.loginUser.bind(this);
     this.onLoginFail = this.onLoginFail.bind(this);
@@ -73,6 +74,7 @@ class Login extends React.Component {
             email: "",
             password: "",
             error: "",
+            isSending:true
           });
           this.props.navigation.navigate("Otp", { otp: this.state.otp, isSignIn: this.state.isSignIn, email: email, password: password });
           showMessage({
@@ -146,9 +148,18 @@ class Login extends React.Component {
 
               <Block middle width={width * 0.8}>
                 <Button color="primary" style={{ width: width * 0.8, marginTop: 50 }} mode="contained" onPress={this.loginUser}>
-                  <Text bold size={18} color={argonTheme.COLORS.WHITE}>
+                  {
+                    (this.state.isSending) ? (
+                      <Text bold size={18} color={argonTheme.COLORS.WHITE}>
+                    Authenticating ...
+                  </Text>
+                    ) : (
+                      <Text bold size={18} color={argonTheme.COLORS.WHITE}>
                     Authenticate
                   </Text>
+                    )
+                  }
+                  
                 </Button>
               </Block>
               <View style={styles.row}>

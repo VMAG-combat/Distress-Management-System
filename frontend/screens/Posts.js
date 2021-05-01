@@ -57,12 +57,12 @@ class Posts extends React.Component{
         this.setState({
           isRefreshing: true
         })
-        console.log(this.props)
         axios({
           method: 'GET',
           url: `${ENV.apiUrl}/social/getposts/`+this.props.route.params.userId,
         }).then((response) => {
 
+          console.log(response.data.posts)
           this.setState({
             posts: response.data.posts,
             message: response.data.error,
@@ -96,7 +96,7 @@ class Posts extends React.Component{
         
         const {posts,message} = this.state;
         const {navigation} = this.props;
-        
+        // console.log(posts)
         return (
             <Block flex center>
               {

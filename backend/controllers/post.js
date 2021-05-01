@@ -2,6 +2,7 @@ const update = require('../crud/update.js');
 const insert = require('../crud/insert.js');
 const get = require('../crud/get.js');
 const remove = require('../crud/remove.js');
+// const { log } = require('react-native-reanimated');
 
 // fetch posts created by the user
 exports.getPostsByUser = async (req,res) => {
@@ -65,15 +66,14 @@ exports.getPosts = async (req,res) => {
         var friendids = user.friends;
 
         allposts = []
-        // console.log(friendids)
         for(const fid of friendids){
             
             const posts = await get({collection:"Post",by:"where",where:[{parameter:"userId", comparison:"==",value:fid}]});
-            console.log(fid)
-            for(const post of posts)
-            allposts.push(post);
+            for(const post of posts){
+                allposts.push(post);
+            }
+
         }
-        console.log(allposts)
         
         if(!allposts){
             return res.status(404).json({

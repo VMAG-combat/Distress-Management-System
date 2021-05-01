@@ -8,6 +8,7 @@ import ENV from '../env.';
 import axios from 'axios';
 
 import { showMessage } from "react-native-flash-message";
+import { argonTheme } from '../constants';
 
 
 const PostCard = (props) => {
@@ -20,6 +21,7 @@ const PostCard = (props) => {
     const [showFullBody, setShowFullBody] = useState(false);
     const [imgWidth, setImgWidth] = useState();
     const [imgHeight, setImgHeight] = useState();
+    const [postUser,setPostUser] = useState('')
 
     const onImageErrorHandler = () => {
         setImageUri(ENV.defaultImageUri)
@@ -85,15 +87,26 @@ const PostCard = (props) => {
     }
 
     useEffect(() => {
+        if(post.photo){
         let imageUrl = `${ENV.apiUrl}/social/post/photo/${post.id}`;
         Image.getSize(imageUrl, (width, height) => {
             // calculate image width and height 
             const screenWidth = Dimensions.get('window').width
             const scaleFactor = width / screenWidth
-            const imageHeight = height / scaleFactor
+            const imageHeight = height /scaleFactor
             setImgWidth(screenWidth);
             setImgHeight(imageHeight);
         })
+    }
+    axios.get(`${ENV.apiUrl}/user/getprofile/` + post.userId)
+    .then((user) => {
+        
+        setPostUser(user.data.user.name)
+        
+      })
+      .catch((error) => {
+        console.log("Somethi wrong",error)
+      });
     }, [])
 
 
@@ -103,7 +116,38 @@ const PostCard = (props) => {
             
         >
             <View style={styles.card}>
-              
+                {post.userId != userId && (
+            <View style={styles.cardTitleHeader}>
+                    <View style={{ display: 'flex', flex: 1, flexDirection: 'row' }} >
+                        <View style={styles.timeContainer}>
+                            <Image
+                                style={styles.userIcon} 
+                                // source={{ uri: imageUri || `${ENV.apiUrl}/user/photo/${post.postedBy._id}?${new Date(post.postedBy.updated)}` }}
+                                source={{ uri: ENV.defaultImageUri }}
+                                onError={onImageErrorHandler}
+                            />
+                            <Text 
+                            bold
+                                style={{ fontSize: 15, alignSelf: 'center', paddingHorizontal: 10, paddingVertical: 5 ,color:argonTheme.COLORS.BLACK }} 
+                               // onPress={() => navigation.navigate('UserProfile', { userId: post.postedBy._id, name: post.postedBy.name })} 
+                            > 
+                                {postUser + " "}
+                                {/* {
+                                    VerifiedUser.verifiedUsersId.includes(post.postedBy._id) && <Octicons name="verified" size={18} color={Colors.brightBlue} />
+                                } */}
+                            </Text>
+                        </View>
+                        {/* <View style={{ position: 'absolute', right: 0, display: 'flex', flexDirection: 'row'}}>
+                            <Ionicons 
+                                name={ Platform.OS === 'android' ? 'md-time' : 'ios-time' }
+                                size= {14}
+                                style={{ marginTop: 3 }}
+                            />
+                            <Text> {timeDifference(new Date(), new Date(post.created))} </Text>
+                        </View> */}
+                    </View>
+                </View>
+                )}
                 <View style={styles.cardImageContainer} >
                     <Image 
                         style={{...styles.cardImage, height: imgHeight }}
@@ -232,7 +276,7 @@ const styles = StyleSheet.create({
     userIcon: {
         height: 30,
         width: 30,
-        borderRadius: 30
+        borderRadius: 30,
     },
     card: {
         width: '100%',

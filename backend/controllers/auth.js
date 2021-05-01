@@ -29,7 +29,7 @@ exports.sendotpForRegister = async (req, res) => {
             var otp = otpGenerator.generate(6, { upperCase: false, specialChars: false , alphabets:false});
             var message = "Your otp for Bachao Account Registration is: "+otp;
             console.log("sending otp "+otp);
-            // const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [phone], flash:1})
+            const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [phone], flash:1})
             // console.log(response);
             res.json({
                 otp: otp,
@@ -109,7 +109,7 @@ exports.sendotpForLogin = async (req, res) => {
         var otp = otpGenerator.generate(6, { upperCase: false, specialChars: false, alphabets: false });
         var message = "Your otp for Bachao Account Login is: " + otp;
         console.log("sending otp " + otp);
-        // const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [user[0].phone],flash:1})
+        const response = await fast2sms.sendMessage({authorization: process.env.FAST2SMS_API_KEY, message: message, numbers: [user[0].phone],flash:1})
 
         res.json({
           otp: otp,

@@ -19,12 +19,14 @@ const userRoutes = require('./routes/user.js');
 const incidentRoutes = require('./routes/incident.js');
 const socialRoutes = require('./routes/social/post.js');
 const eventRoutes = require('./routes/event.js');
+const storeRoutes = require('./routes/store.js');
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/incident', incidentRoutes);
 app.use('/social', socialRoutes);
 app.use('/event',eventRoutes);
+app.use('/store',storeRoutes);
 
 app.use("/crud/",require("./routes/basicCrud"));
 

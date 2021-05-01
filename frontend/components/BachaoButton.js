@@ -18,7 +18,7 @@ class BachaoButton extends React.Component{
         this.state = {
           count:0,
           message:'',
-          nearByHelpers:''
+          nearByHelpers:[]
         }
         
         // console.log(this.state);
@@ -46,8 +46,10 @@ class BachaoButton extends React.Component{
 
     registerIncident = async () => {
         const coord = await deviceStorage.loadCoords();
+        
+        
+        
         deviceStorage.getId().then((userId) => {
-
         
         var date = new Date().getDate(); //Current Date
     var month = new Date().getMonth() + 1; //Current Month
@@ -55,27 +57,80 @@ class BachaoButton extends React.Component{
     var hours = new Date().getHours(); //Current Hours
     var min = new Date().getMinutes(); //Current Minutes
     var sec = new Date().getSeconds(); //Current Seconds
-    var currDateTime = date + '/' + month + '/' + year 
-      + ' ' + hours + ':' + min + ':' + sec
+    const currDateTime = new Date(year,month-1,date,hours,min,sec).toLocaleString();
+    // console.log(dadte)
+    // var currDateTime = date + '/' + month + '/' + year 
+    //   + ' ' + hours + ':' + min + ':' + sec
         axios.post(`${ENV.apiUrl}/incident/registerIncident`,{
             userid: userId,
             longitude:coord[1],
-            latitute:coord[0],
+            latitude:coord[0],
             datetime:currDateTime,
             status:'active'
         }).then((response) => {
             
-            console.log(response.data);
-            this.setState({
-                nearByHelpers:response.data.helpers
-            })
+            // console.log(response.data.helpers);
+            var temp=[]
+            for(const h of response.data.helpers)
+            temp.push(h.phone)
+
+                  var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
+               temp.forEach(async (helper)=>{
+                   if(helper){
+                   console.log('sendin msg to ',helper);
+                  //   await SmsAndroid.autoSend(
+                  //      helper,
+                  //      messsage,
+                  //      (fail) => {
+                  //        console.log('Failed with this error: ' + fail);
+                  //      },
+                  //      (success) => {
+                  //        console.log('SMS sent successfully');
+                  //      },
+                  //    );
+                   }
+               });
+            deviceStorage.saveKey("helpers", JSON.stringify(response.data.helpers));
+            
             console.log("Incident Registered!!!")
           })
           .catch((error) => {
             console.log(error);
           });
+
+
+          
+          
+       
         }
         )
+        
+        const ecc = []
+          deviceStorage.getEmergencyContacts().then( (contacts)=>{
+              JSON.parse(contacts).forEach(contact => {
+                  
+                  ecc.push(
+                    contact.phoneno
+                  )
+                });
+                var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
+                ecc.forEach(async (helper)=>{
+                    if(helper){
+                    console.log('sendin msg to ',helper);
+                   //   await SmsAndroid.autoSend(
+                   //      helper,
+                   //      messsage,
+                   //      (fail) => {
+                   //        console.log('Failed with this error: ' + fail);
+                   //      },
+                   //      (success) => {
+                   //        console.log('SMS sent successfully');
+                   //      },
+                   //    );
+                    }
+                });
+            })
+        
     }
     handdlePress = async () =>{
         // e.preventDefault();
@@ -103,30 +158,9 @@ class BachaoButton extends React.Component{
         })
         if(this.state.count>=2){
             this.registerIncident();
+        
         console.log("Bachao");
-        
-        deviceStorage.loadCoords().then((coord) => {
-            
-            
-           var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
-        
-        help.forEach(async helper => {
-            if(helper){
-            console.log('sendin msg to ',helper.phone);
-            await SmsAndroid.autoSend(
-                // helper.phone,
-                '6389701088',
-                messsage,
-                (fail) => {
-                  console.log('Failed with this error: ' + fail);
-                },
-                (success) => {
-                  console.log('SMS sent successfully');
-                },
-              );
-            }
-        });
-        })
+    
         this.setState({
             count: 0,
         })

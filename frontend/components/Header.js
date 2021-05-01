@@ -28,7 +28,7 @@ const BellButton = ({isWhite, style, navigation}) => (
 const BasketButton = ({isWhite, style, navigation,back,iconColor}) => (
 
   
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')} >
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Store')} >
     <Icon
       family="ArgonExtra"
       size={20}
@@ -245,14 +245,15 @@ const styles = StyleSheet.create({
   },
   title: {
     width: '100%',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     
   },
   navbar: {
     paddingVertical: 0,
-    paddingBottom: theme.SIZES.BASE * 1.5,
-    paddingTop: iPhoneX ? theme.SIZES.BASE * 4 : theme.SIZES.BASE,
+    // paddingBottom: theme.SIZES.BASE * 1.5,
+    paddingTop:10,
+    // paddingTop: iPhoneX ? theme.SIZES.BASE * 4 : theme.SIZES.BASE,
     zIndex: 5,
   },
   shadow: {

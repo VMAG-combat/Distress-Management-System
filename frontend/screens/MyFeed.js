@@ -40,7 +40,6 @@ class MyFeed extends React.Component{
       this.setState({
         isRefreshing: true
       })
-      console.log(this.props)
         axios({
             method: 'GET',
             url: `${ENV.apiUrl}/social/myposts/`+this.props.route.params.route.params.userId,

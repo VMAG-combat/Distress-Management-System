@@ -79,10 +79,35 @@ const deviceStorage = {
           jwt: "",
         });
       });
+      await AsyncStorage.clear();
     } catch (error) {
       console.log("AsyncStorage Error: " + error.message);
     }
   },
+  async getHelpers() {
+    const token = await AsyncStorage.getItem("helpers");
+    if (token !== null) {
+      
+      return token;
+    }
+    return "";
+  },
+  async deleteHelpers() {
+    try {
+      await AsyncStorage.removeItem("helpers")
+    } catch (error) {
+      console.log("AsyncStorage Error: " + error.message);
+    }
+  },
+  async getEmergencyContacts() {
+    const token = await AsyncStorage.getItem("emergency_contacts");
+    if (token !== null) {
+      
+      return token;
+    }
+    return "";
+  },
+
 };
 
 export default deviceStorage;

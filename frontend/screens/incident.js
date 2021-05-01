@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, View,Dimensions, ScrollView,FlatList } from 'react-native';
-import { Block, theme } from 'galio-framework';
+import { Block, theme ,Text} from 'galio-framework';
 const { width } = Dimensions.get('screen');
 import deviceStorage from '../services/deviceStorage.js'; 
 import axios from 'axios';
 import ENV from '../env.'
 import ListIncident from "../components/ListIncident";
+import { articles, Images, argonTheme } from "../constants";
 
 
 class Incident extends React.Component {
@@ -67,11 +68,16 @@ class Incident extends React.Component {
  
   render(){
     const { message,incident,allusers} = this.state;
-    const sortincident = [].slice.call(incident).sort((a,b)=>{ return b.datetime> a.datetime})
+    const sortincident = [].slice.call(incident).sort((a,b)=>{ return Date.parse(b.datetime)> Date.parse(a.datetime)})
     
     return (
       <Block flex center style={styles.home}>
-        <View style={styles.container}>
+        
+        {
+          sortincident.length !==0 ? (
+
+          
+            <View style={styles.container}>
             <FlatList
             onRefresh={this.loadIncident}
             refreshing={this.state.isRefreshing}
@@ -88,6 +94,16 @@ class Incident extends React.Component {
             )}
             />
             </View>
+          ) :
+          (
+            
+            <Text bold size={16} style={styles.title}>You haven't encountered any incident.{'\n'}Stay Safe & Help Others!!!</Text>
+            
+            
+          )
+          
+        }
+         
        </Block>
      
     )
@@ -95,6 +111,12 @@ class Incident extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    paddingBottom: theme.SIZES.BASE,
+    paddingHorizontal: theme.SIZES.BASE * 2,
+    marginTop:100,
+    color: argonTheme.COLORS.WARNING
+  },
   home: {
     width: width,    
   },
