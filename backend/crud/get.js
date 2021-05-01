@@ -8,6 +8,16 @@ module.exports = async (
   if (!obj.collection || obj.collection === "") {
     throw new Error("Collection name should be a non-empty string");
   }
+  if (obj.by && obj.by === "all") {
+    var res = await admin.firestore().collection(obj.collection);
+    res = (await res.get()).docs;
+    for (var i = 0; i < res.length; i++) {
+      var x = res[i].data();
+      x.id = res[i].id;
+      res[i] = x;
+    }
+    return res;
+  }
   if (!obj.by || (obj.by !== "id" && obj.by !== "where")) {
     throw new Error("'by' is a required argument and must be either 'id' or 'where'");
   }

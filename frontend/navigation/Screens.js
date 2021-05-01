@@ -18,6 +18,7 @@ import SocialMedia from "../screens/SocialMedia";
 import BachaoButton from "../components/BachaoButton";
 import Incident from '../screens/incident';
 import AddContacts from '../screens/contacts'
+import Store from "../screens/Store"
 // drawer
 import CustomDrawerContent from "./Menu";
 
@@ -78,11 +79,11 @@ function MapStack(props) {
         }}
       />
       <Stack.Screen
-        name="Pro"
-        component={Pro}
+        name="Store"
+        component={Store}
         options={{
-          header: ({ navigation, scene }) => <Header title="" back white transparent navigation={navigation} scene={scene} />,
-          headerTransparent: true,
+          header: ({ navigation, scene }) => <Header title="E-Store" back  transparent navigation={navigation} scene={scene} />,
+          // headerTransparent: true,
         }}
       />
     </Stack.Navigator>
@@ -95,7 +96,7 @@ function SocialMediaStack(props) {
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
         name="SocialMedia"
-        component={SocialMedia}
+        component={Pro}
         options={{
           header: ({ navigation, scene }) => <Header title="Social" navigation={navigation} scene={scene} />,
           cardStyle: { backgroundColor: "#F8F9FE" },

@@ -70,6 +70,7 @@ export const AllEvents = ({userid}) => {
         // console.log(res.data);
         if(res.data.error==""){  
           console.log("All Events fetched successfully"); 
+          console.log(res.data.events)
           setdata(res.data.events);
           setAllData(res.data.events);
         }else{

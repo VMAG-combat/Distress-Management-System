@@ -137,12 +137,13 @@ exports.updatelocation = async (req, res) => {
       }
       var hotspot=false
       var center =[]
+      console.log(incidents)
       for(var key in data){
         // console.log(parseFloat(key.substring(key.indexOf(',')+1)))
         // console.log(parseFloat(key.substring(0,key.indexOf(',')))-newuser.latitude,parseFloat(key.substring(key.indexOf(',')+1))-newuser.longitude)
         var meanLat = parseFloat(key.substring(0,key.indexOf(',')));
         var meanLong = parseFloat(key.substring(key.indexOf(',')+1));
-        if(Math.abs(meanLat-newuser.latitude)<=0.05 && Math.abs(meanLong-newuser.longitude)<=0.05 && data[key]>=5)
+        if(Math.abs(meanLat-newuser.latitude)<=0.05 && Math.abs(meanLong-newuser.longitude)<=0.05 && data[key]>=3)
         {
           hotspot=true
           center.push(meanLat)

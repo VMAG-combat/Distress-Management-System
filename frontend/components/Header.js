@@ -28,7 +28,7 @@ const BellButton = ({isWhite, style, navigation}) => (
 const BasketButton = ({isWhite, style, navigation,back,iconColor}) => (
 
   
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')} >
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Store')} >
     <Icon
       family="ArgonExtra"
       size={20}
