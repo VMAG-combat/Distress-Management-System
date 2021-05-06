@@ -7,7 +7,7 @@ import {
   Alert,
   Modal,
 } from "react-native";
-import { Block, Text, theme, Icon} from "galio-framework";
+import { Block, Text, theme} from "galio-framework";
 
 import { Button, Input} from "../components";
 import { argonTheme } from "../constants";
@@ -26,54 +26,6 @@ export const ratingImages = {
     '5': require('../assets/ratings/rating5.png'),
   }
 };
-
-// const reviews = [
-//   {
-//     name: 'Sohan Sharma',
-//     content: 'Amazing product',
-//     key: '1',
-//     rating: '3',
-//   },
-//   {
-//     name: 'Mohini Yadav',
-//     content: 'Was very helpful',
-//     key: '2',
-//     rating: '4',
-//   },
-// ]
-
-
-// const [reviewName, setReviewName] = useState("")
-// const [reviewContent, setReviewContent] = useState("")
-// const [reviewRatting, setReviewRatting] = useState("")
-// const [modalOpen, setModalOpen] = useState(false);
-// const changeNameHandler = (val) => {
-//   setReviewName(val)
-// }
-// const changeContentHandler = (val) => {
-//   setReviewContent(val)
-// }
-// const changeRattingHandler = (val) => {
-//   setReviewRatting(val)
-// }
-// const addReviewHandler = () => {
-//   if (reviewContent.length <= 3) {
-//     Alert.alert('OOPS, content length must be greater than 3')
-//   } else if (reviewRatting < '1' || reviewRatting > '5') {
-//     Alert.alert('OOPS, ratting must be 1-5')
-//   } else {
-//     reviews.push({
-//       name: reviewName,
-//       content: reviewContent,
-//       key: Math.random().toString(),
-//       rating: reviewRatting,
-//     })
-//     setReviewName("")
-//     setReviewContent("")
-//     setReviewRatting("")
-//     setModalOpen(false)
-//   }
-// }
     
 
 class ReviewsScreen extends React.Component {
@@ -88,24 +40,28 @@ class ReviewsScreen extends React.Component {
       userName: '',
       message: '',
       reviewContent: '',
-      reviewRatting: ''
+      reviewRatting: '',
+      isRefreshing: false,
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      isRefreshing: true,
+    });
     deviceStorage.getId().then((userId) => {
       this.setState({
         userId: userId
       })
     })
-    axios({
+    await axios({
       method: 'GET',
       url: `${ENV.apiUrl}/store/getAllReviews/` +this.state.itemId,
     }).then((response) => {
       this.setState({
         reviews: response.data.reviews,
-        message: response.data.error
-
+        message: response.data.error,
+        isRefreshing: false,
       });
       
     }).catch((error) => {
@@ -114,7 +70,7 @@ class ReviewsScreen extends React.Component {
       });
     });
 
-    axios({
+    await axios({
       method: 'GET',
       url: `${ENV.apiUrl}/user/getprofile/` +this.state.userId,
     }).then((response) => {
@@ -200,9 +156,10 @@ class ReviewsScreen extends React.Component {
     const reviews = this.state.reviews;
     const userName = this.state.userName;
     const userId = this.state.userId;
+    const isRefreshing = this.state.isRefreshing;
     return (
       <Block style={{ flex: 1, paddingHorizontal: theme.SIZES.BASE, paddingTop: 20 }}>
-        <Modal visible={modalOpen}>
+        {!isRefreshing && <Modal visible={modalOpen}>
           <View>
             <MaterialIcons 
               name='close'
@@ -213,8 +170,7 @@ class ReviewsScreen extends React.Component {
             />
             <Card style={{ marginBottom: 20}}>
               <Card.Content>
-                <Text style={{left: 6, marginBottom: 10, 
-                fontWeight: 'bold', fontSize: 18, color: 'grey'}}>{userName}</Text>
+                <Text style={{left: 6, marginBottom: 10, fontSize: 18, color: 'grey'}}>{userName}</Text>
                 <Input 
                   right
                   placeholder='Content...'
@@ -232,40 +188,49 @@ class ReviewsScreen extends React.Component {
               </Card.Content>
             </Card>
           </View>
-        </Modal>
+        </Modal>}
         <MaterialIcons 
+          name='arrow-back'
+          size={24}
+          style={{}}
+          onPress={() => this.props.navigation.navigate('Products')}
+        />
+        {!isRefreshing && <MaterialIcons 
           name='add'
           size={24}
           style={{marginTop: 0, marginBottom: 15, backgroundColor: '#1687a7',
           color: 'white', padding: 7, borderRadius: 20, alignSelf: 'center'}}
           onPress={this.toggleModal}
-        />
-        {reviews.length != 0 ? <FlatList
-          keyExtractor={(item) => item.id}
-          data={reviews}
-          renderItem={({ item }) => (
-            <Card style={styles.itemCard}>
-              <Card.Title title={item.userName} />
-              <Card.Content>
-                <Paragraph>{item.content}</Paragraph>
-                {item.userId == userId && 
-                <Button style={{marginTop: 0, marignBottom: 0, alignSelf: 'flex-end', width: 80, height: 30, fontSize: 10}}
-                color="error"
-                onPress={() => this.deleteReviewBtn(item.id)}
-                >
-                Delete
-                </Button>}
-                <View style={styles.rating}>
-                  <Image source={ratingImages.ratings[item.ratting]} />
-                </View>
-              </Card.Content>
-            </Card>
-          )}
-        />
-        :
-        <Button style={{alignSelf: 'center'}}color='primary' onPress={()=>this.toggleModal()}>No reviews Yet. Add one</Button>
+        />}
+        {!isRefreshing ? 
+          (reviews.length != 0 ? <FlatList
+            keyExtractor={(item) => item.id}
+            data={reviews}
+            renderItem={({ item }) => (
+              <Card style={styles.itemCard}>
+                <Card.Title title={item.userName} />
+                <Card.Content>
+                  <Paragraph style={{fontSize: 15, color: argonTheme.COLORS.HEADER, marginBottom: 10}}>{item.content}</Paragraph>
+                  {item.userId == userId && 
+                    <MaterialIcons 
+                      name='delete'
+                      size={26}
+                      style={{marginTop: -15, marginBottom: 10, alignSelf: 'flex-end'}}
+                      onPress={() => this.deleteReviewBtn(item.id)}
+                    />
+                  }
+                  <View style={styles.rating}>
+                    <Image source={ratingImages.ratings[item.ratting]} />
+                  </View>
+                </Card.Content>
+              </Card>
+            )}
+          />
+          :
+          <Button style={{alignSelf: 'center'}}color='primary' onPress={()=>this.toggleModal()}>No reviews Yet. Add one</Button>
+          )
+        : <View style={{fontWeight: 'bold', alignSelf: "center"}}><Text style={{fontSize: 18}}>Page is Refreshing ....</Text></View>
         }
-        
       </Block>
     )
   }

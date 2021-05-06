@@ -9,30 +9,29 @@ import {
   ImageBackground,
   Platform,
   Alert,
-  Modal,
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
-
-import { Button } from "../components";
+import { Header, Button, Input, Icon } from "../components";
 import { Images, argonTheme } from "../constants";
+import { HeaderHeight } from "../constants/utils";
+import { MaterialIcons } from '@expo/vector-icons';
 import {Avatar, Card, Title, Paragraph} from 'react-native-paper';
-const { width, height } = Dimensions.get("screen");
 import axios from 'axios';
 import ENV from '../env.';
 import deviceStorage from '../services/deviceStorage.js';
 
-const thumbMeasure = (width - 48 - 32) / 3;
 
-
-class ItemsScreen extends React.Component {
+class Order extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       userId: '',
-      products: '',
-      message:'',
+      orders: "",
+      message: "",
       isRefreshing: false,
-    }  
+    }
+    
   }
 
   async componentDidMount() {
@@ -47,68 +46,75 @@ class ItemsScreen extends React.Component {
 
     await axios({
       method: 'GET',
-      url: `${ENV.apiUrl}/store/getAllProducts/`,
+      url: `${ENV.apiUrl}/store/getMyOrders/` +this.state.userId,
     }).then((response) => {
       this.setState({
-        products: response.data.products,
+        orders: response.data.orders,
         message: response.data.error,
         isRefreshing: false,
       });
-      
     }).catch((error) => {
       this.setState({
-        message: 'Error retrieving data',
+        message: 'Error retrieving data' +error.message,
         isRefreshing: false,
       });
     });
+
   }
 
 
-  addToCart = async (val) => {
-    const productId = val;
+  orderReceived = async (val)=> {
+    const orderId = val;
     await axios({
       method: "POST",
-      url: `${ENV.apiUrl}/store/createOrder/` +productId +`/` +this.state.userId,
+      url: `${ENV.apiUrl}/store/orderReceived/` +orderId,
     }).then(res => {
-        if (res.data.error == "") {
-          Alert.alert("Product successfully added to cart");
-        } else if(res.data.error == "Order already present") {
-          Alert.alert("Product already present in cart.")
-        } else {
-          Alert.alert("Something went wrong. Please Try again");
+        if (res.data.error != '') {
+          Alert.alert(res.data.error)
         }
+        this.componentDidMount();
     });
   }
 
   render() {
-    const {products, message, isRefreshing} = this.state;
-    return (
+    const orders = this.state.orders;
+    const isRefreshing = this.state.isRefreshing;
+    return(
       <Block flex style={styles.group}>
-        {!isRefreshing && <Block flex>
+        {!isRefreshing && orders.length != 0 && <Block flex>
           <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
             <FlatList
               keyExtractor={(item) => item.id}
-              data={products}
+              data={orders}
               renderItem={({ item }) => (
                 <Card style={styles.itemCard}>
                   <Card.Title title={item.title} />
                   <Card.Cover style={styles.cardImage} source={{uri: item.image}} />
                   <Card.Content>
-                    <Paragraph style={styles.cardContent}>{item.content}</Paragraph>
-                    <Paragraph style={styles.itemPrice}>{"Price: " +item.price}</Paragraph>
+                    <View style={{marginTop: 15, flexDirection: 'row', justifyContent: 'space-between',
+                      alignItems: 'center'}}>
+                      <Text style={{fontWeight: 'bold', fontSize: 16}}>{"Price: " +item.price}</Text>
+                      <Text style={{fontWeight: 'bold', fontSize: 16}}>{"Quantity: " +item.quantity}</Text>
+                    </View>
+                    <View>
+                      <Text style={{fontWeight: 'bold', fontSize: 17, color: '#616161'}}>{"Order made on: " +item.madeOn}</Text>
+                      {item.received == 'no' ? <Text style={{fontWeight: 'bold', fontSize: 17, color: '#ffcc29'}}>{"Arriving on: " +item.arrival}</Text> : <Text style={{fontWeight: 'bold', fontSize: 17, color: '#289672', marginBottom: 15}}>Order Received</Text>}
+                    </View>
                   </Card.Content>
-                  <Card.Actions>
-                    <Button style={styles.cardBtn} color='error' onPress={() => this.addToCart(item.id)}>Add to cart</Button>
-                    <Button onPress={() => this.props.navigation.navigate('Reviews', item)} style={styles.cardBtn} color='primary'>See reviews</Button>
-                  </Card.Actions>
+                  { item.received == 'no' &&
+                    <Card.Actions>
+                      <Button style={{width: 100, height: 35}} color='warning' onPress={()=> this.orderReceived(item.id)}>Received</Button>
+                    </Card.Actions>
+                  }
                 </Card>
               )}
             />
           </Block>
         </Block>}
+        {!isRefreshing && orders.length == 0 && <View style={{fontWeight: 'bold', alignSelf: "center"}}><Text style={{fontSize: 18}}>You don't have any previous Orders</Text></View>}
         {isRefreshing && <View style={{fontWeight: 'bold', alignSelf: "center"}}><Text style={{fontSize: 18}}>Page is Refreshing ....</Text></View>}
       </Block>
-    );  
+    );
   }
 }
 
@@ -139,7 +145,7 @@ const styles = StyleSheet.create({
   cardBtn: {
     width: 130,
     height: 40,
-    marginHorizontal: 20,
+    marginHorizontal: 80,
     fontSize: 15,
   },
   itemPrice: {
@@ -166,4 +172,5 @@ const styles = StyleSheet.create({
 });
 
 
-export default ItemsScreen;
+
+export default Order;
