@@ -28,31 +28,6 @@ import ReviewsScreen from './ReviewsScreen';
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
-export const ratingImages = {
-  ratings: {
-    '1': require('../assets/ratings/rating1.png'),
-    '2': require('../assets/ratings/rating2.png'),
-    '3': require('../assets/ratings/rating3.png'),
-    '4': require('../assets/ratings/rating4.png'),
-    '5': require('../assets/ratings/rating5.png'),
-  }
-};
-
-const reviews = [
-  {
-    name: 'Sohan Sharma',
-    content: 'Amazing product',
-    key: '1',
-    rating: '3',
-  },
-  {
-    name: 'Mohini Yadav',
-    content: 'Was very helpful',
-    key: '2',
-    rating: '4',
-  },
-]
-
 
 function ReviewScreen({route, navigation}) {
   const userId = route.params.userId;
@@ -75,8 +50,7 @@ const Stack = createStackNavigator();
 class Product extends React.Component{
   
   render() {
-    const userId = this.props.route.params.userId;
-    console.log("prodo",)
+    const userId = this.props.userId;
     return (
       <NavigationContainer independent={true}>
         <Stack.Navigator

@@ -327,3 +327,48 @@ exports.addEmergencyContacts = async (req, res) => {
     });
   }
 };
+
+exports.incUserPoints = async (req, res) => {
+  const userId = req.params.userId;
+  const increase = req.body.increase;
+  try {
+    var user = await get({collection:"User", by:"id", id:userId});
+    user.points = (Number(user.points) + Number(increase)).toString();
+    var uId = await update({collection:"User",data: user, id: user.id}) 
+    console.log("User points increased successfully!!");
+    res.json({
+        userId: uId,
+        user: user,
+        error:""
+    });
+    
+  } catch (error) {
+      console.log(error.message)
+      return res.status(400).json({
+          error:error.message
+      })
+  }
+}
+
+
+exports.deductPoints = async (req, res) => {
+  const userId = req.params.userId;
+  const deduct = req.body.deduct;
+  try {
+    var user = await get({collection:"User", by:"id", id:userId});
+    user.points = (Number(user.points) - Number(deduct)).toString();
+    var uId = await update({collection:"User",data: user, id: user.id}) 
+    console.log("User points decreased successfully!!");
+    res.json({
+        userId: uId,
+        user: user,
+        error:""
+    });
+    
+  } catch (error) {
+      console.log(error.message)
+      return res.status(400).json({
+          error:error.message
+      })
+  }
+}

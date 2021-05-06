@@ -27,8 +27,7 @@ exports.createProduct = async (req,res) => {
   var price = req.body.price;
 
   newProduct = {title, image, content, price};
-  console.log(newProduct);
-
+  
    try {
       var id = await insert({collection:"Product",data:newProduct});
 
@@ -147,7 +146,9 @@ exports.createOrder = async(req, res) => {
     var userId = req.params.userId;
     var quantity = '1';
     var status = "not_paid";
-    newOrder = {userId, productId, quantity, status};
+    var date = new Date();
+    var received = "no";
+    newOrder = {userId, productId, quantity, status, date, received};
     try {
         var order = await get({collection:"Order", by:"where",where:[{parameter:"userId", comparison:"==", value: userId}, {parameter:"productId", comparison:"==", value: productId}, {parameter:"status", comparison: "==", value: "not_paid"}]});
         console.log(order);
@@ -237,5 +238,89 @@ exports.deleteOrder = async(req, res) => {
         return res.status(404).json({
             error:"Something went Wrong!"+error.message
         });
+    }
+}
+
+exports.orderStatusUpdate = async(req, res) => {
+    var order = req.body.order;
+    order.date = new Date();
+    console.log(order);
+    try {
+        var id = await update({ collection: "Order", data: order, id: order.id });
+        console.log("Order Updated Successfully");
+        res.json({
+          message: "",
+          order: order,
+        });
+      } catch (error) {
+        console.log(error);
+        console.log("Error in updating");
+        res.status(400).json({
+          message: "Error in Updating User Profile",
+        });
+      }
+}
+
+exports.getMyOrders = async(req, res) => {
+    var userId = req.params.userId;
+    try {
+        var orders = await get({collection:"Order",by:"where",where:[{parameter:"userId", comparison:"==", value: userId}, {parameter:"status", comparison: "==", value: 'paid'}, {parameter:"received", comparison: "==", value: 'no'}]});
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        for (let ind = 0; ind < orders.length; ind++) {
+            var product = await get({collection: "Product", by:"id", id: orders[ind].productId});
+            orders[ind].title = product.title;
+            orders[ind].image = product.image;
+            orders[ind].price = product.price;
+            var myDate = orders[ind].date.toDate();
+            orders[ind].madeOn = myDate.getDate() +" " +months[myDate.getMonth()] +" " 
+            +myDate.getFullYear();
+            myDate.setDate(new Date().getDate()+4);
+            orders[ind].arrival = myDate.getDate() +" " +months[myDate.getMonth()] +" " 
+            +myDate.getFullYear();
+        }
+        var yesOrders = await get({collection:"Order",by:"where",where:[{parameter:"userId", comparison:"==", value: userId}, {parameter:"status", comparison: "==", value: 'paid'}, {parameter:"received", comparison: "==", value: 'yes'}]});
+        for (let ind = 0; ind < yesOrders.length; ind++) {
+            var product = await get({collection: "Product", by:"id", id: yesOrders[ind].productId});
+            yesOrders[ind].title = product.title;
+            yesOrders[ind].image = product.image;
+            yesOrders[ind].price = product.price;
+            var myDate = yesOrders[ind].date.toDate();
+            yesOrders[ind].madeOn = myDate.getDate() +" " +months[myDate.getMonth()] +" " 
+            +myDate.getFullYear();
+            myDate.setDate(new Date().getDate()+4);
+            yesOrders[ind].arrival = myDate.getDate() +" " +months[myDate.getMonth()] +" " 
+            +myDate.getFullYear();
+            orders.push(yesOrders[ind]);
+        }
+        console.log("All orders fetched successfully");
+        res.json({
+            orders: orders,
+            error:""
+        });
+    } catch(error) {
+        res.status(400).json({
+            error:"Something went Wrong!"+error.message
+        })
+    }
+}
+
+exports.orderReceived = async(req, res) => {
+    var orderId = req.params.orderId;
+    try {
+        var order = await get({collection:"Order", by:"id", id:orderId});
+        order.received = 'yes';
+        var oId = await update({collection:"Order",data: order, id: order.id}) 
+        console.log("Order received successfully!!");
+        res.json({
+            orderId: oId,
+            order: order,
+            error:""
+        });
+        
+    } catch (error) {
+        console.log(error.message)
+        return res.status(400).json({
+            error:error.message
+        })
     }
 }
