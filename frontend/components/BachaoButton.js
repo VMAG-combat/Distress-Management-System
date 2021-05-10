@@ -129,6 +129,25 @@ class BachaoButton extends React.Component {
                 incidentId: response.data.incidentId,
               },
             });
+                  var messsage = "I'm is Distress. Please Help me. \nMy Location Coordinates are given below: \nLatitude: " +coord[0]+"\nLongitude: "+coord[1];
+               temp.forEach(async (helper)=>{
+                   if(helper){
+                   console.log('sendin msg to ',helper);
+                    await SmsAndroid.autoSend(
+                       helper,
+                       messsage,
+                       (fail) => {
+                         console.log('Failed with this error: ' + fail);
+                       },
+                       (success) => {
+                         console.log('SMS sent successfully');
+                       },
+                     );
+                   }
+               });
+            deviceStorage.saveKey("helpers", JSON.stringify(response.data.helpers));
+            
+            console.log("Incident Registered!!!")
           })
           .catch((error) => {
             console.log(error);
