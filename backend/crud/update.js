@@ -1,5 +1,7 @@
 const admin = require("firebase-admin");
-module.exports = async (obj = { collection: "string", data: {}, id: "string" }) => {
+module.exports = async (
+  obj = { collection: "string", data: {}, id: "string" }
+) => {
   if (typeof obj !== "object") {
     throw new Error("Argument should be of type 'object'");
   }
@@ -12,7 +14,11 @@ module.exports = async (obj = { collection: "string", data: {}, id: "string" }) 
   if (!obj.id) {
     throw new Error("Document id should be a non-empty string");
   } else {
-    await admin.firestore().collection(obj.collection).doc(obj.id).set(obj.data);
+    await admin
+      .firestore()
+      .collection(obj.collection)
+      .doc(obj.id)
+      .update(obj.data);
     return obj.id;
   }
 };

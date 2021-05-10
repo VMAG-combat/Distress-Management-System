@@ -1,4 +1,6 @@
 rootProject.name = 'frontend'
+include ':@unimodules_react-native-adapter'
+project(':@unimodules_react-native-adapter').projectDir = new File(rootProject.projectDir, '../node_modules/@unimodules/react-native-adapter/android')
 include ':react-native-immediate-phone-call'
 project(':react-native-immediate-phone-call').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-immediate-phone-call/android')
 include ':react-native-background-task'
