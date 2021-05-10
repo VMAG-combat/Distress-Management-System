@@ -387,49 +387,34 @@ class Profile extends React.Component {
                         </Text>
                       </View>
                     </Block>
-                  </Block>
-                  <Block
-                    middle
-                    flex
-                    style={{
-                      padding: 10,
-                      marginTop: 10,
-                      borderColor: "#FFFFFF",
-                    }}
-                  >
-                    {user.emergencyContacts ? (
-                      //   <Block middle flex style={{ position:'absolute',bottom:0, backgroundColor:"red"}}>
-                      //   <ScrollView>
-                      //     {
-                      //   user.emergencyContacts.map(ec => {
-                      //     // console.log(ec);
-                      //     return (
+                    <Block middle flex style={{padding:10,marginTop:10, borderColor: "#FFFFFF"}}>
+                      {
+                        user.emergencyContacts ? (
+                        //   <Block middle flex style={{ position:'absolute',bottom:0, backgroundColor:"red"}}>
+                        //   <ScrollView>
+                        //     {
+                        //   user.emergencyContacts.map(ec => {
+                        //     // console.log(ec);
+                        //     return (
+                              
+                        //     <Text size={24} style={{position:'absolute',bottom:0,textAlign:"center", zIndex:99, backgroundColor:'green'}}>{ec.name}</Text>
+                        //     )
+                        //   })
+                          
+                        // } 
+                        //   </ScrollView>
+                        //   </Block>
+                          <Block middle flex style={{width:'100%', marginTop:35}}>
+                            {/* <Text>hello</Text> */}
+                          
+                          {
+                          user.emergencyContacts.map(ec => {
 
-                      //     <Text size={24} style={{position:'absolute',bottom:0,textAlign:"center", zIndex:99, backgroundColor:'green'}}>{ec.name}</Text>
-                      //     )
-                      //   })
-
-                      // }
-                      //   </ScrollView>
-                      //   </Block>
-                      <Block
-                        middle
-                        flex
-                        style={{ width: "100%", marginTop: 35 }}
-                      >
-                        {/* <Text>hello</Text> */}
-
-                        {user.emergencyContacts.map((ec) => {
-                          // console.log(ec);
-                          return (
-                            <View style={styles.contact}>
-                              <Text
-                                size={18}
-                                color="black"
-                                style={{ textAlign: "center" }}
-                              >
-                                {ec.name + " \t " + ec.phoneno}
-                              </Text>
+                            
+                             return (
+                              <View style={styles.contact} key={ec.id}>
+                            <Text size={18} color="black"  style={{ textAlign: "center" }}>{ec.name + " \t "+ ec.phoneno}</Text>
+                            
                             </View>
                             // ec.map(c =>{
                             //     return (
@@ -490,6 +475,7 @@ class Profile extends React.Component {
                     </Button>
                   </Block>
                 </Block>
+              </Block>
               </Block>
             </ScrollView>
           </ImageBackground>

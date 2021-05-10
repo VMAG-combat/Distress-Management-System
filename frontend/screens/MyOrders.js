@@ -62,6 +62,34 @@ class Order extends React.Component {
 
   }
 
+  async getOrders() {
+    this.setState({
+      isRefreshing: true,
+    })
+    await deviceStorage.getId().then((userId) => {
+      this.setState({
+        userId: userId,
+      })
+    })
+
+    await axios({
+      method: 'GET',
+      url: `${ENV.apiUrl}/store/getMyOrders/` +this.state.userId,
+    }).then((response) => {
+      this.setState({
+        orders: response.data.orders,
+        message: response.data.error,
+        isRefreshing: false,
+      });
+    }).catch((error) => {
+      this.setState({
+        message: 'Error retrieving data' +error.message,
+        isRefreshing: false,
+      });
+    });
+
+  }
+
 
   orderReceived = async (val)=> {
     const orderId = val;
@@ -72,7 +100,7 @@ class Order extends React.Component {
         if (res.data.error != '') {
           Alert.alert(res.data.error)
         }
-        this.componentDidMount();
+        this.getOrders();
     });
   }
 

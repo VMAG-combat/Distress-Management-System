@@ -82,6 +82,49 @@ class Cart extends React.Component {
 
   }
 
+  async getData(){
+    this._isMounted = true;
+    this.setState({
+      isRefreshing: true,
+    })
+    await deviceStorage.getId().then((userId) => {
+      this.setState({
+        userId: userId,
+      })
+    })
+
+    await axios({
+      method: 'GET',
+      url: `${ENV.apiUrl}/store/getAllOrders/` +this.state.userId,
+    }).then((response) => {
+      this.setState({
+        orders: response.data.orders,
+        message: response.data.error,
+        subtotal: this.totalPrice(response.data.orders),
+      });
+    }).catch((error) => {
+      this.setState({
+        message: 'Error retrieving data',
+      });
+    });
+
+    await axios({
+      method: 'GET',
+      url: `${ENV.apiUrl}/user/getprofile/` +this.state.userId,
+    }).then((response) => {
+      this.setState({
+        userPoints: response.data.user.points,
+        message: response.data.message,
+        isRefreshing: false,
+      });
+    }).catch((error) => {
+      this.setState({
+        message: 'Error retrieving data',
+        isRefreshing: false,
+      });
+    });
+  }
+
   componentWillUnmount() {
     this._isMounted = false;
   }
@@ -101,7 +144,7 @@ class Cart extends React.Component {
         if (res.data.message != '') {
           Alert.alert("Some Error occurred. Please try again")
         }
-        this.componentDidMount();
+        this.getData();
     });
   }
 
@@ -114,7 +157,7 @@ class Cart extends React.Component {
         if (res.data.error != '') {
           Alert.alert(res.data.error);
         }
-        this.componentDidMount();
+        this.getData();
     });
   }
 
@@ -131,7 +174,7 @@ class Cart extends React.Component {
           if (res.data.error != '') {
             Alert.alert(res.data.error)
           }
-          this.componentDidMount();
+          this.getData();
       });
     }
   }
@@ -168,7 +211,7 @@ class Cart extends React.Component {
       }
       if (i == orders.length) {
         Alert.alert("Payment successfully. Thank you for purchasing from our store..")
-        this.componentDidMount();
+        this.getData();
       }
     }
   }
