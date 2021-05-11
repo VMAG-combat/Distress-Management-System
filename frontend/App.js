@@ -36,6 +36,7 @@ class App extends React.Component {
       this.updateLocation();
     });
   }
+  ref = React.createRef();
   componentDidMount() {
     // KeyEvent.onKeyDownListener((keyEvent) => {
     //   console.log(`onKeyDown keyCode: ${keyEvent.keyCode}`);
@@ -61,20 +62,35 @@ class App extends React.Component {
       });
     messaging().onMessage(async (remoteMessage) => {
       try {
-        console.log(remoteMessage);
+        console.log(remoteMessage.data.incidentId);
         return showMessage({
           type: "info",
           message: remoteMessage.notification.title,
           // description: remoteMessage
-          duration: 3000,
+          duration: 10000,
           icon: { icon: "info", position: "left" },
+          onPress: () => {
+            this.ref.current?.navigate({
+              name: "IncidentViewer",
+              params: {
+                incidentId: remoteMessage.data.incidentId,
+              },
+            });
+            // this.ref.current?.navigate()
+          },
         });
       } catch (err) {}
     });
     messaging().onNotificationOpenedApp((message) => {
       console.log(message);
 
-      this.ref.current?.navigate("Map", { ...obj, id: message.data.id });
+      this.ref.current?.navigate({
+        name: "IncidentViewer",
+        params: { incidentId: message.data.incidentId },
+      });
+      //   "IncidentViewer", {
+      //   incidentId: message.data.incidentId,
+      // });
     });
   }
   updateLocation = () => {
@@ -118,7 +134,7 @@ class App extends React.Component {
   // }
   render() {
     return (
-      <NavigationContainer>
+      <NavigationContainer ref={this.ref}>
         <Screens
           jwt={this.state.jwt}
           newJWT={this.newJWT}

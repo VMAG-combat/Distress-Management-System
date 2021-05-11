@@ -6,6 +6,8 @@ import android.net.Uri;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
+import cn.nodemedia.react_native_nodemediaclient.NodeMediaReactPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
 import com.github.wumke.RNImmediatePhoneCall.RNImmediatePhoneCallPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;

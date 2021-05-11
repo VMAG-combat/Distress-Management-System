@@ -26,6 +26,8 @@ import CustomDrawerContent from "./Menu";
 import { Icon, Header } from "../components";
 import { argonTheme, tabs } from "../constants";
 import Map from "../screens/Map";
+import IncidentStreamer from "../screens/IncidentStreamer";
+import IncidentViewer from "../screens/IncidentViewer";
 
 const { width } = Dimensions.get("screen");
 
@@ -141,6 +143,66 @@ function SocialMediaStack(props) {
     </Stack.Navigator>
   );
 }
+function IncidentStreamerStack(props) {
+  // console.log(props)
+  return (
+    <Stack.Navigator mode="card" headerMode="screen">
+      <Stack.Screen
+        name="IncidentStreamer"
+        component={IncidentStreamer}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              title="IncidentStreamer"
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" },
+        }}
+      />
+      {/* <Stack.Screen
+        name="Pro"
+        component={Pro}
+        options={{
+          header: ({ navigation, scene }) => <Header title="" back white transparent navigation={navigation} scene={scene} />,
+          headerTransparent: true,
+        }}
+      /> */}
+    </Stack.Navigator>
+  );
+}
+
+function IncidentViewerStack(props) {
+  // console.log(props)
+  return (
+    <Stack.Navigator mode="card" headerMode="screen">
+      <Stack.Screen
+        name="IncidentViewer"
+        component={IncidentViewer}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              title="IncidentViewer"
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+          cardStyle: { backgroundColor: "#F8F9FE" },
+        }}
+      />
+      {/* <Stack.Screen
+        name="Pro"
+        component={Pro}
+        options={{
+          header: ({ navigation, scene }) => <Header title="" back white transparent navigation={navigation} scene={scene} />,
+          headerTransparent: true,
+        }}
+      /> */}
+    </Stack.Navigator>
+  );
+}
+
 function AddContactsScreen({ navigation, route }) {
   return <AddContacts />;
 }
@@ -211,9 +273,9 @@ function HomeStack(props) {
           cardStyle: { backgroundColor: "#F8F9FE" },
         }}
       />
-      <Stack.Screen
-        name="Pro"
-        component={Pro}
+      {/* <Stack.Screen
+        name="IncidentStreamer"
+        component={IncidentStreamer}
         options={{
           header: ({ navigation, scene }) => (
             <Header
@@ -227,7 +289,7 @@ function HomeStack(props) {
           ),
           headerTransparent: true,
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }
@@ -238,15 +300,20 @@ export default function OnboardingStack(props) {
   return (
     <Stack.Navigator mode="card" headerMode="none">
       {props.jwt ? (
-        <Stack.Screen
-          name="App"
-          component={AppStack}
-          options={{
-            jwt: props.jwt,
-            // deleteJWT:props.deleteJWT
-          }}
-          initialParams={{ userId: props.userId }}
-        />
+        <>
+          <Stack.Screen
+            name="App"
+            component={AppStack}
+            options={{
+              jwt: props.jwt,
+              // deleteJWT:props.deleteJWT
+            }}
+            initialParams={{ userId: props.userId }}
+          />
+          <Stack.Screen name="IncidentStreamer" component={IncidentStreamer} />
+
+          <Stack.Screen name="IncidentViewer" component={IncidentViewer} />
+        </>
       ) : (
         // <>
         <Stack.Screen
@@ -323,6 +390,8 @@ function AppStack(props) {
           tabBarIcon: () => <BachaoButton />,
         }}
       />
+      {/* <Tab.Screen name="IncidentStreamer" component={IncidentStreamerStack} />
+      <Tab.Screen name="IncedentViewer" component={IncidentViewerStack} /> */}
       <Tab.Screen name="SocialMedia" component={SocialMediaStack} />
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>

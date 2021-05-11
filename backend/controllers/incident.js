@@ -110,8 +110,6 @@ exports.registerIncident = async (req, res) => {
             },
             data: {
               incidentId: id,
-              latitude: incident.latitude,
-              longitude: incident.longitude,
             },
           },
           options: {},
@@ -128,7 +126,7 @@ exports.registerIncident = async (req, res) => {
     res.json({
       message: "",
       incident: incident,
-      // incidentId: id,
+      incidentId: id,
       helpers: users,
     });
   } catch (error) {
@@ -266,5 +264,67 @@ exports.getAllActiveIncidents = async (req, res) => {
     res.status(400).json({
       message: "Error in fetching active incidents",
     });
+  }
+};
+
+exports.getNearbyActiveIncidents = async (req, res) => {
+  try {
+    var userid = req.params.userid;
+    var user = await get({ collection: "User", by: "id", id: userid });
+    console.log(user);
+    var incidents = await get({
+      collection: "Incident",
+      by: "where",
+      where: [
+        // {
+        //   parameter: "latitude",
+        //   comparison: ">=",
+        //   value: parseFloat(user.latitude) - 0.1,
+        // },
+        // {
+        //   parameter: "latitude",
+        //   comparison: "<=",
+        //   value: parseFloat(user.latitude) + 0.1,
+        // },
+        // {
+        //   parameter: "longitude",
+        //   comparison: ">=",
+        //   value: parseFloat(user.longitude) - 0.1,
+        // },
+        // {
+        //   parameter: "longitude",
+        //   comparison: "<=",
+        //   value: parseFloat(user.longitude) + 0.1,
+        // },
+        { parameter: "userid", comparison: "!=", value: userid },
+      ],
+    });
+    incidents = incidents.filter((incident) => {
+      if (
+        Math.abs(incident.latitude - user.latitude) <= 0.1 &&
+        Math.abs(incident.longitude - user.longitude) <= 0.1
+      ) {
+        return true;
+      }
+      return false;
+    });
+    return res.send({ incidents });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.toString());
+  }
+};
+
+exports.getIncident = async (req, res) => {
+  try {
+    var incident = await get({
+      collection: "Incident",
+      by: "id",
+      id: req.params.id,
+    });
+    return res.send({ ...incident });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.toString());
   }
 };
