@@ -212,7 +212,7 @@ const AddContacts = (props) => {
                   onPress={() => toggleCheckbox(item.id)}
                 />
                 <View style={styles.mainContent}>
-                  <TouchableOpacity onPress={() => {}}>
+                  <TouchableOpacity onPress={() => toggleCheckbox(item.id)}>
                     <View style={styles.text}>
                       <Text style={styles.name}>{item.name}</Text>
                     </View>
@@ -236,7 +236,7 @@ const AddContacts = (props) => {
           )}
         />
       </View>
-      <View style={{ position: "absolute", bottom: 15, width: "100%" }}>
+      <View style={{ position: "absolute", top:60, width: "100%" }}>
         <Button onPress={() => add()} block primary style={{ height: 50 }}>
           <Text style={{ fontSize: 24, fontWeight: "bold", color: "#fff" }}>
             SAVE
@@ -264,7 +264,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#FFFFFF",
     alignItems: "flex-start",
-    marginBottom: 100,
+    marginBottom: 50,
+    marginTop: 40
   },
   list: {
     paddingHorizontal: 5,

@@ -12,6 +12,7 @@ import {
   ImageBackground,
   Platform,
   TouchableHighlight,
+  ActivityIndicator,
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 import RNRestart from "react-native-restart";
@@ -394,7 +395,7 @@ class Profile extends React.Component {
                             
                              return (
                               <View style={styles.contact} key={ec.id}>
-                            <Text size={18} color="black"  style={{ textAlign: "center" }}>{ec.name + " \t "+ ec.phoneno}</Text>
+                            <Text size={18} color="black"  style={{  }}>{ec.name + " \t\t "+ ec.phoneno}</Text>
                             
                             </View>
                             // ec.map(c =>{
@@ -572,7 +573,7 @@ const styles = StyleSheet.create({
     // borderColor: "#000000",
     padding: 20,
     marginBottom: 10,
-    width: "100%",
+    width: width-theme.SIZES.BASE*4,
     backgroundColor: "#f7f7f7",
     padding: theme.SIZES.BASE,
     marginHorizontal: theme.SIZES.BASE,

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { NodeCameraView } from "react-native-nodemediaclient";
+import ENV from "../env.";
 
 let styles = StyleSheet.create({
   view: {
@@ -109,7 +110,7 @@ class IncidentStreamer extends React.Component {
             ref={(vb) => {
               this.vb = vb;
             }}
-            outputUrl={`rtmp://192.168.1.107/live/${this.props.route.params.incidentId}`}
+            outputUrl={`rtmp://${ENV.ipAdd}/live/${this.props.route.params.incidentId}`}
             camera={this.state.cameraSettings}
             audio={this.audioSettings}
             video={this.videoSettings}

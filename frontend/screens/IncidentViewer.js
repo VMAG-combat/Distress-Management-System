@@ -55,7 +55,7 @@ class IncidentViewer extends React.Component {
             this.vp = vp;
           }}
           inputUrl={
-            "rtmp://192.168.1.107/live/" + this.props.route.params.incidentId
+            "rtmp://"+ENV.ipAdd+"/live/" + this.props.route.params.incidentId
           }
           scaleMode={"ScaleAspectFit"}
           bufferTime={300}

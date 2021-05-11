@@ -78,7 +78,7 @@ class App extends React.Component {
       });
     messaging().onMessage(async (remoteMessage) => {
       try {
-        console.log(remoteMessage.data.incidentId);
+        console.log("id",remoteMessage.data.incidentId);
         return showMessage({
           type: "info",
           message: remoteMessage.notification.title,
@@ -98,7 +98,7 @@ class App extends React.Component {
       } catch (err) {}
     });
     messaging().onNotificationOpenedApp((message) => {
-      console.log(message);
+      console.log("message",message);
 
       this.ref.current?.navigate({
         name: "IncidentViewer",
