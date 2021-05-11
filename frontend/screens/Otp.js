@@ -17,7 +17,7 @@ import axios from "axios";
 import ENV from "../env.";
 import deviceStorage from "../services/deviceStorage.js";
 import OTPTextInput from "react-native-otp-textinput";
-
+import messaging from "@react-native-firebase/messaging";
 import RNRestart from "react-native-restart";
 class Otp extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class Otp extends React.Component {
     this.state = {
       isVerified: false,
       otp: "",
-      verifying:false,
+      verifying: false,
     };
   }
 
@@ -35,14 +35,16 @@ class Otp extends React.Component {
   }
   render() {
     const { navigation } = this.props;
+
     const handleCodeVerify = async () => {
       console.log(this.props);
+      var fcmToken = await messaging().getToken();
       var otp1 = this.state.otp;
       var otp2 = this.props.route.params.otp;
       if (otp1 === otp2) {
         this.setState({
-          verifying:true
-        })
+          verifying: true,
+        });
         if (this.props.route.params.isSignUp) {
           console.log("okkk");
           axios
@@ -52,6 +54,7 @@ class Otp extends React.Component {
               password: this.props.route.params.password,
               phone: this.props.route.params.phone,
               address: this.props.route.params.address,
+              fcmToken,
             })
             .then((response) => {
               this.setState({
@@ -82,6 +85,7 @@ class Otp extends React.Component {
             .post(`${ENV.apiUrl}/auth/login`, {
               email: this.props.route.params.email,
               password: this.props.route.params.password,
+              fcmToken,
             })
             .then((response) => {
               deviceStorage.saveKey("id_token", response.data.token);
@@ -133,17 +137,15 @@ class Otp extends React.Component {
 
         <Block middle>
           <TouchableOpacity style={styles.verify} onPress={handleCodeVerify}>
-            {
-              this.state.verifying ? (
-                <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
-              Verifying...
-            </Text>
-              ) :
+            {this.state.verifying ? (
               <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
-              Verify
-            </Text>
-            }
-            
+                Verifying...
+              </Text>
+            ) : (
+              <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
+                Verify
+              </Text>
+            )}
           </TouchableOpacity>
         </Block>
       </Block>

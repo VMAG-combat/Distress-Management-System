@@ -10,6 +10,9 @@ import ENV from "./env.";
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
 import BackgroundTask from "react-native-background-task";
+import messaging from "@react-native-firebase/messaging";
+import { showMessage } from "react-native-flash-message";
+
 // import KeyEvent from "react-native-keyevent";
 BackgroundTask.define(() => {
   console.log("scheduling background task");
@@ -33,6 +36,7 @@ class App extends React.Component {
       this.updateLocation();
     });
   }
+  ref = React.createRef();
   componentDidMount() {
     // KeyEvent.onKeyDownListener((keyEvent) => {
     //   console.log(`onKeyDown keyCode: ${keyEvent.keyCode}`);
@@ -40,6 +44,54 @@ class App extends React.Component {
     //   console.log(`Key: ${keyEvent.pressedKey}`);
     // });
     BackgroundTask.schedule();
+    messaging()
+      .requestPermission()
+      .then((authStatus) => {
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+        if (enabled) {
+          console.log("Authorization status:", authStatus);
+        }
+        messaging()
+          .getToken()
+          .then((token) => {
+            console.log(token);
+          });
+      });
+    messaging().onMessage(async (remoteMessage) => {
+      try {
+        console.log(remoteMessage.data.incidentId);
+        return showMessage({
+          type: "info",
+          message: remoteMessage.notification.title,
+          // description: remoteMessage
+          duration: 10000,
+          icon: { icon: "info", position: "left" },
+          onPress: () => {
+            this.ref.current?.navigate({
+              name: "IncidentViewer",
+              params: {
+                incidentId: remoteMessage.data.incidentId,
+              },
+            });
+            // this.ref.current?.navigate()
+          },
+        });
+      } catch (err) {}
+    });
+    messaging().onNotificationOpenedApp((message) => {
+      console.log(message);
+
+      this.ref.current?.navigate({
+        name: "IncidentViewer",
+        params: { incidentId: message.data.incidentId },
+      });
+      //   "IncidentViewer", {
+      //   incidentId: message.data.incidentId,
+      // });
+    });
   }
   updateLocation = () => {
     // console.log(this.state);
@@ -47,8 +99,14 @@ class App extends React.Component {
     if (this.state.id && this.state.id !== "")
       Geolocation.getCurrentPosition(
         (position) => {
-          deviceStorage.saveKey("longitude", position.coords.longitude.toString())
-          deviceStorage.saveKey("latitude", position.coords.latitude.toString())
+          deviceStorage.saveKey(
+            "longitude",
+            position.coords.longitude.toString()
+          );
+          deviceStorage.saveKey(
+            "latitude",
+            position.coords.latitude.toString()
+          );
           axios
             .put(`${ENV.apiUrl}/user/updatelocation`, {
               userid: this.state.id,
@@ -76,8 +134,13 @@ class App extends React.Component {
   // }
   render() {
     return (
-      <NavigationContainer>
-        <Screens jwt={this.state.jwt} newJWT={this.newJWT} deleteJWT={this.deleteJWT} userId={this.state.id} />
+      <NavigationContainer ref={this.ref}>
+        <Screens
+          jwt={this.state.jwt}
+          newJWT={this.newJWT}
+          deleteJWT={this.deleteJWT}
+          userId={this.state.id}
+        />
         <FlashMessage position="top" />
       </NavigationContainer>
     );

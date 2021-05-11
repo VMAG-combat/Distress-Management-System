@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "640101814620",
+    "firebase_url": "https://distress-mangement-default-rtdb.firebaseio.com",
+    "project_id": "distress-mangement",
+    "storage_bucket": "distress-mangement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640101814620:android:76f23e3cff750c58a3b199",
+        "android_client_info": {
+          "package_name": "com.bachaao"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640101814620-d2kutp53bg5a7a7qad4rkrt6ponuhgci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJYaHvmN_NYkSsKUjvCRUdagf_kPex_HY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640101814620-d2kutp53bg5a7a7qad4rkrt6ponuhgci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
