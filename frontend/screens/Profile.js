@@ -23,7 +23,9 @@ import { HeaderHeight } from "../constants/utils";
 import deviceStorage from "../services/deviceStorage.js";
 import axios from "axios";
 import ENV from "../env.";
-import Contacts from "react-native-contacts";
+import Contacts from 'react-native-contacts';
+import { NavigationActions, StackActions } from "@react-navigation/compat";
+import { CommonActions } from "@react-navigation/routers";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -95,18 +97,17 @@ class Profile extends React.Component {
   }
   loadProfile = () => {
     this.setState({
-      isRefreshing: true,
-    });
-    deviceStorage.getId().then((userId) => {
-      axios
-        .get(`${ENV.apiUrl}/user/getprofile/` + userId)
-        .then((user) => {
-          this.setState({
-            isRefreshing: false,
-            user: user.data.user,
-            message: user.data.message,
-            isRefreshing: false,
-          });
+      isRefreshing: true
+    })
+   deviceStorage.getId().then((userId) => {
+    
+      axios.get(`${ENV.apiUrl}/user/getprofile/` + userId)
+    .then((user) => {
+        this.setState({
+          user: user.data.user,
+          message: user.data.message,
+          isRefreshing:false
+        });
 
           deviceStorage.saveKey(
             "emergency_contacts",
@@ -141,46 +142,41 @@ class Profile extends React.Component {
     const { user, message } = this.state;
     const handleLogout = () => {
       this.deleteJWT();
-      RNRestart.Restart();
+      navigation.reset({
+            index: 1,
+            routes: [{ name: 'Onboarding' }],
+          })
     };
 
     return (
       <Block flex style={styles.profile}>
+        
         <Block flex>
-          <ImageBackground
-            source={Images.ProfileBackground}
-            style={styles.profileContainer}
-            imageStyle={styles.profileBackground}
-          >
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={{ width, marginTop: "25%", marginBottom: "15%" }}
-              nestedScrollEnabled={true}
-            >
-              <Text
-                bold
-                size={14}
-                color="black"
-                style={{
-                  position: "absolute",
-                  top: theme.SIZES.BASE + 20,
-                  right: theme.SIZES.BASE,
-                }}
-                onPress={() => {
-                  navigation.navigate("Pro");
-                }}
-              >
-                Edit{" "}
-                <Icon
-                  style={styles.helpIcon}
-                  family="ionicon"
-                  size={18}
-                  name="create-outline"
-                  // color="white"
-                />
-              </Text>
-
+        
+          <ImageBackground source={Images.ProfileBackground} style={styles.profileContainer} imageStyle={styles.profileBackground}>
+          
+            <ScrollView showsVerticalScrollIndicator={false} style={{ width, marginTop: "25%", marginBottom:"15%" }} nestedScrollEnabled={true}>
+            
+            
+            <Text bold size={14} color="black" style={{ position: "absolute",top:theme.SIZES.BASE+20,right:theme.SIZES.BASE }} onPress={()=>{navigation.navigate("Pro")}} >
+                       Edit <Icon
+                      style={styles.helpIcon}
+                    family="ionicon"
+                    size={18}
+                    name="create-outline"
+                    // color="white"
+                  />
+                      </Text>
+                      
               <Block flex style={styles.profileCard}>
+              {this.state.isRefreshing ? (   <View style={{flex: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              margin: 30,
+                              zIndex:100}} >
+                <ActivityIndicator size='large' color="#0000ff"  />
+                <Text>Loading...</Text>
+            </View>):(<>
                 <Block middle style={styles.avatarContainer}>
                   <Image
                     source={{ uri: Images.ProfilePicture }}
@@ -390,22 +386,7 @@ class Profile extends React.Component {
                     <Block middle flex style={{padding:10,marginTop:10, borderColor: "#FFFFFF"}}>
                       {
                         user.emergencyContacts ? (
-                        //   <Block middle flex style={{ position:'absolute',bottom:0, backgroundColor:"red"}}>
-                        //   <ScrollView>
-                        //     {
-                        //   user.emergencyContacts.map(ec => {
-                        //     // console.log(ec);
-                        //     return (
-                              
-                        //     <Text size={24} style={{position:'absolute',bottom:0,textAlign:"center", zIndex:99, backgroundColor:'green'}}>{ec.name}</Text>
-                        //     )
-                        //   })
-                          
-                        // } 
-                        //   </ScrollView>
-                        //   </Block>
                           <Block middle flex style={{width:'100%', marginTop:35}}>
-                            {/* <Text>hello</Text> */}
                           
                           {
                           user.emergencyContacts.map(ec => {
@@ -475,11 +456,16 @@ class Profile extends React.Component {
                     </Button>
                   </Block>
                 </Block>
+                </Block>
+                
+                </>)}  
               </Block>
-              </Block>
+              
             </ScrollView>
+            
           </ImageBackground>
         </Block>
+        
       </Block>
     );
   }

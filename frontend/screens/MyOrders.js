@@ -61,6 +61,11 @@ class Order extends React.Component {
     });
 
   }
+  componentWillUnmount() {
+    this.setState = (state,callback)=>{
+      return;
+  };
+  }
 
   async getOrders() {
     this.setState({

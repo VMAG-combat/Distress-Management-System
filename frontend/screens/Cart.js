@@ -127,6 +127,9 @@ class Cart extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+    this.setState = (state,callback)=>{
+      return;
+  };
   }
 
   totalPrice = (products) =>
@@ -264,7 +267,7 @@ class Cart extends React.Component {
           </Block>
         </Block>}
         {!isRefreshing && orders.length == 0 && <View style={{fontWeight: 'bold', alignSelf: "center"}}><Text style={{fontSize: 18}}>No items in your Cart</Text></View>}
-        {isRefreshing && <View style={{fontWeight: 'bold', alignSelf: "center"}}><Text style={{fontSize: 18}}>Page is Refreshing ....</Text></View>}
+        {isRefreshing && <View style={{fontWeight: 'bold', alignSelf: "center"}}><Text style={{fontSize: 18}}>Refreshing ....</Text></View>}
       </Block>
     );
   }

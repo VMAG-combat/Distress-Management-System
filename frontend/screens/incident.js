@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View,Dimensions, ScrollView,FlatList } from 'react-native';
+import { StyleSheet, View,Dimensions, ScrollView,FlatList, ActivityIndicator } from 'react-native';
 import { Block, theme ,Text} from 'galio-framework';
 const { width } = Dimensions.get('screen');
 import deviceStorage from '../services/deviceStorage.js'; 
@@ -16,12 +16,16 @@ class Incident extends React.Component {
       isRefreshing:false,
       incident: '',
       message:'',
-      allusers:''
+      allusers:'',
+      isLoading:false
     }
     
   }
   componentDidMount(){
     
+  this.setState({
+    isLoading: true
+  })
     deviceStorage.getId().then((userId) => {
     axios.get(`${ENV.apiUrl}/user/getallusers/`+userId)
     .then((response)=>{
@@ -33,8 +37,11 @@ class Incident extends React.Component {
         console.log(error);
     })
   })
-  
-      this.loadIncident();
+     
+  this.loadIncident();
+  this.setState({
+    isLoading: false
+  })
   }
 
   loadIncident = () => {
@@ -67,14 +74,14 @@ class Incident extends React.Component {
 
  
   render(){
-    const { message,incident,allusers} = this.state;
+    const { message,incident,allusers,isRefreshing,isLoading} = this.state;
     const sortincident = [].slice.call(incident).sort((a,b)=>{ return Date.parse(b.datetime)> Date.parse(a.datetime)})
     
     return (
       <Block flex center style={styles.home}>
         
         {
-          sortincident.length !==0 ? (
+          !isLoading && sortincident.length !==0 ? (
 
           
             <View style={styles.container}>
@@ -96,8 +103,18 @@ class Incident extends React.Component {
             </View>
           ) :
           (
-            
-            <Text bold size={16} style={styles.title}>You haven't encountered any incident.{'\n'}Stay Safe & Help Others!!!</Text>
+            !isRefreshing && sortincident.length ==0 ? (
+               <Text bold size={16} style={styles.title}>You haven't encountered any incident.{'\n'}Stay Safe & Help Others!!!</Text> 
+            ) :
+            (
+             <View style={{flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: 30,
+              zIndex:100}} >
+                      <ActivityIndicator size='large' color="#0000ff"  />
+                      <Text>Loading...</Text>
+                  </View>)
             
             
           )

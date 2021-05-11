@@ -67,13 +67,14 @@ class Otp extends React.Component {
               console.log(error);
               // this.onLoginFail();
             });
-          navigation.navigate("Login");
+          
           showMessage({
             message: "OTP verification successful",
             type: "success",
             icon: { icon: "success", position: "left" },
             duration: 3000,
           });
+          navigation.navigate("Login");
 
           // navigation.reset({
           //   index: 0,
@@ -109,8 +110,12 @@ class Otp extends React.Component {
             duration: 3000,
           });
           // navigation.navigate("App");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'App' }],
+          })
           // delay(3000);
-          RNRestart.Restart();
+          // RNRestart.Restart();
         }
       } else {
         return showMessage({
@@ -136,12 +141,13 @@ class Otp extends React.Component {
         />
 
         <Block middle>
-          <TouchableOpacity style={styles.verify} onPress={handleCodeVerify}>
-            {this.state.verifying ? (
-              <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
-                Verifying...
-              </Text>
-            ) : (
+          <TouchableOpacity style={styles.verify} disabled={this.state.verifying} onPress={!this.state.verifying?handleCodeVerify:null}>
+            {
+              this.state.verifying ? (
+                <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
+              Verifying...
+            </Text>
+              ) : (
               <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>
                 Verify
               </Text>

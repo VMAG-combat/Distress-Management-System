@@ -60,7 +60,7 @@ class Header extends React.Component {
     const { back, white, title, navigation,iconColor } = this.props;
 
  
-    if (title === 'Map') {
+    if (title === 'Bachaao') {
       return [
         <BellButton key='chat-title' navigation={navigation} isWhite={white} />,
         <BasketButton key='basket-title' navigation={navigation} isWhite={white} back={back} iconColor={iconColor} />
