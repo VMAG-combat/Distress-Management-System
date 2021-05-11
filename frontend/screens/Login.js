@@ -11,6 +11,7 @@ import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import ENV from "../env.";
 import axios from "axios";
+import { Thumbnail } from "native-base";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -60,6 +61,9 @@ class Login extends React.Component {
         })
       );
     } else {
+      this.setState({
+        isSending:true
+      })
       axios
         .post(`${ENV.apiUrl}/auth/sendotpForLogin`, {
           email: email,
@@ -74,7 +78,7 @@ class Login extends React.Component {
             email: "",
             password: "",
             error: "",
-            isSending:true
+            isSending:false
           });
           this.props.navigation.navigate("Otp", { otp: this.state.otp, isSignIn: this.state.isSignIn, email: email, password: password });
           showMessage({
@@ -95,6 +99,9 @@ class Login extends React.Component {
     this.setState({
       error: "Login Failed",
       isSignIn: false,
+      isSending: false,
+      email:"",
+      password:""
     });
     showMessage({
       message: "Login Failed! Email and Password do not match.",
@@ -106,6 +113,7 @@ class Login extends React.Component {
   render() {
     const { navigation } = this.props;
 
+    // console.log(this.props)
     return (
       <Block flex middle>
         <ImageBackground source={Images.RegisterBackground} style={{ width, height, zIndex: 1 }}>
@@ -121,6 +129,7 @@ class Login extends React.Component {
                   keyboardType="email-address"
                   name="email"
                   placeholder="Email"
+                  value={this.state.email}
                   onChangeText={(text) => this.setState({ email: text, error: "" })}
                   iconContent={<Icon size={16} color={argonTheme.COLORS.ICON} name="ic_mail_24px" family="ArgonExtra" style={styles.inputIcons} />}
                 />
@@ -130,6 +139,7 @@ class Login extends React.Component {
                   password
                   borderless
                   placeholder="Password"
+                  value={this.state.password}
                   onChangeText={(text) => this.setState({ password: text, error: "" })}
                   iconContent={
                     <Icon size={16} color={argonTheme.COLORS.ICON} name="padlock-unlocked" family="ArgonExtra" style={styles.inputIcons} />
@@ -147,7 +157,7 @@ class Login extends React.Component {
               </Block>
 
               <Block middle width={width * 0.8}>
-                <Button color="primary" style={{ width: width * 0.8, marginTop: 50 }} mode="contained" onPress={this.loginUser}>
+                <Button color="primary" style={{ width: width * 0.8, marginTop: 50 }} disabled={this.state.isSending} mode="contained" onPress={!this.state.isSending?this.loginUser:null}>
                   {
                     (this.state.isSending) ? (
                       <Text bold size={18} color={argonTheme.COLORS.WHITE}>

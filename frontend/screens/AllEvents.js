@@ -9,6 +9,7 @@ import {
   Alert,
   ScrollView,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import { Avatar, Card, Title, Paragraph, Button } from 'react-native-paper';
@@ -31,6 +32,7 @@ export const AllEvents = ({userid}) => {
   );
   const [searchQuery, setSearchQuery] = React.useState('');
   const [options, setOptions] = useState(false);
+  const [isRefreshing,setIsRefreshing] = useState(false);
   const onChangeSearch = (query) => setSearchQuery(query);
 
   const [data, setdata] = useState([]);
@@ -39,14 +41,14 @@ export const AllEvents = ({userid}) => {
     setOptions(true);
   };
   const searchFunction = (field) => {
-    console.log('Search Function called with field: ' + field+" and search Query: "+searchQuery);
+    // console.log('Search Function called with field: ' + field+" and search Query: "+searchQuery);
 
     //perform search operations
     axios({
       method: "GET",
       url: `${ENV.apiUrl}/event/searchEvents/${field}/${searchQuery}/${userid}`,      
     }).then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         if(res.data.count=='0'){
           console.log("No data found");
           setdata([]);
@@ -61,8 +63,12 @@ export const AllEvents = ({userid}) => {
   };
 
   useEffect(() => {
-    console.log("User id is: "+userid); 
+    // console.log("User id is: "+userid); 
+    setIsRefreshing(true);
+    let isRendered = true;
+    
     console.log("Calling all user events");
+    console.log(isRefreshing)
     axios({
       method: "GET",
       url: `${ENV.apiUrl}/event/getAllEvents/${userid}`,      
@@ -70,17 +76,24 @@ export const AllEvents = ({userid}) => {
         // console.log(res.data);
         if(res.data.error==""){  
           console.log("All Events fetched successfully"); 
-          console.log(res.data.events)
+          // console.log(res.data.events)
           setdata(res.data.events);
           setAllData(res.data.events);
         }else{
           console.log("Error in fetching user events");
         }
+        setIsRefreshing(false);
     });
+
+    // setIsRefreshing(false);
+    return () => {
+      isRendered = false;
+  };
+
   },[]);
 
   const registerEvent = (eventid) => {
-    console.log('Register event id: ' + eventid);
+    // console.log('Register event id: ' + eventid);
     //implement register event logic
 
     axios({
@@ -100,6 +113,33 @@ export const AllEvents = ({userid}) => {
     });
 
   };
+  if(isRefreshing){
+    return (
+      <View style={{flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 30,
+        zIndex:100}} >
+                <ActivityIndicator size='large' color="#0000ff"  />
+                <Text>Loading...</Text>
+            </View>
+    );
+}
+if(!isRefreshing && data.length === 0){
+return (
+  <View style={{justifyContent:'center', alignItems:'center',flex:1}}>
+  <Text style={{fontSize:18, color:'#A10D0D', fontWeight:'bold'}}>No Events Found!</Text>
+  <TouchableOpacity
+        style={{backgroundColor: '#9D0DA1',
+        borderRadius: 10,
+        padding: 20,
+        margin: 10,}}
+        onPress={() => {setdata(alldata)}}>
+        <Text style={{color:'white', fontSize:15}}>Show All Events</Text>
+      </TouchableOpacity>
+  </View>
+)}
+
   return (
     <View style={{ flex: 1 }}>
       <View>
@@ -140,7 +180,8 @@ export const AllEvents = ({userid}) => {
         <></>
       )}
 
-      { data.length == 0
+      {/* {
+      (!isRefreshing && data.length === 0)
       ? (
         <View style={{justifyContent:'center', alignItems:'center',flex:1}}>
         <Text style={{fontSize:18, color:'#A10D0D', fontWeight:'bold'}}>No Events Found!</Text>
@@ -153,21 +194,24 @@ export const AllEvents = ({userid}) => {
               <Text style={{color:'white', fontSize:15}}>Show All Events</Text>
             </TouchableOpacity>
         </View>
-      ) : (
-        <></>
-      )
-      }
+      ) : 
+        null
+         
+         
+       
+      
+      } */}
 
       <View style={{ flex: 1 }}>
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <Card>
+            <Card key={item.id}>
               <Card.Content>
                 <Title>{item.title}</Title>
                 <Paragraph>{item.organiser}</Paragraph>
               </Card.Content>
-              <Card.Cover source={{ uri: item.photo }} style={{height:350}} />
+              <Card.Cover source={{ uri: 'data:image/jpeg;base64,'+item.imagebase64 }} style={{height:350}} />
               <Card.Content>
                 <Paragraph>{item.caption}</Paragraph>
                 <Paragraph>
@@ -181,8 +225,8 @@ export const AllEvents = ({userid}) => {
             </Card>
           )}
         />
-      </View>
-    </View>
+          </View>
+    </View> 
   );
 };
 

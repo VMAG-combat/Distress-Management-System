@@ -12,6 +12,7 @@ import {
   ImageBackground,
   Platform,
   TouchableHighlight,
+  ActivityIndicator,
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 import RNRestart from "react-native-restart";
@@ -23,7 +24,9 @@ import { HeaderHeight } from "../constants/utils";
 import deviceStorage from "../services/deviceStorage.js";
 import axios from "axios";
 import ENV from "../env.";
-import Contacts from "react-native-contacts";
+import Contacts from 'react-native-contacts';
+import { NavigationActions, StackActions } from "@react-navigation/compat";
+import { CommonActions } from "@react-navigation/routers";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -95,18 +98,17 @@ class Profile extends React.Component {
   }
   loadProfile = () => {
     this.setState({
-      isRefreshing: true,
-    });
-    deviceStorage.getId().then((userId) => {
-      axios
-        .get(`${ENV.apiUrl}/user/getprofile/` + userId)
-        .then((user) => {
-          this.setState({
-            isRefreshing: false,
-            user: user.data.user,
-            message: user.data.message,
-            isRefreshing: false,
-          });
+      isRefreshing: true
+    })
+   deviceStorage.getId().then((userId) => {
+    
+      axios.get(`${ENV.apiUrl}/user/getprofile/` + userId)
+    .then((user) => {
+        this.setState({
+          user: user.data.user,
+          message: user.data.message,
+          isRefreshing:false
+        });
 
           deviceStorage.saveKey(
             "emergency_contacts",
@@ -141,46 +143,41 @@ class Profile extends React.Component {
     const { user, message } = this.state;
     const handleLogout = () => {
       this.deleteJWT();
-      RNRestart.Restart();
+      navigation.reset({
+            index: 1,
+            routes: [{ name: 'Onboarding' }],
+          })
     };
 
     return (
       <Block flex style={styles.profile}>
+        
         <Block flex>
-          <ImageBackground
-            source={Images.ProfileBackground}
-            style={styles.profileContainer}
-            imageStyle={styles.profileBackground}
-          >
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={{ width, marginTop: "25%", marginBottom: "15%" }}
-              nestedScrollEnabled={true}
-            >
-              <Text
-                bold
-                size={14}
-                color="black"
-                style={{
-                  position: "absolute",
-                  top: theme.SIZES.BASE + 20,
-                  right: theme.SIZES.BASE,
-                }}
-                onPress={() => {
-                  navigation.navigate("Pro");
-                }}
-              >
-                Edit{" "}
-                <Icon
-                  style={styles.helpIcon}
-                  family="ionicon"
-                  size={18}
-                  name="create-outline"
-                  // color="white"
-                />
-              </Text>
-
+        
+          <ImageBackground source={Images.ProfileBackground} style={styles.profileContainer} imageStyle={styles.profileBackground}>
+          
+            <ScrollView showsVerticalScrollIndicator={false} style={{ width, marginTop: "25%", marginBottom:"15%" }} nestedScrollEnabled={true}>
+            
+            
+            <Text bold size={14} color="black" style={{ position: "absolute",top:theme.SIZES.BASE+20,right:theme.SIZES.BASE }} onPress={()=>{navigation.navigate("Pro")}} >
+                       Edit <Icon
+                      style={styles.helpIcon}
+                    family="ionicon"
+                    size={18}
+                    name="create-outline"
+                    // color="white"
+                  />
+                      </Text>
+                      
               <Block flex style={styles.profileCard}>
+              {this.state.isRefreshing ? (   <View style={{flex: 1,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              margin: 30,
+                              zIndex:100}} >
+                <ActivityIndicator size='large' color="#0000ff"  />
+                <Text>Loading...</Text>
+            </View>):(<>
                 <Block middle style={styles.avatarContainer}>
                   <Image
                     source={{ uri: Images.ProfilePicture }}
@@ -387,49 +384,19 @@ class Profile extends React.Component {
                         </Text>
                       </View>
                     </Block>
-                  </Block>
-                  <Block
-                    middle
-                    flex
-                    style={{
-                      padding: 10,
-                      marginTop: 10,
-                      borderColor: "#FFFFFF",
-                    }}
-                  >
-                    {user.emergencyContacts ? (
-                      //   <Block middle flex style={{ position:'absolute',bottom:0, backgroundColor:"red"}}>
-                      //   <ScrollView>
-                      //     {
-                      //   user.emergencyContacts.map(ec => {
-                      //     // console.log(ec);
-                      //     return (
+                    <Block middle flex style={{padding:10,marginTop:10, borderColor: "#FFFFFF"}}>
+                      {
+                        user.emergencyContacts ? (
+                          <Block middle flex style={{width:'100%', marginTop:35}}>
+                          
+                          {
+                          user.emergencyContacts.map(ec => {
 
-                      //     <Text size={24} style={{position:'absolute',bottom:0,textAlign:"center", zIndex:99, backgroundColor:'green'}}>{ec.name}</Text>
-                      //     )
-                      //   })
-
-                      // }
-                      //   </ScrollView>
-                      //   </Block>
-                      <Block
-                        middle
-                        flex
-                        style={{ width: "100%", marginTop: 35 }}
-                      >
-                        {/* <Text>hello</Text> */}
-
-                        {user.emergencyContacts.map((ec) => {
-                          // console.log(ec);
-                          return (
-                            <View style={styles.contact}>
-                              <Text
-                                size={18}
-                                color="black"
-                                style={{ textAlign: "center" }}
-                              >
-                                {ec.name + " \t " + ec.phoneno}
-                              </Text>
+                            
+                             return (
+                              <View style={styles.contact} key={ec.id}>
+                            <Text size={18} color="black"  style={{  }}>{ec.name + " \t\t "+ ec.phoneno}</Text>
+                            
                             </View>
                             // ec.map(c =>{
                             //     return (
@@ -490,10 +457,16 @@ class Profile extends React.Component {
                     </Button>
                   </Block>
                 </Block>
+                </Block>
+                
+                </>)}  
               </Block>
+              
             </ScrollView>
+            
           </ImageBackground>
         </Block>
+        
       </Block>
     );
   }
@@ -600,7 +573,7 @@ const styles = StyleSheet.create({
     // borderColor: "#000000",
     padding: 20,
     marginBottom: 10,
-    width: "100%",
+    width: width-theme.SIZES.BASE*4,
     backgroundColor: "#f7f7f7",
     padding: theme.SIZES.BASE,
     marginHorizontal: theme.SIZES.BASE,

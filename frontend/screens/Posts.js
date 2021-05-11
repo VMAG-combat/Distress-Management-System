@@ -5,7 +5,8 @@ import {
   ImageBackground,
   Dimensions,
   View,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from "react-native";
 //galio
 import { Block, Text, theme } from "galio-framework";
@@ -28,30 +29,20 @@ class Posts extends React.Component{
           userId:'',
           posts:'',
           message:'',
-          isRefreshing: false
+          isRefreshing: false,
+          isLoading: false
         }
     }
 
     componentDidMount(){
       
-        // axios({
-        //   method: 'GET',
-        //   url: `${ENV.apiUrl}/social/getposts/`+this.props.route.params.userId,
-        // }).then((response) => {
-
-        //   this.setState({
-        //     posts: response.data.posts,
-        //     message: response.data.error
-        //   });
-        // }).catch((error) => {
-        //   this.setState({
-        //     message: error.response.data.error,
-            
-        //   });
-        // });
+        this.setState({
+          isLoading: true
+        })
         this.loadPosts();
-
-        
+        this.setState({
+          isLoading: false
+        })
       }
       loadPosts = () =>{
         this.setState({
@@ -75,35 +66,31 @@ class Posts extends React.Component{
             
           });
         });
-          // axios({
-          //     method: 'GET',
-          //     url: `${ENV.apiUrl}/social/myposts/`+this.props.route.params.route.params.userId,
-          //   }).then((response) => {
-          //     // console.log(response.data.posts)
-          //     this.setState({
-          //       posts: response.data.posts,
-          //       message: response.data.error,
-          //       isRefreshing: false,
-          //     });
-          //   }).catch((error) => {
-          //     this.setState({
-          //       message: error.response.data.error,
-          //       isRefreshing: false,
-          //     });
-          //   });
         }
     render(){
         
-        const {posts,message} = this.state;
+        const {posts,message,isLoading,isRefreshing} = this.state;
         const {navigation} = this.props;
-        // console.log(posts)
+        console.log(isLoading)
         return (
             <Block flex center>
               {
-               ((!posts) || (posts.length ==0)) ?( <Text bold size={16} style={styles.title}>
-                No Posts Available
-              </Text> )
-              : (
+              //   isRefreshing ? (
+              //     <View style={{flex: 1,
+              //      justifyContent: 'center',
+              //      alignItems: 'center',
+              //      margin: 30,
+              //      }} >
+              //              <ActivityIndicator size='large' color="#0000ff"  />
+              //              <Text>Loading...</Text>
+              //          </View>
+                 
+                 
+              //  ) : 
+              //  ((!isRefreshing && ( (posts.length ==0))) ?( <Text bold size={16} style={styles.title}>
+              //   No Posts Available
+              // </Text> )
+              !isLoading && posts.length!==0 ? (
                 <View style={styles.screen} >
                 <FlatList
                     style={styles.list}
@@ -131,7 +118,25 @@ class Posts extends React.Component{
                 />
     
           </View>
-              )
+                ) :
+                (
+                  !isRefreshing && posts.length ==0 ? (
+                    <Text bold size={16} style={styles.title}>
+                     No Posts Available
+                     </Text>
+                  ) :
+                  (
+                   <View style={{flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: 30,
+                    zIndex:100}} >
+                            <ActivityIndicator size='large' color="#0000ff"  />
+                            <Text>Loading...</Text>
+                        </View>)
+                  
+                  
+                )
               }
 
                

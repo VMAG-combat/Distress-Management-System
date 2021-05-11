@@ -91,9 +91,9 @@ const PostCard = (props) => {
         let imageUrl = `${ENV.apiUrl}/social/post/photo/${post.id}`;
         Image.getSize(imageUrl, (width, height) => {
             // calculate image width and height 
-            const screenWidth = Dimensions.get('window').width
+            const screenWidth = Dimensions.get('screen').width
             const scaleFactor = width / screenWidth
-            const imageHeight = height /scaleFactor
+            const imageHeight = height /(scaleFactor)
             setImgWidth(screenWidth);
             setImgHeight(imageHeight);
         })
@@ -105,7 +105,7 @@ const PostCard = (props) => {
         
       })
       .catch((error) => {
-        console.log("Somethi wrong",error)
+        console.log("Something went wrong",error)
       });
     }, [])
 
@@ -148,9 +148,12 @@ const PostCard = (props) => {
                     </View>
                 </View>
                 )}
+                { post.photo && 
                 <View style={styles.cardImageContainer} >
                     <Image 
-                        style={{...styles.cardImage, height: imgHeight }}
+                    resizeMethod='auto'
+                    resizeMode='contain'
+                        style={{...styles.cardImage, height:300,}}
                         source={{ uri: `${ENV.apiUrl}/social/post/photo/${post.id}` }}
                         onLoad={() => setIsImageLoading(false)}
                     />
@@ -160,6 +163,7 @@ const PostCard = (props) => {
                         size='large' 
                     />
                 </View>
+                }
                 <View style={styles.cardHeader}>
                     <View>
                         <Text style={styles.title}>{post.title}</Text>
@@ -319,7 +323,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 1,
     },
     cardImageContainer: { 
-        backgroundColor: '#c2c2c2', 
+        backgroundColor: "#f7f7f7", 
         flex: 1, 
         display: 'flex',
         borderRadius:20,
@@ -329,9 +333,9 @@ const styles = StyleSheet.create({
     cardImage: {
         flex: 1,
         paddingTop:10,
-        borderRadius:20,
+        borderRadius:4,
         // height: 275,
-        width: null
+        // width: null
     },
     /******** card components **************/
     title: {

@@ -63,6 +63,11 @@ class ItemsScreen extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    this.setState = (state,callback)=>{
+      return;
+  };
+  }
 
   addToCart = async (val) => {
     const productId = val;

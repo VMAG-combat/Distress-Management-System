@@ -46,17 +46,26 @@ export const Elements = (props) => {
         </View>
       </View>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.addbar}
         onPress={() => setChosentab('tab2')}>
         <Ionicons name="add-circle-outline" size={45} />
         <Text style={{ fontSize: 20, paddingLeft: 5 }}>Create New Event</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {chosentab == 'tab0' ? (
         <AllEvents userid={userid}></AllEvents>
       ) : chosentab == 'tab1' ? (
+        <>
+        <TouchableOpacity
+        style={styles.addbar}
+        onPress={() => setChosentab('tab2')}
+        >
+        <Ionicons name="add-circle-outline" size={45} />
+        <Text style={{ fontSize: 20, paddingLeft: 5 }}>Create New Event</Text>
+      </TouchableOpacity>
         <MyEvents changeTab={() => setChosentab('tab0')} userid={userid} />
+        </>
       ) : (
         <CreateEvent userid={userid}/>
       )}

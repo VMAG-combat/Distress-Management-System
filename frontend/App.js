@@ -31,18 +31,34 @@ class App extends React.Component {
     };
     this.newJWT = this.newJWT.bind(this);
     this.deleteJWT = deviceStorage.deleteJWT.bind(this);
-    this.loadJWT = deviceStorage.loadJWT.bind(this);
-    this.loadJWT().then(() => {
-      this.updateLocation();
-    });
+    // this.loadJWT = deviceStorage.loadJWT.bind(this);
+    // this.loadJWT().then(() => {
+    //   console.log("loooo")
+    //   this.updateLocation();
+    // });
   }
   ref = React.createRef();
-  componentDidMount() {
+  // componentDidMount() {
+  async componentDidMount() {
     // KeyEvent.onKeyDownListener((keyEvent) => {
     //   console.log(`onKeyDown keyCode: ${keyEvent.keyCode}`);
     //   console.log(`Action: ${keyEvent.action}`);
     //   console.log(`Key: ${keyEvent.pressedKey}`);
     // });
+    // console.log(this.loadJWT())
+    // this.loadJWT().then(() => {
+    //   this.newJWT;
+    //   console.log("hiii")
+    //   this.updateLocation();
+    // });
+    this.setState({
+      jwt: await deviceStorage.loadJWT(),
+      id: await deviceStorage.getId(),
+      loading:false
+    });
+    // this.newJWT()
+    this.updateLocation();
+    
     BackgroundTask.schedule();
     messaging()
       .requestPermission()
@@ -62,7 +78,7 @@ class App extends React.Component {
       });
     messaging().onMessage(async (remoteMessage) => {
       try {
-        console.log(remoteMessage.data.incidentId);
+        console.log("id",remoteMessage.data.incidentId);
         return showMessage({
           type: "info",
           message: remoteMessage.notification.title,
@@ -82,7 +98,7 @@ class App extends React.Component {
       } catch (err) {}
     });
     messaging().onNotificationOpenedApp((message) => {
-      console.log(message);
+      console.log("message",message);
 
       this.ref.current?.navigate({
         name: "IncidentViewer",
@@ -124,7 +140,7 @@ class App extends React.Component {
       );
     // }, 5000);
   };
-  newJWT(jwt) {
+   newJWT(jwt) {
     this.setState({
       jwt: jwt,
     });
@@ -135,12 +151,14 @@ class App extends React.Component {
   render() {
     return (
       <NavigationContainer ref={this.ref}>
-        <Screens
+        {/* <Screens
           jwt={this.state.jwt}
           newJWT={this.newJWT}
           deleteJWT={this.deleteJWT}
           userId={this.state.id}
         />
+      <NavigationContainer> */}
+        <Screens jwt={this.state.jwt} newJWT={this.state.jwt} deleteJWT={this.deleteJWT} userId={this.state.id} loading={this.state.loading}/>
         <FlashMessage position="top" />
       </NavigationContainer>
     );

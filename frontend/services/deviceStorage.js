@@ -13,16 +13,18 @@ const deviceStorage = {
     try {
       const token = await AsyncStorage.getItem("id_token");
       if (token !== null) {
-        const value = await AsyncStorage.getItem(token);
-        this.setState({
-          jwt: token,
-          id: value,
-          loading: false,
-        });
+        // const value = await AsyncStorage.getItem(token);
+        // this.setState({
+        //   jwt: token,
+        //   id: value,
+        //   loading: false,
+        // });
+        return token
       } else {
-        this.setState({
-          loading: false,
-        });
+        // this.setState({
+        //   loading: false,
+        // });
+        return "";
       }
     } catch (error) {
       console.log("AsyncStorage Error: " + error.message);
@@ -75,9 +77,9 @@ const deviceStorage = {
     try {
       await AsyncStorage.removeItem("id_token").then((res) => {
         
-        this.setState({
-          jwt: "",
-        });
+        // this.setState({
+        //   jwt: "",
+        // });
       });
       await AsyncStorage.clear();
     } catch (error) {

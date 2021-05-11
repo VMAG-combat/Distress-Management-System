@@ -37,7 +37,9 @@ const Tab = createBottomTabNavigator();
 
 function ElementsStack(props) {
   return (
-    <Stack.Navigator initialRouteName="Element" mode="card" headerMode="screen">
+    <Stack.Navigator initialRouteName="Element" mode="card" headerMode="screen" screenOptions={{
+      headerShown: false
+    }}>
       <Stack.Screen
         name="Element"
         component={Element}
@@ -76,9 +78,7 @@ function MapStack(props) {
         name="Map"
         component={Map}
         options={{
-          header: ({ navigation, scene }) => (
-            <Header title="Map" navigation={navigation} scene={scene} />
-          ),
+          header: ({ navigation, scene }) => <Header title="Bachaao" navigation={navigation} scene={scene} />,
           cardStyle: { backgroundColor: "#F8F9FE" },
         }}
       />
@@ -121,7 +121,9 @@ function MapStack(props) {
 function SocialMediaStack(props) {
   // console.log(props)
   return (
-    <Stack.Navigator mode="card" headerMode="screen">
+    <Stack.Navigator mode="card" headerMode="screen" screenOptions={{
+      headerShown: false
+    }}>
       <Stack.Screen
         name="SocialMedia"
         component={SocialMedia}
@@ -295,25 +297,64 @@ function HomeStack(props) {
 }
 
 export default function OnboardingStack(props) {
-  // console.log(props)
+  var iRoute = (props.jwt.length !=0) ? "App": "Onboarding";
+  return (<>
+    { props.jwt.length !== 0 &&  !props.loading && (
+      <Stack.Navigator mode="card" headerMode="none" initialRouteName={iRoute}>
+     
+     <Stack.Screen
+          name="App"
+          component={AppStack}
+          options={{
+            jwt: props.jwt,
+            // deleteJWT:props.deleteJWT
+          }}
+          initialParams={{ userId: props.userId }}
+        />
+         <Stack.Screen
+          name="Onboarding"
+          component={Onboarding}
+          option={{
+            headerTransparent: true,
+            newJWT: props.newJWT,
+          }}
+        />
+         <Stack.Screen name="IncidentStreamer" component={IncidentStreamer} />
 
-  return (
-    <Stack.Navigator mode="card" headerMode="none">
-      {props.jwt ? (
-        <>
-          <Stack.Screen
-            name="App"
-            component={AppStack}
-            options={{
-              jwt: props.jwt,
-              // deleteJWT:props.deleteJWT
-            }}
-            initialParams={{ userId: props.userId }}
-          />
-          <Stack.Screen name="IncidentStreamer" component={IncidentStreamer} />
+<Stack.Screen name="IncidentViewer" component={IncidentViewer} />
+            </Stack.Navigator>
 
-          <Stack.Screen name="IncidentViewer" component={IncidentViewer} />
-        </>
+    )
+        }
+    
+  {props.jwt.length === 0 &&  !props.loading &&(
+    <Stack.Navigator mode="card" headerMode="none" initialRouteName={iRoute}>
+      {/* {props.jwt.length!==0 ? (<> */}
+        
+         <Stack.Screen
+          name="Onboarding"
+          component={Onboarding}
+          option={{
+            headerTransparent: true,
+            newJWT: props.newJWT,
+          }}
+        />
+        <Stack.Screen
+          name="App"
+          component={AppStack}
+          options={{
+            jwt: props.jwt,
+            // deleteJWT:props.deleteJWT
+          }}
+          initialParams={{ userId: props.userId }}
+        />
+         <Stack.Screen name="IncidentStreamer" component={IncidentStreamer} />
+
+<Stack.Screen name="IncidentViewer" component={IncidentViewer} />
+        </Stack.Navigator>
+  )}
+    
+        {/* </>
       ) : (
         // <>
         <Stack.Screen
@@ -325,8 +366,9 @@ export default function OnboardingStack(props) {
           }}
         />
         // </>
-      )}
-    </Stack.Navigator>
+      )} */}
+    
+    </>
   );
 }
 const bachaoButton = () => {
@@ -336,7 +378,7 @@ function AppStack(props) {
   return (
     <Tab.Navigator
       style={{ flex: 1, flexDirection: "row" }}
-      initialRouteName={"Home"}
+      initialRouteName={"Map"}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, horizontal, color }) => {
           let IconComponent = Ionicons;
@@ -351,7 +393,7 @@ function AppStack(props) {
           } else if (route.name === "SocialMedia") {
             iconName = "planet";
           } else if (route.name === "Profile") {
-            iconName = "ios-call";
+            iconName = "ios-person";
           }
 
           // You can return any component that you like here!
@@ -379,7 +421,7 @@ function AppStack(props) {
         },
       }}
     >
-      <Tab.Screen name="Map" component={MapStack} />
+      <Tab.Screen name="Map" component={MapStack}/>
       {/* <Tab.Screen name="Home" component={HomeStack} /> */}
       <Tab.Screen name="Elements" component={ElementsStack} />
       {/* <Tab.Screen name="Elemednts"/> */}
