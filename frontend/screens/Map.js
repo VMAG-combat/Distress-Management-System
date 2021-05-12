@@ -59,6 +59,14 @@ export default class Map extends Component {
             message: "MyMapApp needs access to your location",
           }
         );
+
+        PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: 'Contacts',
+            message: 'This app would like to view your contacts.'
+          }
+        )
       }
       Geolocation.getCurrentPosition(
         async (position) => {
@@ -133,6 +141,7 @@ export default class Map extends Component {
               `${ENV.apiUrl}/incident/getNearbyActiveIncidents/${this.state.id}`
             )
             .then((res) => {
+              console.log(res.data.incidents)
               this.setState({ incidents: res.data.incidents });
             });
         },

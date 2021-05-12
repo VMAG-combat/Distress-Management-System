@@ -147,6 +147,12 @@ android {
         }
     }
     signingConfigs {
+        // release {
+        //     storeFile file('your_key_name.keystore')
+        //     storePassword "Mridu@1234"
+        //     keyAlias "your_key_alias"
+        //     keyPassword "Mridu@1234"
+        // }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'

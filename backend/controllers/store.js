@@ -151,7 +151,7 @@ exports.createOrder = async(req, res) => {
     newOrder = {userId, productId, quantity, status, date, received};
     try {
         var order = await get({collection:"Order", by:"where",where:[{parameter:"userId", comparison:"==", value: userId}, {parameter:"productId", comparison:"==", value: productId}, {parameter:"status", comparison: "==", value: "not_paid"}]});
-        console.log(order);
+        // console.log(order);
         if (!order.length) {
             var id = await insert({collection:"Order", data: newOrder});
             console.log("Order Successfully Added!!");
@@ -179,7 +179,7 @@ exports.incOrderQuantity = async(req, res) => {
     try {
         var order = await get({collection:"Order", by:"id", id:orderId});
         order.quantity = (Number(order.quantity) + 1).toString();
-        console.log(order);
+        // console.log(order);
         var oId = await update({collection:"Order",data: order, id: order.id}) 
         console.log("Order quantity increased successfully!!");
         
@@ -244,7 +244,7 @@ exports.deleteOrder = async(req, res) => {
 exports.orderStatusUpdate = async(req, res) => {
     var order = req.body.order;
     order.date = new Date();
-    console.log(order);
+    // console.log(order);
     try {
         var id = await update({ collection: "Order", data: order, id: order.id });
         console.log("Order Updated Successfully");

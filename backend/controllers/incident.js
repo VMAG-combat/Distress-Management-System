@@ -99,7 +99,7 @@ exports.registerIncident = async (req, res) => {
       return false;
     });
     users.map((user) => {
-      console.log(user);
+      // console.log(user);
       if (user.fcmToken) {
         notify({
           fcmToken: user.fcmToken,
@@ -122,7 +122,7 @@ exports.registerIncident = async (req, res) => {
     // nearbyUsers = [distUsers[0],distUsers[1],distUsers[2],distUsers[3],distUsers[4]]
     //nearbyUsers = [distUsers[0],distUsers[1]]
 
-    console.log(users.length);
+    // console.log(users.length);
     res.json({
       message: "",
       incident: incident,
@@ -271,7 +271,7 @@ exports.getNearbyActiveIncidents = async (req, res) => {
   try {
     var userid = req.params.userid;
     var user = await get({ collection: "User", by: "id", id: userid });
-    console.log(user);
+    // console.log(user);
     var incidents = await get({
       collection: "Incident",
       by: "where",

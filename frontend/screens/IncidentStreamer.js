@@ -47,7 +47,7 @@ class IncidentStreamer extends React.Component {
 
   state = {
     isStreaming: true,
-    cameraSettings: { cameraId: 1, cameraFrontMirror: true },
+    cameraSettings: { cameraId: 0, cameraFrontMirror: true },
   };
 
   videoSettings = {
@@ -127,10 +127,10 @@ class IncidentStreamer extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-                this.state.cameraSettings.cameraId =
-                  this.state.cameraSettings.cameraId === 2 ? 1 : 2;
-                this.setState({});
+              onPress={() => { this.vb.switchCamera()
+                // this.state.cameraSettings.cameraId =
+                //   this.state.cameraSettings.cameraId === 2 ? 1 : 2;
+                // this.setState({});
               }}
             >
               <View style={styles.button}>

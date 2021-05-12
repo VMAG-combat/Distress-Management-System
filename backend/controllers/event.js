@@ -139,7 +139,7 @@ exports.createEvent = async (req,res) => {
     //var date = new Date(yyyy,mm,dd);
     var date = dd+'/'+mm+'/'+yyyy;
     newEvent = {userid, title, caption, photo, imagebase64, date, time, organiser, link, registered:[]};
-    console.log(newEvent);
+    // console.log(newEvent);
 
      try {
         var id = await insert({collection:"Event",data:newEvent}) 
@@ -182,7 +182,7 @@ exports.createEventPost = async (req,res) => {
     //var photo = {'data':data, 'contentType':contentType }
     var photo = req.body.photo;
     post = {userId, title, caption, photo, comments:"", likes:"", report:"", description};
-    console.log(post);
+    // console.log(post);
 
      try {
         var id = await insert({collection:"Post",data:post}) 
