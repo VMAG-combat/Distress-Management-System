@@ -25,3 +25,7 @@ $ npm start
 ```
 
 **NOTE :** put your machines ip_address as the apiURL in env..js
+
+Download the files from the given link and place it inside ```./backend/bin``` directory
+
+**Link :** https://drive.google.com/drive/folders/1b0ojR8Nli497GR9d2wlOQxLocEsBHkNh?usp=sharing
