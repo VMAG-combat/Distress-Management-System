@@ -137,7 +137,7 @@ exports.updatelocation = async (req, res) => {
       }
       var hotspot=false
       var center =[]
-      console.log(incidents)
+      // console.log(incidents)
       for(var key in data){
         // console.log(parseFloat(key.substring(key.indexOf(',')+1)))
         // console.log(parseFloat(key.substring(0,key.indexOf(',')))-newuser.latitude,parseFloat(key.substring(key.indexOf(',')+1))-newuser.longitude)
@@ -208,7 +208,7 @@ exports.addFriends = async (req, res) => {
 
 exports.getFriends = async (req, res) => {
   var userid = req.params.userid;
-  console.log(userid);
+  // console.log(userid);
   try {
     var user = await get({ collection: "User", by: "id", id: userid });
     
@@ -293,11 +293,13 @@ exports.addEmergencyContacts = async (req, res) => {
     for(const contact of emergencyContacts){
     if (user.emergencyContacts) {
       user.emergencyContacts.push({
+        "id":contact.id,
         "name":contact.name,
         "phoneno":contact.numbers[0]
       });
     } else {
       user.emergencyContacts = [{
+        "id":contact.id,
         "name":contact.name,
         "phoneno":contact.numbers[0]
       }];
@@ -306,7 +308,7 @@ exports.addEmergencyContacts = async (req, res) => {
     var id = await update({ collection: "User", data: user, id: user.id });
     console.log("Emergency Contacts Added Succesfully");
 
-    console.log(user)
+    // console.log(user)
     // adding user1 to user2's friend list
     // var user2 = await get({ collection: "User", by: "id", id: friendId });
     // if (user2.friends) {

@@ -27,6 +27,7 @@ import ENV from "../env.";
 import Contacts from 'react-native-contacts';
 import { NavigationActions, StackActions } from "@react-navigation/compat";
 import { CommonActions } from "@react-navigation/routers";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -54,24 +55,25 @@ class Profile extends React.Component {
     //     // contacts returned
     //     this.setState({contacts})
     //   })
-    // }else if(Platform.OS === 'android'){
-    //   PermissionsAndroid.request(
-    //     PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-    //     {
-    //       title: 'Contacts',
-    //       message: 'This app would like to view your contacts.'
-    //     }
-    //   ).then(() => {
-    //     Contacts.getAll((err, contacts) => {
-    //       if (err === 'denied'){
-    //         // error
-    //       } else {
-    //         // contacts returned in Array
-    //         this.setState({contacts})
-    //       }
-    //     })
-    //   })
-    // }
+    // }else 
+    if(Platform.OS === 'android'){
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        {
+          title: 'Contacts',
+          message: 'This app would like to view your contacts.'
+        }
+      // ).then(() => {
+      //   Contacts.getAll((err, contacts) => {
+      //     if (err === 'denied'){
+      //       // error
+      //     } else {
+      //       // contacts returned in Array
+      //       this.setState({contacts})
+      //     }
+      //   })
+      // })
+      )}
     // Contacts.getAll((err, contacts) => {
     //   if (err === 'denied'){
 
@@ -357,12 +359,18 @@ class Profile extends React.Component {
                           style={styles.help}
                           onPress={this.getHelp}
                         >
-                          <Icon
+                          {/* <Icon
                             style={styles.helpIcon}
-                            family="ionicon"
+                            family="Ionicon"
                             size={24}
                             name="help-circle"
                             color="white"
+                          /> */}
+                          <Ionicons
+                          style={styles.helpIcon}
+                          name="help-circle"
+                            color="white"
+                            size={24}
                           />
                         </TouchableOpacity>
                         <Text

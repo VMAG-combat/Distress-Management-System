@@ -199,7 +199,7 @@ const AddContacts = (props) => {
           // horizontal={false}
           // numColumns={2}
           keyExtractor={(item, index) => {
-            return index;
+            return item.id;
           }}
           renderItem={({ item }) => (
             <Fragment key={item.id}>

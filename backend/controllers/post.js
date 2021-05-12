@@ -25,7 +25,7 @@ exports.getPostsByUser = async (req,res) => {
             
             try {
                 const post = await get({collection:"Post",by:"id",id:pid});
-            console.log(post)
+            // console.log(post)
             posts.push(post);
             } catch (error) {
                 console.log(error);
@@ -43,7 +43,6 @@ exports.getPostsByUser = async (req,res) => {
         //     });
         // }
         
-            console.log("ko")
             res.json({
                 posts: posts,
                 error:""
@@ -103,7 +102,7 @@ exports.createPost = async (req,res) => {
     var contentType = req.body.imageType
     var photo = {'data':data, 'contentType':contentType }
     post = {userId, title, caption, photo, comments:"", likes:"", report:""};
-    console.log(post);
+    // console.log(post);
 
      try {
         var id = await insert({collection:"Post",data:post}) 
@@ -170,13 +169,13 @@ exports.comment = async (req,res) => {
     try {
         
         var post = await get({collection: "Post",by:"id",id:comment.postId});
-        console.log(post);
+        // console.log(post);
         if(post.comment){
             post.comment.push(comment.text);
         }else{
             post.comment = [comment.text];
         }
-        console.log(post);
+        // console.log(post);
         var pid = await update({collection:"Post",data:post, id:post.id}) 
 
         console.log("Comment added successfully!!");

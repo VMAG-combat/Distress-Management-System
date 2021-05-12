@@ -4,13 +4,17 @@ import axios from "axios";
 import {
   StyleSheet,
   View,
-  Text,
+  // Text,
   StatusBar,
   Dimensions,
   TouchableOpacity,
   PermissionsAndroid,
   Linking,
 } from "react-native";
+import { Block, Text, theme } from "galio-framework";
+import { Button, Icon } from "../components";
+import { Images, argonTheme } from "../constants";
+
 import ENV from "../env.";
 let styles = StyleSheet.create({
   view: {
@@ -50,18 +54,19 @@ class IncidentViewer extends React.Component {
         <StatusBar barStyle="dark-content" />
 
         <NodePlayerView
-          style={{ height: 200 }}
+          style={{ height: 300 }}
           ref={(vp) => {
             this.vp = vp;
           }}
           inputUrl={
-            "rtmp://"+ENV.ipAdd+"/live/" + this.props.route.params.incidentId
+            `rtmp://${ENV.ipAdd}/live/` + this.props.route.params.incidentId
           }
           scaleMode={"ScaleAspectFit"}
           bufferTime={300}
           maxBufferTime={1000}
           autoplay={true}
         />
+        <Block middle>
         <TouchableOpacity
           onPress={async () => {
             var res = await axios.get(
@@ -79,8 +84,9 @@ class IncidentViewer extends React.Component {
             });
           }}
         >
-          <Text>Navigate</Text>
+          <Text bold size={20} color={argonTheme.COLORS.PRIMARY}>Click to Proceed to Help</Text>
         </TouchableOpacity>
+        </Block>
       </>
     );
   }

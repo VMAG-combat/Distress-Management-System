@@ -52,8 +52,8 @@ const config = {
     port: 1935,
     chunk_size: 60000,
     gop_cache: true,
-    ping: 30,
-    ping_timeout: 60,
+    ping: 60,
+    ping_timeout: 30,
   },
   http: {
     port: 8000,
@@ -61,7 +61,7 @@ const config = {
     mediaroot: "./recordings",
   },
   trans: {
-    ffmpeg: "/usr/local/bin/ffmpeg",
+    ffmpeg: "./bin/ffmpeg.exe",
     tasks: [
       {
         app: "live",
